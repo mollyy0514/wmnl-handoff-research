@@ -1,0 +1,8 @@
+*.csv
+*.db
+*.bak
+*.pcap
+*.log
+*.o
+.ipynb_checkpoints
+.DS_Store
