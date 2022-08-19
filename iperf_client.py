@@ -24,7 +24,7 @@ IP_PMTUDISC_DO    =  2  # Always DF.
 IP_PMTUDISC_PROBE =  3  # Ignore dst pmtu.
 TCP_CONGESTION = 13
 
-PORT = args.port           # UL
+PORT = int(args.port)           # UL
 serverip = args.HOST
 thread_stop = False
 exit_program = False
@@ -53,9 +53,12 @@ for i in range(len(n)-3, len(n)):
         n[i] = '0' + n[i]
 n = '-'.join(n)
 
-pcapfile1 = "%s/CLIENT_DL_%s_%s.pcap"%(pcap_path, PORT, n)
-socket_proc =  subprocess.Popen(["iperf3 -c %s -p %d -b %dk -R -t 3600"%(serverip, PORT, bandwidth)], shell=True, preexec_fn=os.setsid)
-tcpproc1 =  subprocess.Popen(["tcpdump -i any net %s -w %s &"%(serverip, pcapfile1)], shell=True, preexec_fn=os.setsid)
+# pcap_ul = "%s/CLIENT_UL_%d_%s.pcap"%(pcap_path, PORT, n)
+# pcap_dl = "%s/CLIENT_DL_%d_%s.pcap"%(pcap_path, PORT+1, n)
+pcap_bl = "%s/CLIENT_BL_%d_%d_%s.pcap"%(pcap_path, PORT, PORT+1, n)
+socket_proc1 =  subprocess.Popen(["iperf3 -c %s -p %d -b %dk -t 3600"%(serverip, PORT, bandwidth)], shell=True, preexec_fn=os.setsid)
+socket_proc2 =  subprocess.Popen(["iperf3 -c %s -p %d -b %dk -R -t 3600"%(serverip, PORT+1, bandwidth)], shell=True, preexec_fn=os.setsid)
+tcpproc =  subprocess.Popen(["tcpdump -i any net %s -w %s &"%(serverip, pcap_bl)], shell=True, preexec_fn=os.setsid)
 
 
 while True:
@@ -64,10 +67,11 @@ while True:
         time.sleep(1)
     except KeyboardInterrupt:
         subprocess.Popen(["killall -9 iperf3"], shell=True, preexec_fn=os.setsid)
-        os.killpg(os.getpgid(socket_proc.pid), signal.SIGTERM)
-        os.killpg(os.getpgid(tcpproc1.pid), signal.SIGTERM)
+        os.killpg(os.getpgid(socket_proc1.pid), signal.SIGTERM)
+        os.killpg(os.getpgid(socket_proc2.pid), signal.SIGTERM)
+        os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
         break
     except Exception as e:
         print("error", e)
 
-os.killpg(os.getpgid(tcpproc1.pid), signal.SIGTERM)
+os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
