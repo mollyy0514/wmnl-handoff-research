@@ -54,8 +54,8 @@ for i in range(len(n)-3, len(n)):
 n = '-'.join(n)
 
 pcapfile1 = "%s/CLIENT_DL_%s_%s.pcap"%(pcap_path, PORT, n)
-tcpproc1 =  subprocess.Popen(["tcpdump -i any net %s -w %s &"%(serverip, pcapfile1)], shell=True, preexec_fn=os.setsid)
 socket_proc =  subprocess.Popen(["iperf3 -c %s -p %d -b %dk -R -t 3600"%(serverip, PORT, bandwidth)], shell=True, preexec_fn=os.setsid)
+tcpproc1 =  subprocess.Popen(["tcpdump -i any net %s -w %s &"%(serverip, pcapfile1)], shell=True, preexec_fn=os.setsid)
 
 
 while True:
