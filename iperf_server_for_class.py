@@ -7,6 +7,7 @@ import time, subprocess
 
 if __name__ == '__main__':
     os.system("echo wmnlab | sudo -S su")
+    
     t = dt.datetime.today()
     n = '-'.join([str(x) for x in [t.year, t.month, t.day, t.hour, t.minute, t.second]])
 
@@ -42,8 +43,8 @@ if __name__ == '__main__':
                 _l.append('iperf3 -s -B 0.0.0.0 -p {} -V --logfile '.format(int(sys.argv[i])+1) + os.path.join('.', 'server_log', n + '_server_{}_DL.log'.format(int(sys.argv[i])+1)))
             
             for i in range(2, len(sys.argv)): 
-                _l.append('sudo tcpdump port {} -w '.format(int(sys.argv[i]))   + os.path.join('.', 'server_pcap', n + '_server_{}_UL.pcap'.format(int(sys.argv[i]))  ))
-                _l.append('sudo tcpdump port {} -w '.format(int(sys.argv[i])+1) + os.path.join('.', 'server_pcap', n + '_server_{}_DL.pcap'.format(int(sys.argv[i])+1)))
+                _l.append('tcpdump port {} -w '.format(int(sys.argv[i]))   + os.path.join('.', 'server_pcap', n + '_server_{}_UL.pcap'.format(int(sys.argv[i]))  ))
+                _l.append('tcpdump port {} -w '.format(int(sys.argv[i])+1) + os.path.join('.', 'server_pcap', n + '_server_{}_DL.pcap'.format(int(sys.argv[i])+1)))
             for l in _l: 
                 print(l)
                 run_store = subprocess.Popen(l.split(" "), preexec_fn=os.setpgrp)
