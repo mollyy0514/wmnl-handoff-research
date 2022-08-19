@@ -7,7 +7,7 @@ import argparse
 import subprocess
 import re
 import signal
-import subprocess
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--port", type=int,
@@ -31,7 +31,7 @@ exit_program = False
 length_packet = 250 # unit: byte
 bandwidth = 200 # unit: kbps
 total_time = 3600 # unit: second
-pcap_path = os.path(".", "client_pcap")
+pcap_path = os.path.join(".", "client_pcap")
 # try: 
 #     os.mkdir(pcap_path)
 # except: 
