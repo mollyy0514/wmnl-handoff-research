@@ -13,13 +13,6 @@ Enter diagnostic mode
 
 > Cannot share Internet with laptop!
 
-Some useful commands
-
-    $ lsusb
-    $ lsusb -t
-    $ dmesg
-    $ dmesg | grep ttyUSB
-
 Let your laptop find the USB port
 
     $ sudo rmmod usbserial
@@ -32,6 +25,13 @@ Let your laptop find the USB port
 > You should see ttyUSB0 tyUSB1 tyUSB2, 0 is for QxDM (i.e., MobileInsight).
 
 > You should see ttyUSB3 tyUSB4 tyUSB5, 3 is for QxDM if using 2 cellphone.
+
+Some useful commands
+
+    $ lsusb
+    $ lsusb -t
+    $ dmesg
+    $ dmesg | grep ttyUSB
 
 ## Experiment Setup
 #### Server: PC
