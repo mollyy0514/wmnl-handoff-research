@@ -2,7 +2,7 @@
 # (1) python3 iperf_client_single.py -d DEVICE [-u]
 #     python3 iperf_client_single.py -d sm01 -u
 # (2) python3 iperf_client_single.py -d DEVICE -H SERVER_IP -p LIST_PORTS -S STREAMING_DIRECTION
-#     python3 iperf_client_single.py -d sm01 -H 210.65.88.213 -p 3270 3271 -S bl
+#     python3 iperf_client_single.py -d sm01 -H 140.112.17.209 -p 3270 3271 -S bl
 # (3) python3 iperf_client_single.py -d DEVICE -b BITRATE -l PACKET_SIZE -t EXP_TIME
 #     python3 iperf_client_single.py -d sm01 -b 2M -l 2500 -t 300
 import os
@@ -22,6 +22,7 @@ parser.add_argument("-d", "--device", type=str,
                     help="device name (only allow 1 device)", required=True)
 parser.add_argument("-H", "--host", type=str,
                     help="server ip address", default="140.112.20.183")
+                    # help="server ip address", default="140.112.17.209")
                     # help="server ip address", default="210.65.88.213")
 parser.add_argument("-p", "--ports", type=int, nargs='+',     # input list of port numbers sep by 'space'
                     help="ports to bind")
