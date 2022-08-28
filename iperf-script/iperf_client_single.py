@@ -112,8 +112,8 @@ n = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.se
 n = [x.zfill(2) for x in n]  # zero-padding to two digit
 n = '-'.join(n[:3]) + '_' + '-'.join(n[3:])
 
-_l = []        # commands list
-run_list = []  # running sessions list
+_l = []        # command list
+run_list = []  # running session list
 
 if args.stream == "bl":  # bi-link
     # tcpdump

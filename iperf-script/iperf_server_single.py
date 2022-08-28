@@ -89,8 +89,8 @@ if __name__ == '__main__':
     n = [x.zfill(2) for x in n]  # zero-padding to two digit
     n = '-'.join(n[:3]) + '_' + '-'.join(n[3:])
 
-    _l = []        # commands list
-    run_list = []  # running sessions list
+    _l = []        # command list
+    run_list = []  # running session list
     if args.stream == "bl":  # bi-link
         for device, port1, port2 in zip(devices, ports[::2], ports[1::2]):
             # tcpdump
