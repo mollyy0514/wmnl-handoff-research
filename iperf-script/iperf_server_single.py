@@ -1,6 +1,8 @@
 # Command usage:
-# python3 iperf_server_beta.py -d LIST_DEVICES
-# python3 iperf_server_beta.py -d LIST_DEVICES -p LIST_PORTS -S STREAMING_DIRECTION
+# (1) python3 iperf_server_beta.py -d LIST_DEVICES
+#     python3 iperf_server_beta.py -d sm01 sm08
+# (2) python3 iperf_server_beta.py -d LIST_DEVICES -p LIST_PORTS -S STREAMING_DIRECTION
+#     python3 iperf_server_beta.py -d sm01 sm08 -p 3270 3271 3272 3273 -S bl
 import os
 import sys
 import datetime as dt
@@ -16,7 +18,7 @@ parser.add_argument("-d", "--devices", type=str, nargs='+',  # input list of dev
 parser.add_argument("-p", "--ports", type=int, nargs='+',    # input list of port numbers sep by 'space'
                     help="ports to bind")
 parser.add_argument("-S", "--stream", type=str,
-                    help="streaming direction: uplink (ul), downlink (dl), bi-link (default bl)", default="bl")
+                    help="streaming direction: uplink (ul), downlink (dl), bi-link (bl, 2 ports/device)", default="bl")
 args = parser.parse_args()
 
 device_to_port = {

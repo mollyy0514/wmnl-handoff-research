@@ -1,6 +1,10 @@
-# Command usage:
-# python3 iperf_client_beta.py -d LIST_DEVICES
-# python3 iperf_client_beta.py -d LIST_DEVICES -p LIST_PORTS -S STREAMING_DIRECTION
+# Command usage (need su priviledge): 
+# (1) python3 iperf_client_beta.py -d DEVICE [-u]
+#     python3 iperf_client_beta.py -d sm01 -u 
+# (2) python3 iperf_client_beta.py -d DEVICE -H SERVER_IP -p LIST_PORTS -S STREAMING_DIRECTION
+#     python3 iperf_client_beta.py -d sm01 -H 210.65.88.213 -p 3270 3271 -S bl
+# (3) python3 iperf_client_beta.py -d DEVICE -b BITRATE -l PACKET_SIZE -t EXP_TIME
+#     python3 iperf_client_beta.py -d sm01 -b 2M -l 2500 -t 300
 import os
 import sys
 import time
@@ -14,11 +18,11 @@ import signal
 
 # ------------------------------ Add Arguments & Global Variables ------------------------------- #
 parser = argparse.ArgumentParser()
+parser.add_argument("-d", "--device", type=str,
+                    help="device name (only allow 1 device)", required=True)
 parser.add_argument("-H", "--host", type=str,
                     help="server ip address", default="140.112.20.183")
                     # help="server ip address", default="210.65.88.213")
-parser.add_argument("-d", "--device", type=str,
-                    help="device name (only allow 1 device)", required=True)
 parser.add_argument("-p", "--ports", type=int, nargs='+',     # input list of port numbers sep by 'space'
                     help="ports to bind")
 parser.add_argument("-u", "--udp", action="store_true",       # needs no value, True if set "-u"
@@ -30,7 +34,7 @@ parser.add_argument("-l", "--length", type=str,
 parser.add_argument("-t", "--time", type=int,
                     help="time in seconds to transmit for (default 1 hour = 3600 secs)", default=3600)
 parser.add_argument("-S", "--stream", type=str,
-                    help="streaming direction: uplink (ul), downlink (dl), bi-link (default bl)", default="bl")
+                    help="streaming direction: uplink (ul), downlink (dl), bi-link (bl, 2 ports/device)", default="bl")
 args = parser.parse_args()
 
 device_to_port = {
