@@ -133,7 +133,7 @@ while True:
         for run_item in run_list:
             print(run_item, ", PID: ", run_item.pid)
             # os.killpg(os.getpgid(run_item.pid), signal.SIGTERM)
-            command = "sudo kill -9 -{}".format(run_item.pid)
+            command = "kill -9 -{}".format(run_item.pid)
             subprocess.check_output(command.split(" "))
         break
         # os.killpg(os.getpgid(socket_proc1.pid), signal.SIGTERM)
