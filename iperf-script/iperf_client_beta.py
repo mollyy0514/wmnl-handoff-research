@@ -104,12 +104,12 @@ _l = []
 run_list = []
 if len(ports) > 2:
     print("You cannot specify more than 2 ports for one device.")
-    raise
+    raise Exception("You cannot specify more than 2 ports for one device.")
 
 if stream_flow == "bl":
     if len(ports) < 2:
         print("You need to specify at least 2 ports for bi-link transmission.")
-        raise
+        raise Exception("You need to specify at least 2 ports for bi-link transmission.")
     pcap_bl = os.path.join(pcap_path, "client_BL_{}_{}_{}_{}.pcap".format(ports[0], ports[1], device, n))
     tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap_bl)
     socket_proc1 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, max_time)
