@@ -131,7 +131,7 @@ elif args.stream == "ul" or args.stream == "dl":  # uplink or downlink
     socket_proc = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, args.time)
     _l = [tcpproc, socket_proc]
 else:
-    raise Exception("must specify only ul, dl, bl.")
+    raise Exception("must specify from {ul, dl, bl}.")
 
 # Run all commands in the collection
 for l in _l: 

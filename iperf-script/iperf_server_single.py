@@ -109,7 +109,7 @@ if __name__ == '__main__':
             # iperf
             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port))
     else:
-        raise Exception("must specify only ul, dl, bl.")
+        raise Exception("must specify from {ul, dl, bl}.")
     
     # Run all commands in the collection
     for l in _l: 
