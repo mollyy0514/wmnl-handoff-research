@@ -15,7 +15,7 @@ parser.add_argument("-H", "--host", type=str,
                     help="server ip address", default="140.112.20.183")
                     # help="server ip address", default="210.65.88.213")
 parser.add_argument("-d", "--device", type=str,                # enable both uplink & downlink
-                    help="device name (only allow 1 device)")
+                    help="device name (only allow 1 device)", required=True)
 parser.add_argument("-p", "--port", type=int, nargs='+',       # input list of port numbers sep by 'space'
                     help="port to bind")
 parser.add_argument("-u", "--udp", action="store_true",        # needs not value, "True" if set "-u"
@@ -63,10 +63,10 @@ device_to_port = {
 
 serverip = args.host
 device = args.device
-if device:
-    ports = [device_to_port[args.device][0], device_to_port[args.device][1]]
+if args.port:
+    ports = args.port
 else:
-    ports = args.port  # "None" if not specify any port
+    ports = [device_to_port[args.device][0], device_to_port[args.device][1]]  # default setting
 
 is_udp = "-u" if args.udp else ""
 
@@ -102,23 +102,24 @@ n = '-'.join(n[:3]) + '_' + '-'.join(n[3:])
 
 _l = []
 run_list = []
-if device:
-    # pcap_ul = os.path.join(pcap_path, "client_UL_%d_%s_%s.pcap"%(port1, device, n))
-    # tcpproc =  subprocess.Popen(["tcpdump -i any net %s -w %s &"%(serverip, pcap_ul)], shell=True, preexec_fn=os.setsid)
-    # pcap_dl = os.path.join(pcap_path, "client_DL_%d_%s_%s.pcap"%(port2, device, n))
-    # tcpproc =  subprocess.Popen(["tcpdump -i any net %s -w %s &"%(serverip, pcap_dl)], shell=True, preexec_fn=os.setsid)
+if len(ports) > 2:
+    print("You cannot specify more than 2 ports for one device.")
+    raise
 
+if stream_flow == "bl":
     pcap_bl = os.path.join(pcap_path, "client_BL_{}_{}_{}_{}.pcap".format(ports[0], ports[1], device, n))
     tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap_bl)
     socket_proc1 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, max_time)
     socket_proc2 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -R -t {} -V".format(serverip, ports[1], bitrate, packet_size, is_udp, max_time)
     _l = [tcpproc, socket_proc1, socket_proc2]
-    
-    # tcpproc = subprocess.Popen("tcpdump -i any net {} -w {} &".format(serverip, pcap_bl), shell=True, preexec_fn=os.setsid)
-    # socket_proc1 = subprocess.Popen("iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, max_time), shell=True, preexec_fn=os.setsid)
-    # socket_proc2 = subprocess.Popen("iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -R -t {} -V".format(serverip, ports[1], bitrate, packet_size, is_udp, max_time), shell=True, preexec_fn=os.setsid)
-elif ports:
-    pass
+else:
+    port_ss = "_".join([str(port) for port in ports])
+    pcap = os.path.join(pcap_path, "client_{}_{}_{}_{}.pcap".format(stream_flow.upper(), port_ss, device, n))
+    tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap)
+    _l.append(tcpproc)
+    for port in ports:
+        socket_proc = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, port, bitrate, packet_size, is_udp, max_time)
+        _l.append(socket_proc)
 
 for l in _l: 
     print(l)
@@ -136,11 +137,5 @@ while True:
             # command = "kill -9 -{}".format(run_item.pid)
             # subprocess.check_output(command.split(" "))
         break
-        # os.killpg(os.getpgid(socket_proc1.pid), signal.SIGTERM)
-        # os.killpg(os.getpgid(socket_proc2.pid), signal.SIGTERM)
-        # os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
-        # break
     except Exception as e:
         print("error", e)
-
-# os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
