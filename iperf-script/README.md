@@ -12,7 +12,6 @@ Enter diagnostic mode
 > Exit adb shell automatically, and cannot enter adb shell!
 > Cannot share Internet to laptop!
 
-
 Some useful commands
 
     $ lsusb
@@ -20,26 +19,27 @@ Some useful commands
     $ dmesg
     $ dmesg | grep ttyUSB
 
-
 Let your laptop find the USB port
 
     $ sudo rmmod usbserial
-> you may need to rmmod other driver such as "option", "usb_wwan" first.
+> You may need to rmmod other driver such as "option", "usb_wwan" first.
 
     $ sudo modprobe usbserial vendor=0x05c6 product=0x9091
 > Now, you can enter adb shell again!
 
     $ ls /dev/ttyUSB*
-> you should see ttyUSB0 tyUSB1 tyUSB2, 0 is for QxDM (i.e., MobileInsight).
-> you should see ttyUSB3 tyUSB4 tyUSB5, 3 is for QxDM if using 2 cellphone.
+> You should see ttyUSB0 tyUSB1 tyUSB2, 0 is for QxDM (i.e., MobileInsight).
+> You should see ttyUSB3 tyUSB4 tyUSB5, 3 is for QxDM if using 2 cellphone.
 
 ## Experiment Setup
-##### Terminal 1, 2
+#### Terminal 1, 2
     $ sudo python3 monitor-example.py /dev/ttyUSB0 9600 sm01
     $ sudo python3 monitor-example.py /dev/ttyUSB3 9600 sm02
-##### Server
+
+#### Server
     $ python3 iperf_server_single.py -d sm01 sm02
-##### Terminal 3, 4
+
+#### Terminal 3, 4
     $ adb -s PHONE1_SERIAL shell
     $ su
     # python3 iperf_client_single.py -d sm01 -u
