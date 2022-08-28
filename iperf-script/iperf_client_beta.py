@@ -73,8 +73,6 @@ if args.ports:
         raise Exception("must specify 2 ports for the device to transmit bi-link.")
     elif (args.stream == "ul" or args.stream == "dl") and len(ports) != 1:
         raise Exception("must specify only 1 port for the device to transmit uplink or downlink.")
-    else:
-        raise Exception("must specify only ul, dl, bl.")
 else:
     ports = [device_to_port[device][0], device_to_port[device][1]]  # default port setting for each device
 
@@ -121,13 +119,15 @@ if args.stream == "bl":  # bi-link
     socket_proc1 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, args.time)
     socket_proc2 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -R -t {} -V".format(serverip, ports[1], bitrate, packet_size, is_udp, args.time)
     _l = [tcpproc, socket_proc1, socket_proc2]
-else:  # uplink or downlink
+elif args.stream == "ul" or args.stream == "dl":  # uplink or downlink
     # tcpdump
     pcap = os.path.join(pcap_path, "client_{}_{}_{}_{}.pcap".format(args.stream.upper(), ports[0], device, n))
     tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap)
     # iperf
     socket_proc = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, args.time)
     _l = [tcpproc, socket_proc]
+else:
+    raise Exception("must specify only ul, dl, bl.")
 
 # Run all commands in the collection
 for l in _l: 

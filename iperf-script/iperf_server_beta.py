@@ -58,8 +58,6 @@ if args.ports:
         raise Exception("must specify 2 ports for each device to transmit bi-link.")
     elif (args.stream == "ul" or args.stream == "dl") and len(ports) != len(devices):
         raise Exception("must specify only 1 port for each device to transmit uplink or downlink.")
-    else:
-        raise Exception("must specify only ul, dl, bl.")
 else:
     for device in devices:
         ports = []
@@ -101,13 +99,15 @@ if __name__ == '__main__':
             # iperf
             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port1))
             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port2))
-    else:  # uplink or downlink
+    elif args.stream == "ul" or args.stream == "dl":  # uplink or downlink
         for device, port in zip(devices, ports):
             # tcpdump
             pcap = os.path.join(pcap_path, "server_{}_{}_{}_{}.pcap".format(args.stream.upper(), port, device, n))
             _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
             # iperf
             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port))
+    else:
+        raise Exception("must specify only ul, dl, bl.")
     
     # Run all commands in the collection
     for l in _l: 
