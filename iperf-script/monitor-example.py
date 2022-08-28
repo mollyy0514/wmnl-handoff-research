@@ -34,7 +34,7 @@ if __name__ == "__main__":
     n = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.second]]
     n = [x.zfill(2) for x in n]  # zero-padding to two digit
     n = '-'.join(n[:3]) + '_' + '-'.join(n[3:])
-    savepath = os.path.join(dirpath, "diag_" + sys.argv[3] + '_' + n + ".mi2log")
+    savepath = os.path.join(dirpath, "diag_log_{}_{}.mi2log".format(sys.argv[3], n))
     src.save_log_as(savepath)
 
     # src.enable_log_all()
