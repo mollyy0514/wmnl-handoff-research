@@ -39,8 +39,11 @@ if __name__ == '__main__':
     else: 
         if sys.argv[1] == 'start': 
             for i in range(2, len(sys.argv)): 
-                _l.append('iperf3 -s -B 0.0.0.0 -p {} -V --logfile '.format(int(sys.argv[i]))   + os.path.join('.', 'server_log', n + '_server_{}_UL.log'.format(int(sys.argv[i]))  ))
-                _l.append('iperf3 -s -B 0.0.0.0 -p {} -V --logfile '.format(int(sys.argv[i])+1) + os.path.join('.', 'server_log', n + '_server_{}_DL.log'.format(int(sys.argv[i])+1)))
+                # _l.append('iperf3 -s -B 0.0.0.0 -p {} -V --logfile '.format(int(sys.argv[i]))   + os.path.join('.', 'server_log', n + '_server_{}_UL.log'.format(int(sys.argv[i]))  ))
+                # _l.append('iperf3 -s -B 0.0.0.0 -p {} -V --logfile '.format(int(sys.argv[i])+1) + os.path.join('.', 'server_log', n + '_server_{}_DL.log'.format(int(sys.argv[i])+1)))
+
+                _l.append('iperf3 -s -B 0.0.0.0 -p {} -V'.format(int(sys.argv[i])))
+                _l.append('iperf3 -s -B 0.0.0.0 -p {} -V'.format(int(sys.argv[i])+1))
             
             for i in range(2, len(sys.argv)): 
                 _l.append('tcpdump port {} -w '.format(int(sys.argv[i]))   + os.path.join('.', 'server_pcap', n + '_server_{}_UL.pcap'.format(int(sys.argv[i]))  ))

@@ -75,8 +75,8 @@ if __name__ == '__main__':
     for device, port in zip(args.list_device, port_list):
         # _l.append("iperf3 -s 0.0.0.0 -p %d -V --logfile %s" % (port[0], os.path.join(log_path, "serverlog_UL_%d_%s_%s.log"%(port[0], device, n))))
         # _l.append("iperf3 -s 0.0.0.0 -p %d -V --logfile %s" % (port[1], os.path.join(log_path, "serverlog_UL_%d_%s_%s.log"%(port[1], device, n))))
-        _l.append("iperf3 -s 0.0.0.0 -p %d -V" % port[0])
-        _l.append("iperf3 -s 0.0.0.0 -p %d -V" % port[1])
+        _l.append("iperf3 -s 0.0.0.0 -p %d -V &" % port[0])
+        _l.append("iperf3 -s 0.0.0.0 -p %d -V &" % port[1])
         pcap_ul = os.path.join(pcap_path, "server_UL_%d_%s_%s.pcap"%(port[0], device, n))
         _l.append("tcpdump -i any port %d -w %s &" % (port[0], pcap_ul))
         pcap_dl = os.path.join(pcap_path, "server_DL_%d_%s_%s.pcap"%(port[1], device, n))
