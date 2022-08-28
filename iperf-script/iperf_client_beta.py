@@ -109,31 +109,37 @@ if device:
     # tcpproc =  subprocess.Popen(["tcpdump -i any net %s -w %s &"%(serverip, pcap_dl)], shell=True, preexec_fn=os.setsid)
 
     pcap_bl = os.path.join(pcap_path, "client_BL_{}_{}_{}_{}.pcap".format(ports[0], ports[1], device, n))
-    # tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap_bl)
-    # socket_proc1 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, max_time)
-    # socket_proc2 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -R -t {} -V".format(serverip, ports[1], bitrate, packet_size, is_udp, max_time)
-    # _l = [tcpproc, socket_proc1, socket_proc2]
+    tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap_bl)
+    socket_proc1 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, max_time)
+    socket_proc2 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -R -t {} -V".format(serverip, ports[1], bitrate, packet_size, is_udp, max_time)
+    _l = [tcpproc, socket_proc1, socket_proc2]
     
-    tcpproc = subprocess.Popen("tcpdump -i any net {} -w {} &".format(serverip, pcap_bl), shell=True, preexec_fn=os.setsid)
-    socket_proc1 = subprocess.Popen("iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, max_time), shell=True, preexec_fn=os.setsid)
-    socket_proc2 = subprocess.Popen("iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -R -t {} -V".format(serverip, ports[1], bitrate, packet_size, is_udp, max_time), shell=True, preexec_fn=os.setsid)
+    # tcpproc = subprocess.Popen("tcpdump -i any net {} -w {} &".format(serverip, pcap_bl), shell=True, preexec_fn=os.setsid)
+    # socket_proc1 = subprocess.Popen("iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, max_time), shell=True, preexec_fn=os.setsid)
+    # socket_proc2 = subprocess.Popen("iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -R -t {} -V".format(serverip, ports[1], bitrate, packet_size, is_udp, max_time), shell=True, preexec_fn=os.setsid)
 elif ports:
     pass
 
-# for l in _l: 
-#     # print(l)
-#     run_store = subprocess.Popen(l, shell=True, preexec_fn=os.setpgrp)
-#     run_list.append(run_store)
+for l in _l: 
+    print(l)
+    run_store = subprocess.Popen(l, shell=True, preexec_fn=os.setpgrp)
+    run_list.append(run_store)
 
 while True:
     try:
         time.sleep(1)
     except KeyboardInterrupt:
         # subprocess.Popen(["killall -9 iperf3"], shell=True, preexec_fn=os.setsid)
-        os.killpg(os.getpgid(socket_proc1.pid), signal.SIGTERM)
-        os.killpg(os.getpgid(socket_proc2.pid), signal.SIGTERM)
-        os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
+        for run_item in run_list:
+            print(run_item, ", PID: ", run_item.pid)
+            # os.killpg(os.getpgid(run_item.pid), signal.SIGTERM)
+            command = "sudo kill -9 -{}".format(run_item.pid)
+            subprocess.check_output(command.split(" "))
         break
+        # os.killpg(os.getpgid(socket_proc1.pid), signal.SIGTERM)
+        # os.killpg(os.getpgid(socket_proc2.pid), signal.SIGTERM)
+        # os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
+        # break
     except Exception as e:
         print("error", e)
 
