@@ -10,7 +10,7 @@ import signal
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--port", type=int,
                     help="port to bind", default=3270)
-parser.add_argument("-l", "--list_device", type=str, nargs='+',  # input list of devices sep by 'space'
+parser.add_argument("-d", "--device_list", type=str, nargs='+',  # input list of devices sep by 'space'
                     help="list of device", default=["reserve"])
 args = parser.parse_args()
 
@@ -57,12 +57,12 @@ if not os.path.exists(log_path):
 
 
 if __name__ == '__main__':
-    os.system("echo wmnlab | sudo -S su")
-    print("All supported port: 3200-3300, even number for Uplink, odd number for Downlink. ")
+    # os.system("echo wmnlab | sudo -S su")
+    print("Supported port: 3200-3300, even number for Uplink, odd number for Downlink. ")
     print("--------------------")
 
     port_list = []
-    for device in args.list_device:
+    for device in args.device_list:
         port_list.append(device_to_port[device])
 
     now = dt.datetime.today()
@@ -72,19 +72,19 @@ if __name__ == '__main__':
 
     _l = []
     run_list = []
-    for device, port in zip(args.list_device, port_list):
-        # _l.append("iperf3 -s 0.0.0.0 -p %d -V --logfile %s" % (port[0], os.path.join(log_path, "serverlog_UL_%d_%s_%s.log"%(port[0], device, n))))
-        # _l.append("iperf3 -s 0.0.0.0 -p %d -V --logfile %s" % (port[1], os.path.join(log_path, "serverlog_UL_%d_%s_%s.log"%(port[1], device, n))))
-        _l.append("iperf3 -s 0.0.0.0 -p %d -V &" % port[0])
-        _l.append("iperf3 -s 0.0.0.0 -p %d -V &" % port[1])
+    for device, port in zip(args.device_list, port_list):
         pcap_ul = os.path.join(pcap_path, "server_UL_%d_%s_%s.pcap"%(port[0], device, n))
         _l.append("tcpdump -i any port %d -w %s &" % (port[0], pcap_ul))
         pcap_dl = os.path.join(pcap_path, "server_DL_%d_%s_%s.pcap"%(port[1], device, n))
         _l.append("tcpdump -i any port %d -w %s &" % (port[1], pcap_dl))
+        # _l.append("iperf3 -s 0.0.0.0 -p %d -V --logfile %s" % (port[0], os.path.join(log_path, "serverlog_UL_%d_%s_%s.log"%(port[0], device, n))))
+        # _l.append("iperf3 -s 0.0.0.0 -p %d -V --logfile %s" % (port[1], os.path.join(log_path, "serverlog_UL_%d_%s_%s.log"%(port[1], device, n))))
+        _l.append("iperf3 -s -B 0.0.0.0 -p %d -V" % port[0])
+        _l.append("iperf3 -s -B 0.0.0.0 -p %d -V" % port[1])
     
     for l in _l: 
-        print(l.split(" "))
-        run_store = subprocess.Popen(l.split(" "), shell=True, preexec_fn=os.setpgrp)
+        print(l)
+        run_store = subprocess.Popen(l, shell=True, preexec_fn=os.setpgrp)
         run_list.append(run_store)
     
     while True:
@@ -93,14 +93,11 @@ if __name__ == '__main__':
         except KeyboardInterrupt:
             # subprocess.Popen(["killall -9 iperf3"], shell=True, preexec_fn=os.setsid)
             for run_item in run_list:
-                try:
-                    print(run_item, ", PID: ", run_item.pid)
-                    os.killpg(os.getpgid(run_item.pid), signal.SIGTERM)
-                    # command = "sudo kill -9 -{}".format(run_item.pid)
-                    # subprocess.check_output(command.split(" "))
-                    break
-                except Exception as e:
-                    print(e)
+                print(run_item, ", PID: ", run_item.pid)
+                # os.killpg(os.getpgid(run_item.pid), signal.SIGTERM)
+                command = "sudo kill -9 -{}".format(run_item.pid)
+                subprocess.check_output(command.split(" "))
+            break
         except Exception as e:
             print("error", e)
     
