@@ -1,8 +1,8 @@
 # Command usage:
-# (1) python3 iperf_server_beta.py -d LIST_DEVICES
-#     python3 iperf_server_beta.py -d sm01 sm08
-# (2) python3 iperf_server_beta.py -d LIST_DEVICES -p LIST_PORTS -S STREAMING_DIRECTION
-#     python3 iperf_server_beta.py -d sm01 sm08 -p 3270 3271 3272 3273 -S bl
+# (1) python3 iperf_server_single.py -d LIST_DEVICES
+#     python3 iperf_server_single.py -d sm01 sm08
+# (2) python3 iperf_server_single.py -d LIST_DEVICES -p LIST_PORTS -S STREAMING_DIRECTION
+#     python3 iperf_server_single.py -d sm01 sm08 -p 3270 3271 3272 3273 -S bl
 import os
 import sys
 import datetime as dt
@@ -131,4 +131,3 @@ if __name__ == '__main__':
             break
         except Exception as e:
             print("error", e)
-    

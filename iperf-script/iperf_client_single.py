@@ -1,10 +1,10 @@
 # Command usage (need su priviledge): 
-# (1) python3 iperf_client_beta.py -d DEVICE [-u]
-#     python3 iperf_client_beta.py -d sm01 -u
-# (2) python3 iperf_client_beta.py -d DEVICE -H SERVER_IP -p LIST_PORTS -S STREAMING_DIRECTION
-#     python3 iperf_client_beta.py -d sm01 -H 210.65.88.213 -p 3270 3271 -S bl
-# (3) python3 iperf_client_beta.py -d DEVICE -b BITRATE -l PACKET_SIZE -t EXP_TIME
-#     python3 iperf_client_beta.py -d sm01 -b 2M -l 2500 -t 300
+# (1) python3 iperf_client_single.py -d DEVICE [-u]
+#     python3 iperf_client_single.py -d sm01 -u
+# (2) python3 iperf_client_single.py -d DEVICE -H SERVER_IP -p LIST_PORTS -S STREAMING_DIRECTION
+#     python3 iperf_client_single.py -d sm01 -H 210.65.88.213 -p 3270 3271 -S bl
+# (3) python3 iperf_client_single.py -d DEVICE -b BITRATE -l PACKET_SIZE -t EXP_TIME
+#     python3 iperf_client_single.py -d sm01 -b 2M -l 2500 -t 300
 import os
 import sys
 import time
