@@ -1,3 +1,6 @@
+# Command usage:
+# python3 iperf_server_beta.py -d LIST_DEVICES
+# python3 iperf_server_beta.py -d LIST_DEVICES -p LIST_PORTS -S STREAMING_DIRECTION
 import os
 import sys
 import datetime as dt
@@ -6,12 +9,14 @@ import subprocess
 import argparse
 import signal
 
-
+# ------------------------------ Add Arguments & Global Variables ------------------------------- #
 parser = argparse.ArgumentParser()
-parser.add_argument("-p", "--port", type=int,
-                    help="port to bind", default=3270)
-parser.add_argument("-d", "--device_list", type=str, nargs='+',  # input list of devices sep by 'space'
-                    help="list of device", default=["reserve"])
+parser.add_argument("-d", "--devices", type=str, nargs='+',  # input list of devices sep by 'space'
+                    help="list of devices", required=True)
+parser.add_argument("-p", "--ports", type=int, nargs='+',    # input list of port numbers sep by 'space'
+                    help="ports to bind")
+parser.add_argument("-S", "--stream", type=str,
+                    help="streaming direction: uplink (ul), downlink (dl), bi-link (default bl)", default="bl")
 args = parser.parse_args()
 
 device_to_port = {
@@ -45,48 +50,72 @@ device_to_port = {
     "reserve": (3270, 3299),
 }
 
-thread_stop = False
-exit_program = False
+# ----------------------------------------- Parameters ------------------------------------------ #
+devices = args.devices
+if args.ports:
+    ports = args.ports
+    if args.stream == "bl" and len(ports) != 2*len(devices):
+        raise Exception("must specify 2 ports for each device to transmit bi-link.")
+    elif (args.stream == "ul" or args.stream == "dl") and len(ports) != len(devices):
+        raise Exception("must specify only 1 port for each device to transmit uplink or downlink.")
+    else:
+        raise Exception("must specify only ul, dl, bl.")
+else:
+    for device in devices:
+        ports = []
+        ports.append((device_to_port[device][0]))  # default uplink port for each device
+        ports.append((device_to_port[device][1]))  # default downlink port for each device
 
+# ----------------------------------------- Save Path ------------------------------------------- #
 pcap_path = "./server_pcap"
-log_path = "./server_log"
 if not os.path.exists(pcap_path):
     os.mkdir(pcap_path)
+
+log_path = "./server_log"
 if not os.path.exists(log_path):
     os.mkdir(log_path)
 
-
+# ---------------------------------- Transmission / Receiving ----------------------------------- #
 if __name__ == '__main__':
+    # Avoid need to feed in password for superuser priviledge
     os.system("echo wmnlab | sudo -S su")
-    print("Supported port: 3200-3300, even number for Uplink, odd number for Downlink. ")
-    print("--------------------")
 
-    port_list = []
-    for device in args.device_list:
-        port_list.append(device_to_port[device])
+    print("Supported port: 3200-3300, even number for Uplink, odd number for Downlink.")
+    print("---------------------------------------------------------------------------")
 
+    # Get time
     now = dt.datetime.today()
     n = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.second]]
     n = [x.zfill(2) for x in n]  # zero-padding to two digit
     n = '-'.join(n[:3]) + '_' + '-'.join(n[3:])
 
-    _l = []
-    run_list = []
-    for device, port in zip(args.device_list, port_list):
-        pcap_ul = os.path.join(pcap_path, "server_UL_%d_%s_%s.pcap"%(port[0], device, n))
-        _l.append("tcpdump -i any port %d -w %s &" % (port[0], pcap_ul))
-        pcap_dl = os.path.join(pcap_path, "server_DL_%d_%s_%s.pcap"%(port[1], device, n))
-        _l.append("tcpdump -i any port %d -w %s &" % (port[1], pcap_dl))
-        # _l.append("iperf3 -s 0.0.0.0 -p %d -V --logfile %s" % (port[0], os.path.join(log_path, "serverlog_UL_%d_%s_%s.log"%(port[0], device, n))))
-        # _l.append("iperf3 -s 0.0.0.0 -p %d -V --logfile %s" % (port[1], os.path.join(log_path, "serverlog_UL_%d_%s_%s.log"%(port[1], device, n))))
-        _l.append("iperf3 -s -B 0.0.0.0 -p %d -V" % port[0])
-        _l.append("iperf3 -s -B 0.0.0.0 -p %d -V" % port[1])
+    _l = []        # commands list
+    run_list = []  # running sessions list
+    if args.stream == "bl":  # bi-link
+        for device, port1, port2 in zip(devices, ports[::2], ports[1::2]):
+            # tcpdump
+            pcap_ul = os.path.join(pcap_path, "server_UL_{}_{}_{}.pcap".format(port1, device, n))
+            _l.append("tcpdump -i any port {} -w {} &".format(port1, pcap_ul))
+            pcap_dl = os.path.join(pcap_path, "server_DL_{}_{}_{}.pcap".format(port2, device, n))
+            _l.append("tcpdump -i any port {} -w {} &".format(port2, pcap_dl))
+            # iperf
+            _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port1))
+            _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port2))
+    else:  # uplink or downlink
+        for device, port in zip(devices, ports):
+            # tcpdump
+            pcap = os.path.join(pcap_path, "server_{}_{}_{}_{}.pcap".format(args.stream.upper(), port, device, n))
+            _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
+            # iperf
+            _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port))
     
+    # Run all commands in the collection
     for l in _l: 
         print(l)
         run_store = subprocess.Popen(l, shell=True, preexec_fn=os.setpgrp)
         run_list.append(run_store)
     
+    # Kill iperf3 & tcpdump sessions with PID when detecting KeyboardInterrupt (Ctrl-C,Z)
     while True:
         try:
             time.sleep(1)
