@@ -34,14 +34,14 @@ Let your laptop find the USB port
 > you should see ttyUSB3 tyUSB4 tyUSB5, 3 is for QxDM if using 2 cellphone.
 
 ## Experiment Setup
-#### Terminal 1, 2
+##### Terminal 1, 2
     $ sudo python3 monitor-example.py /dev/ttyUSB0 9600 sm01
     $ sudo python3 monitor-example.py /dev/ttyUSB3 9600 sm02
 
-#### Server
+##### Server
     $ python3 iperf_server_single.py -d sm01 sm02
 
-#### Terminal 3, 4
+##### Terminal 3, 4
     $ adb -s PHONE1_SERIAL shell
     $ su
     # python3 iperf_client_single.py -d sm01 -u
