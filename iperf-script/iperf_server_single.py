@@ -120,7 +120,7 @@ if __name__ == '__main__':
     # Kill iperf3 & tcpdump sessions with PID when detecting KeyboardInterrupt (Ctrl-C,Z)
     while True:
         try:
-            time.sleep(1)
+            time.sleep(1)  # detect every second
         except KeyboardInterrupt:
             # subprocess.Popen(["killall -9 iperf3"], shell=True, preexec_fn=os.setsid)
             for run_item in run_list:
