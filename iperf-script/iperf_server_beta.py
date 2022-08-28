@@ -57,7 +57,7 @@ if not os.path.exists(log_path):
 
 
 if __name__ == '__main__':
-    # os.system("echo wmnlab | sudo -S su")
+    os.system("echo wmnlab | sudo -S su")
     print("Supported port: 3200-3300, even number for Uplink, odd number for Downlink. ")
     print("--------------------")
 

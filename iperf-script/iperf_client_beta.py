@@ -108,7 +108,7 @@ if device:
     # pcap_dl = os.path.join(pcap_path, "client_DL_%d_%s_%s.pcap"%(port2, device, n))
     # tcpproc =  subprocess.Popen(["tcpdump -i any net %s -w %s &"%(serverip, pcap_dl)], shell=True, preexec_fn=os.setsid)
 
-    # pcap_bl = os.path.join(pcap_path, "client_BL_{}_{}_{}_{}.pcap".format(ports[0], ports[1], device, n))
+    pcap_bl = os.path.join(pcap_path, "client_BL_{}_{}_{}_{}.pcap".format(ports[0], ports[1], device, n))
     # tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap_bl)
     # socket_proc1 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, max_time)
     # socket_proc2 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -R -t {} -V".format(serverip, ports[1], bitrate, packet_size, is_udp, max_time)
