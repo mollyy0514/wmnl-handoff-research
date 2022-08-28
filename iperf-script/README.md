@@ -5,19 +5,24 @@
 
 ## Samsung: Diagnostic Mode
 Enter diagnostic mode
+
     $ adb shell
     $ adb -s SERIAL_NUMBER shell
     $ setprop sys.usb.config diag,serial_cdev,rmnet,adb
 > Exit adb shell automatically, and cannot enter adb shell!
 > Cannot share Internet to laptop!
 
+
 Some useful commands
+
     $ lsusb
     $ lsusb -t
     $ dmesg
     $ dmesg | grep ttyUSB
 
+
 Let your laptop find the USB port
+
     $ sudo rmmod usbserial
 > you may need to rmmod other driver such as "option", "usb_wwan" first.
 
