@@ -112,9 +112,7 @@ n = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.se
 n = [x.zfill(2) for x in n]  # zero-padding to two digit
 n = '-'.join(n[:3]) + '_' + '-'.join(n[3:])
 
-_l = []        # command list
-run_list = []  # running session list
-
+_l = []  # command list
 if args.stream == "bl":  # bi-link
     # tcpdump
     pcap_bl = os.path.join(pcap_path, "client_BL_{}_{}_{}_{}.pcap".format(ports[0], ports[1], device, n))
@@ -134,6 +132,7 @@ else:
     raise Exception("must specify from {ul, dl, bl}.")
 
 # Run all commands in the collection
+run_list = []  # running session list
 for l in _l: 
     print(l)
     run_store = subprocess.Popen(l, shell=True, preexec_fn=os.setpgrp)

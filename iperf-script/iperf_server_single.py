@@ -89,8 +89,7 @@ if __name__ == '__main__':
     n = [x.zfill(2) for x in n]  # zero-padding to two digit
     n = '-'.join(n[:3]) + '_' + '-'.join(n[3:])
 
-    _l = []        # command list
-    run_list = []  # running session list
+    _l = []  # command list
     if args.stream == "bl":  # bi-link
         for device, port1, port2 in zip(devices, ports[::2], ports[1::2]):
             # tcpdump
@@ -112,6 +111,7 @@ if __name__ == '__main__':
         raise Exception("must specify from {ul, dl, bl}.")
     
     # Run all commands in the collection
+    run_list = []  # running session list
     for l in _l: 
         print(l)
         run_store = subprocess.Popen(l, shell=True, preexec_fn=os.setpgrp)
