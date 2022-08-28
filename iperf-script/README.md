@@ -50,4 +50,4 @@ Some useful commands
     $ su
     # python3 iperf_client_single.py -d sm02 -u
 
-***See Command Usage in python script to know more!***
+***See Command Usage in python script to understand more!***
