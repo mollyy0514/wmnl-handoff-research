@@ -57,9 +57,9 @@ devices = args.devices
 if args.ports:
     ports = args.ports
     if args.stream == "bl" and len(ports) != 2*len(devices):
-        raise Exception("must specify 2 ports for each device to transmit bi-link.")
+        raise Exception("must specify at least and only 2 ports for each device to transmit bi-link.")
     elif (args.stream == "ul" or args.stream == "dl") and len(ports) != len(devices):
-        raise Exception("must specify only 1 port for each device to transmit uplink or downlink.")
+        raise Exception("must specify at least and only 1 port for each device to transmit uplink or downlink.")
 else:
     for device in devices:
         ports = []

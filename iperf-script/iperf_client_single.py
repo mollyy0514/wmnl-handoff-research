@@ -74,9 +74,9 @@ device = args.device
 if args.ports:
     ports = args.ports
     if args.stream == "bl" and len(ports) != 2:
-        raise Exception("must specify 2 ports for the device to transmit bi-link.")
+        raise Exception("must specify at least and only 2 ports for the device to transmit bi-link.")
     elif (args.stream == "ul" or args.stream == "dl") and len(ports) != 1:
-        raise Exception("must specify only 1 port for the device to transmit uplink or downlink.")
+        raise Exception("must specify at least and only 1 port for the device to transmit uplink or downlink.")
 else:
     ports = [device_to_port[device][0], device_to_port[device][1]]  # default port setting for each device
 
