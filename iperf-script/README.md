@@ -29,6 +29,7 @@ Let your laptop find the USB port
 
     $ ls /dev/ttyUSB*
 > You should see ttyUSB0 tyUSB1 tyUSB2, 0 is for QxDM (i.e., MobileInsight).
+
 > You should see ttyUSB3 tyUSB4 tyUSB5, 3 is for QxDM if using 2 cellphone.
 
 ## Experiment Setup
