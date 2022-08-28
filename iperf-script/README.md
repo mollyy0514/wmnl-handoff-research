@@ -16,7 +16,7 @@ Enter diagnostic mode
 Let your laptop find the USB port
 
     $ sudo rmmod usbserial
-> You may need to rmmod other driver such as "option", "usb_wwan" first.
+> You may need to rmmod other drivers such as "option", "usb_wwan" first.
 
     $ sudo modprobe usbserial vendor=0x05c6 product=0x9091
 > Now, you can enter adb shell again!
