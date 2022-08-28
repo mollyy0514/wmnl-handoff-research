@@ -132,9 +132,9 @@ while True:
         # subprocess.Popen(["killall -9 iperf3"], shell=True, preexec_fn=os.setsid)
         for run_item in run_list:
             print(run_item, ", PID: ", run_item.pid)
-            # os.killpg(os.getpgid(run_item.pid), signal.SIGTERM)
-            command = "kill -9 -{}".format(run_item.pid)
-            subprocess.check_output(command.split(" "))
+            os.killpg(os.getpgid(run_item.pid), signal.SIGTERM)
+            # command = "kill -9 -{}".format(run_item.pid)
+            # subprocess.check_output(command.split(" "))
         break
         # os.killpg(os.getpgid(socket_proc1.pid), signal.SIGTERM)
         # os.killpg(os.getpgid(socket_proc2.pid), signal.SIGTERM)
