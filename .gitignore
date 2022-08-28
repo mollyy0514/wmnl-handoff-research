@@ -4,5 +4,6 @@
 *.pcap
 *.log
 *.o
+*.mi2log
 .ipynb_checkpoints
 .DS_Store
