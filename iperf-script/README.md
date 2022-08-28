@@ -10,6 +10,7 @@ Enter diagnostic mode
     $ adb -s SERIAL_NUMBER shell
     $ setprop sys.usb.config diag,serial_cdev,rmnet,adb
 > Exit adb shell automatically, and cannot enter adb shell!
+
 > Cannot share Internet to laptop!
 
 Some useful commands
