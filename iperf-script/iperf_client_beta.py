@@ -107,7 +107,7 @@ if len(ports) > 2:
     raise
 
 if stream_flow == "bl":
-    if len(ports) > 2:
+    if len(ports) < 2:
         print("You need to specify at least 2 ports for bi-link transmission.")
         raise
     pcap_bl = os.path.join(pcap_path, "client_BL_{}_{}_{}_{}.pcap".format(ports[0], ports[1], device, n))
