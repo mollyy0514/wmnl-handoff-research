@@ -100,6 +100,12 @@ if args.stream == "ul":
 elif args.stream == "dl":
     is_reverse = "-R"
 
+# check whether it has iperf-3.9-m1
+if os.path.exists("/bin/iperf-3.9-m1") or os.path.exists("/sbin/iperf-3.9-m1"):
+    iperf = "iperf-3.9-m1"
+else:
+    iperf = "iperf3"
+
 # ----------------------------------------- Save Path ------------------------------------------- #
 pcap_path = "./client_pcap"  # packet capture
 if not os.path.exists(pcap_path):
@@ -150,13 +156,9 @@ if args.stream == "bl":  # bi-link
     pcap_bl = os.path.join(pcap_path, "client_BL_{}_{}_{}_{}.pcap".format(ports[0], ports[1], device, n))
     tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap_bl)
     # iperf
-    socket_proc1 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, args.time)
-    socket_proc1_1 = "iperf3 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, args.time)
-    socket_proc2 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -R -t {} -V".format(serverip, ports[1], bitrate, packet_size, is_udp, args.time)
-    socket_proc2_1 = "iperf3 -c {} -p {} -b {} -l {} {} -R -t {} -V".format(serverip, ports[1], bitrate, packet_size, is_udp, args.time)
-    _l = [tcpproc, socket_proc1, socket_proc2,
-                socket_proc1_1, socket_proc2_1,
-    ]
+    socket_proc1 = "{} -c {} -p {} -b {} -l {} {} -t {} -V".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time)
+    socket_proc2 = "{} -c {} -p {} -b {} -l {} {} -R -t {} -V".format(iperf, serverip, ports[1], bitrate, packet_size, is_udp, args.time)
+    _l = [tcpproc, socket_proc1, socket_proc2]
     # ss
     ss_threads.append(threading.Thread(target = get_ss, args = (ports[0], device, 'ul')))
     ss_threads.append(threading.Thread(target = get_ss, args = (ports[1], device, 'dl')))
@@ -165,11 +167,8 @@ elif args.stream == "ul" or args.stream == "dl":  # uplink or downlink
     pcap = os.path.join(pcap_path, "client_{}_{}_{}_{}.pcap".format(args.stream.upper(), ports[0], device, n))
     tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap)
     # iperf
-    socket_proc = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, args.time)
-    socket_proc_1 = "iperf3 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, args.time)
-    _l = [tcpproc, socket_proc,
-                socket_proc_1,
-    ]
+    socket_proc = "{} -c {} -p {} -b {} -l {} {} -t {} -V".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time)
+    _l = [tcpproc, socket_proc]
     # ss
     ss_threads.append(threading.Thread(target = get_ss, args = (ports[0], device, args.stream)))
 else:
