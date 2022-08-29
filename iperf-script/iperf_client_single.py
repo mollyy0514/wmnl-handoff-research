@@ -70,6 +70,9 @@ device_to_port = {
 }
 
 # ----------------------------------------- Parameters ------------------------------------------ #
+thread_stop = False
+# exit_program = False
+
 serverip = args.host
 device = args.device
 if args.ports:
@@ -98,13 +101,40 @@ elif args.stream == "dl":
     is_reverse = "-R"
 
 # ----------------------------------------- Save Path ------------------------------------------- #
-pcap_path = "./client_pcap"
+pcap_path = "./client_pcap"  # packet capture
 if not os.path.exists(pcap_path):
     os.mkdir(pcap_path)
 
-log_path = "./client_log"
+log_path = "./client_log"   # iperf log
 if not os.path.exists(log_path):
     os.mkdir(log_path)
+
+ss_path = "./client_stats"  # socket statistics (Linux: ss)
+if not os.path.exists(ss_path):
+    os.mkdir(ss_path)
+
+# ----------------------------------- Define Utils Function ------------------------------------- #
+def get_ss(port, device, mode):
+    global thread_stop
+    global n
+
+    # fp = None
+    fp = open(os.path.join(ss_path, "client_ss_{}_{}_{}_{}.csv".format(mode.upper(), port, device, n)), 'a+')
+    print(fp)
+    while not thread_stop:
+        # ss --help (Linux/Android)
+        # ss -ai src :PORT (server-side command)
+        # ss -ai dst :PORT (client-side command)
+        proc = subprocess.Popen(["ss -ai dst :{}".format(port)], stdout=subprocess.PIPE, shell=True)
+        text = proc.communicate()[0].decode()
+        lines = text.split('\n')
+        for line in lines:
+            if any(s in line for s in ["bytes_sent", "cwnd"]):  # change the keywords if needed
+                l = line.strip()
+                fp.write(",".join([str(dt.datetime.now())]+ re.split("[: \n\t]", l))+'\n')
+                break
+        time.sleep(1)
+    fp.close()
 
 # ---------------------------------- Transmission / Receiving ----------------------------------- #
 # Get time
@@ -113,7 +143,8 @@ n = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.se
 n = [x.zfill(2) for x in n]  # zero-padding to two digit
 n = '-'.join(n[:3]) + '_' + '-'.join(n[3:])
 
-_l = []  # command list
+_l = []          # command list
+ss_threads = []  # ss thread command list
 if args.stream == "bl":  # bi-link
     # tcpdump
     pcap_bl = os.path.join(pcap_path, "client_BL_{}_{}_{}_{}.pcap".format(ports[0], ports[1], device, n))
@@ -122,6 +153,9 @@ if args.stream == "bl":  # bi-link
     socket_proc1 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, args.time)
     socket_proc2 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -R -t {} -V".format(serverip, ports[1], bitrate, packet_size, is_udp, args.time)
     _l = [tcpproc, socket_proc1, socket_proc2]
+    # ss
+    ss_threads.append(threading.Thread(target = get_ss, args = (ports[0], device, 'ul')))
+    ss_threads.append(threading.Thread(target = get_ss, args = (ports[1], device, 'dl')))
 elif args.stream == "ul" or args.stream == "dl":  # uplink or downlink
     # tcpdump
     pcap = os.path.join(pcap_path, "client_{}_{}_{}_{}.pcap".format(args.stream.upper(), ports[0], device, n))
@@ -129,11 +163,16 @@ elif args.stream == "ul" or args.stream == "dl":  # uplink or downlink
     # iperf
     socket_proc = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, args.time)
     _l = [tcpproc, socket_proc]
+    # ss
+    ss_threads.append(threading.Thread(target = get_ss, args = (ports[0], device, args.stream)))
 else:
     raise Exception("must specify from {ul, dl, bl}.")
 
 # Run all commands in the collection
 run_list = []  # running session list
+for l in ss_threads:
+    l.start()
+    time.sleep(0.00001)
 for l in _l: 
     print(l)
     run_store = subprocess.Popen(l, shell=True, preexec_fn=os.setpgrp)
@@ -153,3 +192,5 @@ while True:
         break
     except Exception as e:
         print("error", e)
+
+thread_stop = True
