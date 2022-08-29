@@ -151,8 +151,12 @@ if args.stream == "bl":  # bi-link
     tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap_bl)
     # iperf
     socket_proc1 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, args.time)
+    socket_proc1_1 = "iperf3 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, args.time)
     socket_proc2 = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -R -t {} -V".format(serverip, ports[1], bitrate, packet_size, is_udp, args.time)
-    _l = [tcpproc, socket_proc1, socket_proc2]
+    socket_proc2_1 = "iperf3 -c {} -p {} -b {} -l {} {} -R -t {} -V".format(serverip, ports[1], bitrate, packet_size, is_udp, args.time)
+    _l = [tcpproc, socket_proc1, socket_proc2,
+                socket_proc1_1, socket_proc2_1,
+    ]
     # ss
     ss_threads.append(threading.Thread(target = get_ss, args = (ports[0], device, 'ul')))
     ss_threads.append(threading.Thread(target = get_ss, args = (ports[1], device, 'dl')))
@@ -162,7 +166,10 @@ elif args.stream == "ul" or args.stream == "dl":  # uplink or downlink
     tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap)
     # iperf
     socket_proc = "iperf-3.9-m1 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, args.time)
-    _l = [tcpproc, socket_proc]
+    socket_proc_1 = "iperf3 -c {} -p {} -b {} -l {} {} -t {} -V".format(serverip, ports[0], bitrate, packet_size, is_udp, args.time)
+    _l = [tcpproc, socket_proc,
+                socket_proc_1,
+    ]
     # ss
     ss_threads.append(threading.Thread(target = get_ss, args = (ports[0], device, args.stream)))
 else:
