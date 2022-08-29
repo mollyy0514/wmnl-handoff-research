@@ -32,6 +32,7 @@ Some useful commands
     $ lsusb -t
     $ dmesg
     $ dmesg | grep ttyUSB
+    $ getprop sys.usb.config  # in adb shell
 
 ## Experiment Setup
 #### Server: PC
