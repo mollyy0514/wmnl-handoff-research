@@ -4,6 +4,7 @@
 # ./set_android_device adb shell
 # 1 - R5CRA1ET22M [device usb:1-4.4 product:a42xqxx model:SM_A426B device:a42xq transport_id:13] sm07
 # 2 - R5CRA2EGJ5X [device usb:1-4.3 product:a42xqxx model:SM_A426B device:a42xq transport_id:14] sm08
+
 import subprocess
 import sys
 import os
