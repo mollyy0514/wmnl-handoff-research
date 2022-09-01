@@ -3,6 +3,7 @@
 #     python3 iperf_server_single.py -d sm01 sm08
 # (2) python3 iperf_server_single.py -d LIST_DEVICES -p LIST_PORTS -S STREAMING_DIRECTION
 #     python3 iperf_server_single.py -d sm01 sm08 -p 3270 3271 3272 3273 -S bl
+
 import os
 import sys
 import datetime as dt

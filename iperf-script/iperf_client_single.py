@@ -5,7 +5,7 @@
 #     python3 iperf_client_single.py -d sm01 -H 140.112.17.209 -p 3270 3271 -S bl
 # (3) python3 iperf_client_single.py -d DEVICE -b BITRATE -l PACKET_SIZE -t EXP_TIME
 #     python3 iperf_client_single.py -d sm01 -b 2M -l 2500 -t 300
-from cmath import log10
+
 import os
 import sys
 import time
