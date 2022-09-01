@@ -20,7 +20,7 @@ import signal
 # ------------------------------ Add Arguments & Global Variables ------------------------------- #
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--device", type=str,
-                    help="device name (only allow 1 device)", required=True)
+                    help="device name (only allow 1 device)", default="unnamed")
 parser.add_argument("-H", "--host", type=str,
                     help="server ip address", default="140.112.20.183")
                     # help="server ip address", default="140.112.17.209")
@@ -71,7 +71,7 @@ device_to_port = {
     "sm06": (3212, 3213),
     "sm07": (3214, 3215),
     "sm08": (3216, 3217),
-    "reserve": (3270, 3299),
+    "unnamed": (3268, 3269),
 }
 
 # ----------------------------------------- Parameters ------------------------------------------ #
