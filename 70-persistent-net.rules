@@ -36,4 +36,7 @@ SUBSYSTEM=="net", ACTION=="add", ATTRS{serial}=="613a273a", NAME="xm16"
 SUBSYSTEM=="net", ACTION=="add", ATTRS{serial}=="fe3df56f", NAME="xm17"
 
 // Quectel RM500Q-GL
-SUBSYSTEM=="net", ACTION=="add", ATTRS{serial}=="76857c8", NAME="quectel0"
+SUBSYSTEM=="net", ACTION=="add", ATTRS{serial}=="76857c8" , NAME="quectel0"
+SUBSYSTEM=="net", ACTION=="add", ATTRS{serial}=="bc4587d" , NAME="quectel1"
+SUBSYSTEM=="net", ACTION=="add", ATTRS{serial}=="5881b62f", NAME="quectel2"
+SUBSYSTEM=="net", ACTION=="add", ATTRS{serial}=="32b2bdb2", NAME="quectel3"
