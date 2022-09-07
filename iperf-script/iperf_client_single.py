@@ -31,7 +31,7 @@ parser.add_argument("-u", "--udp", action="store_true",       # needs no value, 
 parser.add_argument("-b", "--bitrate", type=str,
                     help="target bitrate in bits/sec (0 for unlimited)", default=["200k", "1M"])  # [UDP, TCP]
 parser.add_argument("-l", "--length", type=str,
-                    help="length of buffer to read or write in bytes (packet size)", default=["250", "1250"])  # [UDP, TCP]
+                    help="length of buffer to read or write in bytes (packet size)", default=["250", "250"])  # [UDP, TCP]
 parser.add_argument("-t", "--time", type=int,
                     help="time in seconds to transmit for (default 1 hour = 3600 secs)", default=3600)
 parser.add_argument("-S", "--stream", type=str,
