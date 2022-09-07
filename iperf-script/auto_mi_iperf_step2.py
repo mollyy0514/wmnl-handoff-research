@@ -9,6 +9,8 @@ import datetime as dt
 import argparse
 import time
 from pprint import pprint
+import subprocess
+import signal
 
 # parser = argparse.ArgumentParser()
 # parser.add_argument("-d", "--devices", type=str, nargs='+',  # input list of devices sep by 'space'
@@ -79,10 +81,12 @@ for device, info in zip(devices, devices_info):
     print(info[2], device.shell("su -c 'getprop sys.usb.config'"))
 
 # run mobileinsight
-mi_path = os.path.join("/home/wmnlab-yj/Desktop/Jackbedford/wmnl-handoff-research", "iperf-script", "monitor-example.py")
+run_list = []
 for device, info in zip(devices, devices_info):
     device_path = os.path.join("/dev/serial/by-id", "usb-SAMSUNG_SAMSUNG_Android_{}-if00-port0".format(info[0]))
-    os.system("sudo python3 {} {} 9600 {} &".format(mi_path, device_path, info[2]))
+    # run_store = subprocess.Popen("sudo python3 monitor-example.py {} 9600 {}".format(device_path, info[2]), shell=True, preexec_fn=os.setpgrp)
+    # run_list.append(run_store)
+    os.system("sudo python3 monitor-example.py {} 9600 {} &".format(device_path, info[2]))
     
 # Kill python3 if capture KeyboardInterrup
 while True:

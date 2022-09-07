@@ -47,6 +47,12 @@ if __name__ == "__main__":
     # src.enable_log("LTE_PHY_Serv_Cell_Measurement")
     # src.enable_log("LTE_PHY_Connected_Mode_Intra_Freq_Meas")
     # src.enable_log("LTE_PHY_Connected_Mode_Neighbor_Measurement")
+    # Shen-ru's needed
+    src.enable_log('5G_NR_ML1_Searcher_Measurement_Database_Update_Ext')
+    src.enable_log('LTE_PHY_Connected_Mode_Intra_Freq_Meas')
+    src.enable_log('LTE_PHY_Connected_Mode_Neighbor_Measurement')
+    src.enable_log('LTE_PHY_Inter_RAT_Measurement')
+    src.enable_log('LTE_PHY_Inter_Freq_Log')
 
     # Dump the messages to std I/O. Comment it if it is not needed.
     dumper = MsgLogger()
