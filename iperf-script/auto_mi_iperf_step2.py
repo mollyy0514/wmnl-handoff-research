@@ -80,6 +80,11 @@ for info in adb.list():
 for device, info in zip(devices, devices_info):
     print(info[2], device.shell("su -c 'getprop sys.usb.config'"))
 
+# # run iperf-client
+# for device, info in zip(devices, devices_info):
+#     # print(info[2], device.shell("su"))
+#     print(info[2], device.shell("su -c 'python3 /sdcard/wmnl-handoff-research/iperf-script/iperf_client_single.py -d {}'".format(info[2])))
+
 # run mobileinsight
 run_list = []
 for device, info in zip(devices, devices_info):
