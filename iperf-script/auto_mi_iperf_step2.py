@@ -89,22 +89,22 @@ for device, info in zip(devices, devices_info):
 run_list = []
 for device, info in zip(devices, devices_info):
     device_path = os.path.join("/dev/serial/by-id", "usb-SAMSUNG_SAMSUNG_Android_{}-if00-port0".format(info[0]))
-    # run_store = subprocess.Popen("sudo python3 monitor-example.py {} 9600 {}".format(device_path, info[2]), shell=True, preexec_fn=os.setpgrp)
-    # run_list.append(run_store)
-    os.system("sudo python3 monitor-example.py {} 9600 {} &".format(device_path, info[2]))
+    run_store = subprocess.Popen("sudo python3 monitor-example.py {} 9600 {}".format(device_path, info[2]), shell=True, preexec_fn=os.setpgrp)
+    run_list.append(run_store)
+    # os.system("sudo python3 monitor-example.py {} 9600 {} &".format(device_path, info[2]))
+
+for item in run_list:
+    print(item.pid)
     
 # Kill python3 if capture KeyboardInterrup
 while True:
     try:
         time.sleep(1)  # detect every second
     except KeyboardInterrupt:
-        # subprocess.Popen(["killall -9 iperf3"], shell=True, preexec_fn=os.setsid)
-        # for run_item in run_list:
-        #     print(run_item, ", PID: ", run_item.pid)
-        #     os.killpg(os.getpgid(run_item.pid), signal.SIGTERM)
-        #     # command = "kill -9 -{}".format(run_item.pid)
-        #     # subprocess.check_output(command.split(" "))
-        os.system("sudo killall -9 python3")
+        for run_item in run_list:
+            print(run_item, ", PID: ", run_item.pid)
+            os.system("sudo kill -9 {}".format(run_item.pid))
+        # os.system("sudo killall -9 python3")
         break
     except Exception as e:
         print("error", e)
