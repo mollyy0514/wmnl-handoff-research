@@ -49,6 +49,8 @@ serial_to_device = {
     "32b2bdb2":"quectel3",
 }
 
+os.system("echo wmnlab | sudo -S su")
+
 devices_info = []
 for i, info in enumerate(adb.list()):
     try:
