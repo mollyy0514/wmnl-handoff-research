@@ -70,8 +70,8 @@ if args.ports:
     elif (args.stream == "ul" or args.stream == "dl") and len(ports) != len(devices):
         raise Exception("must specify at least and only 1 port for each device to transmit uplink or downlink.")
 else:
+    ports = []
     for device in devices:
-        ports = []
         ports.append((device_to_port[device][0]))  # default uplink port for each device
         ports.append((device_to_port[device][1]))  # default downlink port for each device
 
