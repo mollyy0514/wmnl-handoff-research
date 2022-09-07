@@ -47,7 +47,7 @@ def parse_device_list(str):
         try:
             devices.append((parts[0], " ".join(parts[1:]), serial_to_device[parts[0]]))
         except:
-            devices.append((parts[0], " ".join(parts[1:]), ""))
+            devices.append((parts[0], " ".join(parts[1:]), "-"))
     if not devices:
         devices = None
     return devices
@@ -78,6 +78,7 @@ if devices == None:
     print("Could not find any device")
     sys.exit(1)
 
+devices = sorted(devices, key=lambda v:v[2])
 print_device_list(devices)
 
 if len(sys.argv) == 1:

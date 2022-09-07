@@ -1,7 +1,19 @@
+#!/usr/bin/env python3
+# Command Usage:
 # pip3 install adbutils
-
+# ./auto_mi_iperf.py
 from adbutils import adb
+import os
+import sys
+import datetime as dt
+import argparse
+import time
 from pprint import pprint
+
+# parser = argparse.ArgumentParser()
+# parser.add_argument("-d", "--devices", type=str, nargs='+',  # input list of devices sep by 'space'
+#                     help="list of devices", default=["unnamed"])
+# args = parser.parse_args()
 
 serial_to_device = {
     "R5CRA1ET5KB":"sm00",
@@ -31,12 +43,23 @@ serial_to_device = {
     "64545f94":"xm15",
     "613a273a":"xm16",
     "fe3df56f":"xm17",
+    "76857c8" :"quectel0",
+    "bc4587d" :"quectel1",
+    "5881b62f":"quectel2",
+    "32b2bdb2":"quectel3",
 }
+
+
+os.system("echo wmnlab | sudo -S su")
 
 devices_info = []
 for i, info in enumerate(adb.list()):
     try:
-        devices_info.append((info.serial, info.state, serial_to_device[info.serial]))
+        if info.state == "device":
+            # <serial> <device|offline> <device name>
+            devices_info.append((info.serial, info.state, serial_to_device[info.serial]))
+        else:
+            print("Unauthorized device {}: {} {}".format(serial_to_device[info.serial], info.serial, info.state))
     except:
         print("Unknown device: {} {}".format(info.serial, info.state))
 
@@ -46,13 +69,13 @@ devices = []
 for i, info in enumerate(devices_info):
     devices.append(adb.device(info[0]))
     print("{} - {} {} {}".format(i+1, info[0], info[1], info[2]))
+print("-----------------------------------")
 
-for device, info in zip(devices, devices_info):
-    # print(info[2], device.shell("setprop sys.usb.config diag,serial_cdev,rmnet,adb"))
-    print(info[2], device.shell("getprop sys.usb.config"))
-    # # Set timeout for shell command
-    # device.shell("sleep 1", timeout=0.5) # Should raise adbutils.AdbTimeout
+for info in adb.list():
+    if info.state == "unauthorized":
+        sys.exit(1)
 
+# setprop
 for device, info in zip(devices, devices_info):
-    print(info[2], device.shell("cd /sdcard/wmnl-handoff-research/iperf-script"))
-    print(info[2], device.shell("ls"))
+    print(info[2], device.shell("su -c 'getprop sys.usb.config'"))
+    print(info[2], device.shell("su -c 'setprop sys.usb.config diag,serial_cdev,rmnet,adb'"))
