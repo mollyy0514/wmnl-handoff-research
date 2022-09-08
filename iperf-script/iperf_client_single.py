@@ -130,7 +130,7 @@ def get_ss(port, device, mode):
     global args
 
     # fp = None
-    fp = open(os.path.join(ss_path, "client_ss_{}_{}_{}_{}.csv".format(mode.upper(), port, device, n)), 'a+')
+    fp = open(os.path.join(ss_path, "client_stats_{}_{}_{}_{}.csv".format(mode.upper(), port, device, n)), 'a+')
     print(fp)
     while not thread_stop:
         # ss --help (Linux/Android)
