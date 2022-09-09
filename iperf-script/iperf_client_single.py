@@ -5,7 +5,6 @@
 #     python3 iperf_client_single.py -d sm01 -H 140.112.17.209 -p 3270 3271 -S bl
 # (3) python3 iperf_client_single.py -d DEVICE -b BITRATE -l PACKET_SIZE -t EXP_TIME
 #     python3 iperf_client_single.py -d sm01 -b 2M -l 2500 -t 300
-
 import os
 import sys
 import time
@@ -32,7 +31,7 @@ parser.add_argument("-u", "--udp", action="store_true",       # needs no value, 
 parser.add_argument("-b", "--bitrate", type=str,
                     help="target bitrate in bits/sec (0 for unlimited)", default=["200k", "1M"])  # [UDP, TCP]
 parser.add_argument("-l", "--length", type=str,
-                    help="length of buffer to read or write in bytes (packet size)", default=["250", "1250"])  # [UDP, TCP]
+                    help="length of buffer to read or write in bytes (packet size)", default=["250", "250"])  # [UDP, TCP]
 parser.add_argument("-t", "--time", type=int,
                     help="time in seconds to transmit for (default 1 hour = 3600 secs)", default=3600)
 parser.add_argument("-S", "--stream", type=str,
@@ -131,7 +130,7 @@ def get_ss(port, device, mode):
     global args
 
     # fp = None
-    fp = open(os.path.join(ss_path, "client_ss_{}_{}_{}_{}.csv".format(mode.upper(), port, device, n)), 'a+')
+    fp = open(os.path.join(ss_path, "client_stats_{}_{}_{}_{}.csv".format(mode.upper(), port, device, n)), 'a+')
     print(fp)
     while not thread_stop:
         # ss --help (Linux/Android)

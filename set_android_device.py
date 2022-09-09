@@ -47,7 +47,7 @@ def parse_device_list(str):
         try:
             devices.append((parts[0], " ".join(parts[1:]), serial_to_device[parts[0]]))
         except:
-            devices.append((parts[0], " ".join(parts[1:]), ""))
+            devices.append((parts[0], " ".join(parts[1:]), "-"))
     if not devices:
         devices = None
     return devices
@@ -78,11 +78,11 @@ if devices == None:
     print("Could not find any device")
     sys.exit(1)
 
-print_device_list(devices)
-
 if len(sys.argv) == 1:
-    print("Please specify an adb command.")
-    sys.exit(1)
+    print("You could specify other adb command as parameters. (default: adb shell)")
+
+devices = sorted(devices, key=lambda v:v[2])
+print_device_list(devices)
 
 while True:
     if len(devices) == 1:
@@ -98,7 +98,11 @@ while True:
 
 os.environ['ANDROID_SERIAL'] = devices[choosen - 1][0]
 
-p = subprocess.Popen(sys.argv[1:])
+if len(sys.argv) == 1:
+    p = subprocess.Popen("adb shell", shell=True)
+else:
+    p = subprocess.Popen(sys.argv[1:])
+
 try:
 	p.communicate()
 except KeyboardInterrupt:

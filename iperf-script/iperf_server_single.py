@@ -3,7 +3,6 @@
 #     python3 iperf_server_single.py -d sm01 sm08
 # (2) python3 iperf_server_single.py -d LIST_DEVICES -p LIST_PORTS -S STREAMING_DIRECTION
 #     python3 iperf_server_single.py -d sm01 sm08 -p 3270 3271 3272 3273 -S bl
-
 import os
 import sys
 import datetime as dt
@@ -71,8 +70,8 @@ if args.ports:
     elif (args.stream == "ul" or args.stream == "dl") and len(ports) != len(devices):
         raise Exception("must specify at least and only 1 port for each device to transmit uplink or downlink.")
 else:
+    ports = []
     for device in devices:
-        ports = []
         ports.append((device_to_port[device][0]))  # default uplink port for each device
         ports.append((device_to_port[device][1]))  # default downlink port for each device
 
@@ -96,7 +95,7 @@ def get_ss(port, device, mode):
     global args
 
     # fp = None
-    fp = open(os.path.join(ss_path, "server_ss_{}_{}_{}_{}.csv".format(mode.upper(), port, device, n)), 'a+')
+    fp = open(os.path.join(ss_path, "server_stats_{}_{}_{}_{}.csv".format(mode.upper(), port, device, n)), 'a+')
     print(fp)
     while not thread_stop:
         # ss --help (Linux/Android)
