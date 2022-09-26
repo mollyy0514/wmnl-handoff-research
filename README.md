@@ -53,4 +53,4 @@ Reload termux tools to /bin
 	$ tcpdump -i any net SERVER_IP -w FILENAME.pcap
 
 	// window 2: transmit & receive customized packets
-	$ iperf3 -c SERVER_IP -p PORT(3280-3299) -b BITRATE(bps) -l PACKET_LENGTH(bytes) -t EXP_TIME(secords) [-u](TCP->UDP) [-R](UPLINK->DOWNLINK)
+	$ iperf3 -c SERVER_IP -p PORT(3280-3299) -b BITRATE(bps) -l PACKET_LENGTH(bytes) -t EXP_TIME(seconds) [-u](TCP->UDP) [-R](UPLINK->DOWNLINK)
