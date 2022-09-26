@@ -1,7 +1,7 @@
 # wmnl-handoff-research
 Utils and analysis code for research in handoff.
 
-## Reload mobile tools for smartphone
+## Reload mobile tools for smartphone (if phone restart)
 
 Enter adb shell with laptop or use **Termux** app on the smartphone
 
