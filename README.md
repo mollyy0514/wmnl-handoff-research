@@ -50,7 +50,7 @@ Reload termux tools to /bin
 
 	// window 1: capture all packets throught specific net interface
 	# cd /sdcard/YOUR_DIRECTORY
-	$ tcpdump -i any net SERVER_IP -w FILENAME.pcap
+	# tcpdump -i any net SERVER_IP -w FILENAME.pcap
 
 	// window 2: transmit & receive customized packets
-	$ iperf3 -c SERVER_IP -p PORT(3280-3299) -b BITRATE(bps) -l PACKET_LENGTH(Bytes) -t EXP_TIME(seconds) [-u](TCP->UDP) [-R](UPLINK->DOWNLINK)
+	# iperf-3.9-m1 -c SERVER_IP -p PORT(3280-3299) -b BITRATE(bps) -l PACKET_LENGTH(Bytes) -t EXP_TIME(seconds) [-u](TCP->UDP) [-R](UPLINK->DOWNLINK)
