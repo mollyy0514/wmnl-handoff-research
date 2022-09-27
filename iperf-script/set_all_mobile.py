@@ -53,7 +53,7 @@ for i, info in enumerate(devices_info):
     print("{} - {} {} {}".format(i+1, info[0], info[1], info[2]))
 print("-----------------------------------")
 
-tools = ["git", "iperf-3.9-m1", "iperf3", "python3", "tcpdump", "tmux", "vim"]
+tools = ["git", "iperf3m", "iperf3", "python3", "tcpdump", "tmux", "vim"]
 for device, info in zip(devices, devices_info):
     print(info[2], device.shell("su -c 'cd /sdcard/wmnl-handoff-research && /data/git pull'"))
     for tool in tools:
@@ -66,6 +66,6 @@ for device, info in zip(devices, devices_info):
     print("-----------------------------------")
     
     # test tools
-    print(info[2], device.shell("su -c 'iperf-3.9-m1 --version'"))
+    print(info[2], device.shell("su -c 'iperf3m --version'"))
     print("-----------------------------------")
 

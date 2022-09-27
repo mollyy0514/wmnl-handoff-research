@@ -104,9 +104,9 @@ if args.stream == "ul":
 elif args.stream == "dl":
     is_reverse = "-R"
 
-# check whether it has iperf-3.9-m1
-if os.path.exists("/bin/iperf-3.9-m1") or os.path.exists("/sbin/iperf-3.9-m1"):
-    iperf = "iperf-3.9-m1"
+# check whether it has iperf3m
+if os.path.exists("/bin/iperf3m") or os.path.exists("/sbin/iperf3m"):
+    iperf = "iperf3m"
 else:
     iperf = "iperf3"
 

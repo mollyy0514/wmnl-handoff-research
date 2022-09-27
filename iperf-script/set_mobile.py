@@ -54,7 +54,7 @@ else:
 print(args.device, device)
 print("-----------------------------------")
 
-tools = ["git", "iperf-3.9-m1", "iperf3", "python3", "tcpdump", "tmux", "vim"]  
+tools = ["git", "iperf3m", "iperf3", "python3", "tcpdump", "tmux", "vim"]  
 print(device.shell("su -c 'cd /sdcard/wmnl-handoff-research && /data/git pull'"))
 for tool in tools:
     if args.device[:2] == "sm":
@@ -68,7 +68,7 @@ print("-----------------------------------")
 # test tools
 print(device.shell("su -c 'iperf3 --version'"))
 print("-----------------------------------")
-print(device.shell("su -c 'iperf-3.9-m1 --version'"))
+print(device.shell("su -c 'iperf3m --version'"))
 print("-----------------------------------")
 print(device.shell("su -c 'tcpdump --version'"))
 print("-----------------------------------")
@@ -80,4 +80,4 @@ print(device.shell("su -c 'tmux -V'"))
 print("-----------------------------------")
 print(device.shell("su -c 'vim --version'"))
 print("-----------------------------------")
-# print(device.shell("su -c 'iperf-3.9-m1 -c 140.112.20.183 -p 3270 -l 250 -b 200k -V -u'"))
+# print(device.shell("su -c 'iperf3m -c 140.112.20.183 -p 3270 -l 250 -b 200k -V -u'"))
