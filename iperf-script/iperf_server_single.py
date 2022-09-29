@@ -55,7 +55,7 @@ device_to_port = {
     "sm06": (3212, 3213),
     "sm07": (3214, 3215),
     "sm08": (3216, 3217),
-    "unnamed": (3268, 3269),
+    "unam": (3268, 3269),
 }
 
 # ----------------------------------------- Parameters ------------------------------------------ #
@@ -89,13 +89,13 @@ if not os.path.exists(ss_path):
     os.mkdir(ss_path)
 
 # ----------------------------------- Define Utils Function ------------------------------------- #
-def get_ss(port, device, mode):
+def get_ss(device, port, mode):
     global thread_stop
     global n
     global args
 
     # fp = None
-    fp = open(os.path.join(ss_path, "server_stats_{}_{}_{}_{}.csv".format(mode.upper(), port, device, n)), 'a+')
+    fp = open(os.path.join(ss_path, "server_stats_{}_{}_{}_{}.csv".format(mode.upper(), device, port, n)), 'a+')
     print(fp)
     while not thread_stop:
         # ss --help (Linux/Android)
@@ -133,13 +133,13 @@ if args.stream == "bl":  # bi-link
     print("Downlink Ports:", ports[1::2])
     for device, port1, port2 in zip(devices, ports[::2], ports[1::2]):
         # tcpdump
-        pcap_ul = os.path.join(pcap_path, "server_pcap_UL_{}_{}_{}.pcap".format(port1, device, n))
-        pcap_dl = os.path.join(pcap_path, "server_pcap_DL_{}_{}_{}.pcap".format(port2, device, n))
+        pcap_ul = os.path.join(pcap_path, "server_pcap_UL_{}_{}_{}.pcap".format(device, port1, n))
+        pcap_dl = os.path.join(pcap_path, "server_pcap_DL_{}_{}_{}.pcap".format(device, port2, n))
         _l.append("tcpdump -i any port {} -w {} &".format(port1, pcap_ul))
         _l.append("tcpdump -i any port {} -w {} &".format(port2, pcap_dl))
         # iperf
-        log_ul = os.path.join(log_path, "server_log_UL_{}_{}_{}.log".format(port1, device, n))
-        log_dl = os.path.join(log_path, "server_log_DL_{}_{}_{}.log".format(port2, device, n))
+        log_ul = os.path.join(log_path, "server_log_UL_{}_{}_{}.log".format(device, port1, n))
+        log_dl = os.path.join(log_path, "server_log_DL_{}_{}_{}.log".format(device, port2, n))
         if args.logfile:
             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V --logfile {}".format(port1, log_ul))
             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V --logfile {}".format(port2, log_dl))
@@ -147,8 +147,8 @@ if args.stream == "bl":  # bi-link
             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port1))
             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port2))
         # ss
-        ss_threads.append(threading.Thread(target = get_ss, args = (port1, device, 'ul')))
-        ss_threads.append(threading.Thread(target = get_ss, args = (port2, device, 'dl')))
+        ss_threads.append(threading.Thread(target = get_ss, args = (device, port1, 'ul')))
+        ss_threads.append(threading.Thread(target = get_ss, args = (device, port2, 'dl')))
 elif args.stream == "ul" or args.stream == "dl":  # uplink or downlink
     if args.stream == "ul":
         print("Uplink   Ports:", ports)
@@ -156,16 +156,16 @@ elif args.stream == "ul" or args.stream == "dl":  # uplink or downlink
         print("Downlink Ports:", ports)
     for device, port in zip(devices, ports):
         # tcpdump
-        pcap = os.path.join(pcap_path, "server_pacp_{}_{}_{}_{}.pcap".format(args.stream.upper(), port, device, n))
+        pcap = os.path.join(pcap_path, "server_pacp_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
         _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
         # iperf
-        log = os.path.join(log_path, "server_log_{}_{}_{}_{}.log".format(args.stream.upper(), port, device, n))
+        log = os.path.join(log_path, "server_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, port, n))
         if args.logfile:
             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V --logfile".format(port, log))
         else:
             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port))
         # ss
-        ss_threads.append(threading.Thread(target = get_ss, args = (port, device, args.stream)))
+        ss_threads.append(threading.Thread(target = get_ss, args = (device, port, args.stream)))
 else:
     raise Exception("must specify from {ul, dl, bl}.")
 

@@ -1,5 +1,8 @@
 #! /usr/bin/sh
 
+# getprop sys.usb.config
+# setprop sys.usb.config diag,serial_cdev,rmnet,adb
+
 sudo rmmod option
 sudo rmmod usb_wwan
 sudo rmmod usbserial

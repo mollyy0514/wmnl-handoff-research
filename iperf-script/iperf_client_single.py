@@ -29,7 +29,7 @@ parser.add_argument("-p", "--ports", type=int, nargs='+',     # input list of po
 parser.add_argument("-u", "--udp", action="store_true",       # needs no value, True if set "-u"
                     help="use UDP rather than TCP")           # default TCP
 parser.add_argument("-b", "--bitrate", type=str,
-                    help="target bitrate in bits/sec (0 for unlimited)", default=["200k", "1M"])  # [UDP, TCP]
+                    help="target bitrate in bits/sec (0 for unlimited)", default=["200k", "200k"])  # [UDP, TCP]
 parser.add_argument("-l", "--length", type=str,
                     help="length of buffer to read or write in bytes (packet size)", default=["250", "250"])  # [UDP, TCP]
 parser.add_argument("-t", "--time", type=int,
@@ -70,7 +70,7 @@ device_to_port = {
     "sm06": (3212, 3213),
     "sm07": (3214, 3215),
     "sm08": (3216, 3217),
-    "unnamed": (3268, 3269),
+    "unam": (3268, 3269),
 }
 
 # ----------------------------------------- Parameters ------------------------------------------ #
@@ -124,13 +124,13 @@ if not os.path.exists(ss_path):
     os.mkdir(ss_path)
 
 # ----------------------------------- Define Utils Function ------------------------------------- #
-def get_ss(port, device, mode):
+def get_ss(device, port, mode):
     global thread_stop
     global n
     global args
 
     # fp = None
-    fp = open(os.path.join(ss_path, "client_stats_{}_{}_{}_{}.csv".format(mode.upper(), port, device, n)), 'a+')
+    fp = open(os.path.join(ss_path, "client_stats_{}_{}_{}_{}.csv".format(mode.upper(), device, port, n)), 'a+')
     print(fp)
     while not thread_stop:
         # ss --help (Linux/Android)
@@ -158,11 +158,11 @@ _l = []          # command list
 ss_threads = []  # ss thread command list
 if args.stream == "bl":  # bi-link
     # tcpdump
-    pcap_bl = os.path.join(pcap_path, "client_pcap_BL_{}_{}_{}_{}.pcap".format(ports[0], ports[1], device, n))
+    pcap_bl = os.path.join(pcap_path, "client_pcap_BL_{}_{}_{}_{}.pcap".format(device, ports[0], ports[1], n))
     tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap_bl)
     # iperf
-    log1 = os.path.join(log_path, "client_log_UL_{}_{}_{}.log".format(ports[0], device, n))
-    log2 = os.path.join(log_path, "client_log_UL_{}_{}_{}.log".format(ports[1], device, n))
+    log1 = os.path.join(log_path, "client_log_UL_{}_{}_{}.log".format(device, ports[0], n))
+    log2 = os.path.join(log_path, "client_log_UL_{}_{}_{}.log".format(device, ports[1], n))
     if args.logfile:
         socket_proc1 = "{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {}".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time, log1)
         socket_proc2 = "{} -c {} -p {} -b {} -l {} {} -R -t {} -V --logfile {}".format(iperf, serverip, ports[1], bitrate, packet_size, is_udp, args.time, log2)
@@ -171,21 +171,21 @@ if args.stream == "bl":  # bi-link
         socket_proc2 = "{} -c {} -p {} -b {} -l {} {} -R -t {} -V".format(iperf, serverip, ports[1], bitrate, packet_size, is_udp, args.time)
     _l = [tcpproc, socket_proc1, socket_proc2]
     # ss
-    ss_threads.append(threading.Thread(target = get_ss, args = (ports[0], device, 'ul')))
-    ss_threads.append(threading.Thread(target = get_ss, args = (ports[1], device, 'dl')))
+    ss_threads.append(threading.Thread(target = get_ss, args = (device, ports[0], 'ul')))
+    ss_threads.append(threading.Thread(target = get_ss, args = (device, ports[1], 'dl')))
 elif args.stream == "ul" or args.stream == "dl":  # uplink or downlink
     # tcpdump
-    pcap = os.path.join(pcap_path, "client_pcap_{}_{}_{}_{}.pcap".format(args.stream.upper(), ports[0], device, n))
+    pcap = os.path.join(pcap_path, "client_pcap_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, ports[0], n))
     tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap)
     # iperf
-    log = os.path.join(log_path, "client_log_{}_{}_{}_{}.log".format(args.stream.upper(), ports[0], device, n))
+    log = os.path.join(log_path, "client_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, ports[0], n))
     if args.logfile:
         socket_proc = "{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {}".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time, log)
     else:
         socket_proc = "{} -c {} -p {} -b {} -l {} {} -t {} -V".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time)
     _l = [tcpproc, socket_proc]
     # ss
-    ss_threads.append(threading.Thread(target = get_ss, args = (ports[0], device, args.stream)))
+    ss_threads.append(threading.Thread(target = get_ss, args = (device, ports[0], args.stream)))
 else:
     raise Exception("must specify from {ul, dl, bl}.")
 
