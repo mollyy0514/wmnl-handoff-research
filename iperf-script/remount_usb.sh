@@ -9,4 +9,4 @@ sudo rmmod usbserial
 sudo modprobe usbserial vendor=0x05c6 product=0x9091
 
 ls /dev/ttyUSB*
-ls /dev/serial/by-id
+sudo ls /dev/serial/by-id
