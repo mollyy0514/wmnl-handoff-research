@@ -331,7 +331,7 @@ while not exit_main_process:
         t2.start()
         # t4.start()
         receiving_threads.append(t2)
-        receiving_threads.append(t4)
+        # receiving_threads.append(t4)
     
     t.join()
     t3.join()
