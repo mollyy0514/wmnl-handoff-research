@@ -78,11 +78,12 @@ if devices == None:
     print("Could not find any device")
     sys.exit(1)
 
-if len(sys.argv) == 1:
-    print("You could specify other adb command as parameters. (default: adb shell)")
-
 devices = sorted(devices, key=lambda v:v[2])
 print_device_list(devices)
+
+if len(sys.argv) == 1:
+    print("You could specify other adb command as parameters. (default: adb shell)")
+    sys.exit(1)
 
 while True:
     if len(devices) == 1:

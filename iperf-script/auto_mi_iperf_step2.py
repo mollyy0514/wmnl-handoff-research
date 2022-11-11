@@ -101,10 +101,10 @@ while True:
     try:
         time.sleep(1)  # detect every second
     except KeyboardInterrupt:
-        for run_item in run_list:
-            print(run_item, ", PID: ", run_item.pid)
-            os.system("sudo kill -9 {}".format(run_item.pid))
-        # os.system("sudo killall -9 python3")
+        # for run_item in run_list:
+        #     print(run_item, ", PID: ", run_item.pid)
+        #     os.system("sudo kill -9 {}".format(run_item.pid))
+        os.system("sudo killall -9 python3")
         break
     except Exception as e:
         print("error", e)
