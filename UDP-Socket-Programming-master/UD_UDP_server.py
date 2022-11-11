@@ -85,10 +85,10 @@ PORTS = []
 for device in devices:
     PORTS.append((device_to_port[device][0]))  # default uplink port for each device
 
-UL_PORTS, DL_PORTS = [], []
-for device in devices:
-    UL_PORTS.append((device_to_port[device][0]))  # default uplink port for each device
-    DL_PORTS.append((device_to_port[device][1]))  # default downlink port for each device
+# UL_PORTS, DL_PORTS = [], []
+# for device in devices:
+#     UL_PORTS.append((device_to_port[device][0]))  # default uplink port for each device
+#     DL_PORTS.append((device_to_port[device][1]))  # default downlink port for each device
 
 # if type(args.bitrate) is list:  # unit: bps
 #     bitrate = args.bitrate[0] if args.udp else args.bitrate[1]
@@ -139,19 +139,19 @@ def connection_setup():
     conn_list = []
     
     #--------------establish sockets for UDP data traffic----- 
-    # for PORT in PORTS:
+    for PORT in PORTS:
+        s_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s_udp.bind((HOST, PORT))
+        s_udp_list.append(s_udp)
+    
+    # for PORT in UL_PORTS:
     #     s_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     #     s_udp.bind((HOST, PORT))
-    #     s_udp_list.append(s_udp)
-    
-    for PORT in UL_PORTS:
-        s_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s_udp.bind((HOST, PORT))
-        s_udp_ul_list.append(s_udp)
-    for PORT in DL_PORTS:
-        s_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s_udp.bind((HOST, PORT))
-        s_udp_dl_list.append(s_udp)
+    #     s_udp_ul_list.append(s_udp)
+    # for PORT in DL_PORTS:
+    #     s_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    #     s_udp.bind((HOST, PORT))
+    #     s_udp_dl_list.append(s_udp)
     
     #--------------establish TCP control flows----------------
     s_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -161,9 +161,12 @@ def connection_setup():
     # print(PORTS, "wait for tcp connection...")
     print((HOST, CONTROL_PORT), "wait for tcp control connection...")
     s_tcp.listen(number_client)
-    for port1, port2 in zip(UL_PORTS, DL_PORTS):
-        print((HOST, port1), "wait for udp connection...")
-        print((HOST, port2), "wait for udp connection...")
+
+    for port in zip(PORTS):
+        print((HOST, port), "wait for udp connection...")
+    # for port1, port2 in zip(UL_PORTS, DL_PORTS):
+    #     print((HOST, port1), "wait for udp connection...")
+    #     print((HOST, port2), "wait for udp connection...")
     
     for i in range(number_client):
         conn, tcp_addr = s_tcp.accept()
@@ -273,15 +276,15 @@ while not exit_main_process:
     
     #Create subprocesses to capture packets (TCPDUMP)
     tcpproc_list = []
-    # for PORT in PORTS:
+    for PORT in PORTS:
+        tcpproc =  subprocess.Popen(["sudo tcpdump -i any port %s -w %s/%s_%s.pcap"%(PORT, pcap_path,PORT, n)], shell=True, preexec_fn = os.setpgrp)
+        tcpproc_list.append(tcpproc)
+    # for PORT in UL_PORTS:
     #     tcpproc =  subprocess.Popen(["sudo tcpdump -i any port %s -w %s/%s_%s.pcap"%(PORT, pcap_path,PORT, n)], shell=True, preexec_fn = os.setpgrp)
     #     tcpproc_list.append(tcpproc)
-    for PORT in UL_PORTS:
-        tcpproc =  subprocess.Popen(["sudo tcpdump -i any port %s -w %s/%s_%s.pcap"%(PORT, pcap_path,PORT, n)], shell=True, preexec_fn = os.setpgrp)
-        tcpproc_list.append(tcpproc)
-    for PORT in DL_PORTS:
-        tcpproc =  subprocess.Popen(["sudo tcpdump -i any port %s -w %s/%s_%s.pcap"%(PORT, pcap_path,PORT, n)], shell=True, preexec_fn = os.setpgrp)
-        tcpproc_list.append(tcpproc)
+    # for PORT in DL_PORTS:
+    #     tcpproc =  subprocess.Popen(["sudo tcpdump -i any port %s -w %s/%s_%s.pcap"%(PORT, pcap_path,PORT, n)], shell=True, preexec_fn = os.setpgrp)
+    #     tcpproc_list.append(tcpproc)
         
     time.sleep(1)
     
@@ -289,8 +292,8 @@ while not exit_main_process:
     udp_addr = {}
 
     try:
-        # s_tcp, s_udp_list, conn_list = connection_setup()
-        s_tcp, s_udp_ul_list, s_udp_dl_list, conn_list = connection_setup()
+        s_tcp, s_udp_list, conn_list = connection_setup()
+        # s_tcp, s_udp_ul_list, s_udp_dl_list, conn_list = connection_setup()
         
         while thread_stop == True:
             control_message = input("Enter START to start: ")
@@ -299,11 +302,11 @@ while not exit_main_process:
                 
                 for conn in conn_list:
                     conn.sendall("START".encode())
-                # t = threading.Thread(target = transmission, args = (s_udp_list, ))
-                t = threading.Thread(target = transmission, args = (s_udp_dl_list, ))
+                t = threading.Thread(target = transmission, args = (s_udp_list, ))
+                # t = threading.Thread(target = transmission, args = (s_udp_dl_list, ))
                 t.start()
-                # for s_udp in s_udp_list:
-                for s_udp in s_udp_ul_list:
+                for s_udp in s_udp_list:
+                # for s_udp in s_udp_ul_list:
                     t1 = threading.Thread(target = receive, args = (s_udp,))
                     t1.start()
                     receiving_threads.append(t1)
@@ -351,12 +354,12 @@ while not exit_main_process:
         
         #close sockets
         s_tcp.close()
-        # for s_udp in s_udp_list:
+        for s_udp in s_udp_list:
+            s_udp.close()
+        # for s_udp in s_udp_ul_list:
         #     s_udp.close()
-        for s_udp in s_udp_ul_list:
-            s_udp.close()
-        for s_udp in s_udp_dl_list:
-            s_udp.close()
+        # for s_udp in s_udp_dl_list:
+        #     s_udp.close()
             
         #Kill TCPDUMP subprocesses
         for tcpproc in tcpproc_list:

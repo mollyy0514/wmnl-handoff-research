@@ -99,10 +99,10 @@ PORTS = []
 for device in devices:
     PORTS.append((device_to_port[device][0]))  # default uplink port for each device
 
-UL_PORTS, DL_PORTS = [], []
-for device in devices:
-    UL_PORTS.append((device_to_port[device][0]))  # default uplink port for each device
-    DL_PORTS.append((device_to_port[device][1]))  # default downlink port for each device
+# UL_PORTS, DL_PORTS = [], []
+# for device in devices:
+#     UL_PORTS.append((device_to_port[device][0]))  # default uplink port for each device
+#     DL_PORTS.append((device_to_port[device][1]))  # default downlink port for each device
 
 # length_packet = args.length
 # bandwidth = args.bandwidth
@@ -143,8 +143,8 @@ def connection_setup():
     s_udp_list = []
     
     #--------------establish sockets for UDP data traffic----- 
-    for device, port1, port2 in zip(devices, UL_PORTS, DL_PORTS):
-    # for device, port in zip(devices, PORTS):
+    # for device, port1, port2 in zip(devices, UL_PORTS, DL_PORTS):
+    for device, port in zip(devices, PORTS):
         s_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s_udp.settimeout(1)
         
@@ -197,7 +197,8 @@ def transmission(s_udp_list):
             redundant = os.urandom(length_packet-4*5)
             outdata = euler.to_bytes(4, 'big') + pi.to_bytes(4, 'big') + datetimedec.to_bytes(4, 'big') + microsec.to_bytes(4, 'big') + seq.to_bytes(4, 'big') + redundant
             
-            for s_udp, PORT in zip(s_udp_list, UL_PORTS):       
+            for s_udp, PORT in zip(s_udp_list, PORTS):
+            # for s_udp, PORT in zip(s_udp_list, UL_PORTS):       
                 s_udp.sendto(outdata, (HOST, PORT))
             seq += 1
         
@@ -279,18 +280,18 @@ while not exit_main_process:
     try:
         now = dt.datetime.today()
         n = '-'.join([str(x) for x in[ now.year, now.month, now.day, now.hour, now.minute, now.second]])
-        # print(len(PORTS))
-        # for PORT in PORTS:
+        print(len(PORTS))
+        for PORT in PORTS:
+            tcpproc = subprocess.Popen(["tcpdump -i any port %s -w %s/%s_%s.pcap"%(PORT,pcap_path,PORT,n)], shell=True, preexec_fn=os.setpgrp)
+            tcpproc_list.append(tcpproc)
+        # print(len(UL_PORTS))
+        # for PORT in UL_PORTS:
         #     tcpproc = subprocess.Popen(["tcpdump -i any port %s -w %s/%s_%s.pcap"%(PORT,pcap_path,PORT,n)], shell=True, preexec_fn=os.setpgrp)
         #     tcpproc_list.append(tcpproc)
-        print(len(UL_PORTS))
-        for PORT in UL_PORTS:
-            tcpproc = subprocess.Popen(["tcpdump -i any port %s -w %s/%s_%s.pcap"%(PORT,pcap_path,PORT,n)], shell=True, preexec_fn=os.setpgrp)
-            tcpproc_list.append(tcpproc)
-        print(len(DL_PORTS))
-        for PORT in DL_PORTS:
-            tcpproc = subprocess.Popen(["tcpdump -i any port %s -w %s/%s_%s.pcap"%(PORT,pcap_path,PORT,n)], shell=True, preexec_fn=os.setpgrp)
-            tcpproc_list.append(tcpproc)
+        # print(len(DL_PORTS))
+        # for PORT in DL_PORTS:
+        #     tcpproc = subprocess.Popen(["tcpdump -i any port %s -w %s/%s_%s.pcap"%(PORT,pcap_path,PORT,n)], shell=True, preexec_fn=os.setpgrp)
+        #     tcpproc_list.append(tcpproc)
         print("ready to setup connection...")
         s_tcp, s_udp_list = connection_setup()
         
@@ -326,9 +327,9 @@ while not exit_main_process:
     
     for s_udp in s_udp_list:
         t2 = threading.Thread(target=receive, args=(s_udp, s_udp_list, ))
-        t4 = threading.Thread(target=remote_control, args = (s_tcp, t2))
+        # t4 = threading.Thread(target=remote_control, args = (s_tcp, t2))
         t2.start()
-        t4.start()
+        # t4.start()
         receiving_threads.append(t2)
         receiving_threads.append(t4)
     
