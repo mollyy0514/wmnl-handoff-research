@@ -265,6 +265,7 @@ def remote_control(s_tcp, t):
     thread_stop = True
     print("STOP remote control")
 
+os.system("echo wmnlab | sudo -S su")
 while not exit_main_process:
     tcpproc_list = []
     try:
