@@ -121,7 +121,7 @@ def get_ss(device, port, mode):
 os.system("echo wmnlab | sudo -S su")
 
 print("---------------------------------------------------------------------------")
-print("Supported port: 3200-3300, even number for Uplink, odd number for Downlink.")
+print("Supported port: 3200-3299, even number for Uplink, odd number for Downlink.")
 print("---------------------------------------------------------------------------")
 
 # Get time
