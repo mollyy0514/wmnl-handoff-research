@@ -180,8 +180,8 @@ def connection_setup():
     # print((host, port), "connection setup complete")
     # result[0] = s_tcp, conn, tcp_addr
 
-    # return s_tcp, s_udp_list, conn_list
-    return s_tcp, s_udp_ul_list, s_udp_dl_list, conn_list
+    return s_tcp, s_udp_list, conn_list
+    # return s_tcp, s_udp_ul_list, s_udp_dl_list, conn_list
 
 def transmission(s_udp_list):
     global thread_stop
