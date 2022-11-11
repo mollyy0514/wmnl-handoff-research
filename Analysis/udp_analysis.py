@@ -63,7 +63,7 @@ PKT_RATE = DATA_RATE / Payload.LENGTH / 8  # packets-per-second
 print("packet_rate (pps):", PKT_RATE, "\n")
 
 database = "/home/wmnlab/D/database/"
-date = "2022-10-20"
+date = "2022-11-11"
 db_path = os.path.join(database, date)
 Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment_round)
                 # If the list is empty, it will list all directories in the current directory by default.
@@ -74,16 +74,17 @@ Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment
     # "_Bandlock_Udp":(4, ["#01", "#02", "#03", "#04"]),
     # "_Bandlock_Udp":(6, []),
     # "_Bandlock_Udp":(4, []),
-    "_Udp_Stationary_Bandlock":(1, []),
-    "_Udp_Stationary_SameSetting":(1, []),
+    # "_Udp_Stationary_Bandlock":(1, []),
+    # "_Udp_Stationary_SameSetting":(1, []),
+    "_Test1":(2, [])
 }
 devices = sorted([
     # "sm03",
-    "sm04",
-    "sm05", 
+    # "sm04",
+    # "sm05", 
     "sm06",
     "sm07",
-    "sm08",
+    # "sm08",
 ])
 # *****************************************************************************
 
@@ -495,14 +496,14 @@ def get_latency_jitter(rxdf, txdf, fout, mode):
     rx_lat_arr = rxdf['latency'].array
     for i in range(len(rxdf)):
         if rx_lat_arr[i] < 0:
-            print("******************************************************")
+            # print("******************************************************")
             # print("Latency should not be negative!!! Force to terminate.")
             print("Latency should not be negative!!!")
-            if i > 0:
-                print(rxdf[['sequence.number', 'Timestamp', 'latency']].iloc[i-1])
-            print(rxdf[['sequence.number', 'Timestamp', 'latency']].iloc[i])
-            print("******************************************************")
-            sys.exit(1)
+            # if i > 0:
+            #     print(rxdf[['sequence.number', 'Timestamp', 'latency']].iloc[i-1])
+            # print(rxdf[['sequence.number', 'Timestamp', 'latency']].iloc[i])
+            # print("******************************************************")
+            # sys.exit(1)
             # break
         if i == 0:
             continue
@@ -515,6 +516,7 @@ def get_latency_jitter(rxdf, txdf, fout, mode):
                             'transmit.time' : 'Timestamp', 'transmit.time_epoch' : 'Timestamp_epoch'},
                             inplace=True)
         rxdf = rxdf.reindex("sequence.number,Timestamp,Timestamp_epoch,payload.time,payload.time_epoch,latency,arrival.time,arrival.time_epoch".split(','), axis=1)
+    # rxdf = rxdf[rxdf['latency'] > 0]
     print("output >>>", fout)
     rxdf.to_csv(fout, index=False)
 
@@ -651,98 +653,98 @@ if __name__ == "__main__":
                 sys.exit()
         print()
 
-        # # --------------------- Phase 1: Parse basic information --------------------- 
-        # ##### Downlink
-        # ### Read files: server_DL (Tx), client_DL (Rx)
-        # print(_exp)
-        # for j in range(_times):
-        #     for i, dev in enumerate(devices):
-        #         print(exp_dirs[i][j])
-        #         dirpath = os.path.join(exp_dirs[i][j], "data")
-        #         filenames = os.listdir(dirpath)
-        #         for filename in filenames:
-        #             if filename.startswith(("client_pcap_DL", "client_pcap_BL")) and filename.endswith(".csv"):
-        #                 rxfile = filename
-        #             if filename.startswith(("server_pcap_DL", "server_pcap_BL")) and filename.endswith(".csv"):
-        #                 txfile = filename
-        #         rxfin = os.path.join(dirpath, rxfile)
-        #         txfin = os.path.join(dirpath, txfile)
+        # --------------------- Phase 1: Parse basic information --------------------- 
+        ##### Downlink
+        ### Read files: server_DL (Tx), client_DL (Rx)
+        print(_exp)
+        for j in range(_times):
+            for i, dev in enumerate(devices):
+                print(exp_dirs[i][j])
+                dirpath = os.path.join(exp_dirs[i][j], "data")
+                filenames = os.listdir(dirpath)
+                for filename in filenames:
+                    if filename.startswith(("client_pcap_DL", "client_pcap_BL")) and filename.endswith(".csv"):
+                        rxfile = filename
+                    if filename.startswith(("server_pcap_DL", "server_pcap_BL")) and filename.endswith(".csv"):
+                        txfile = filename
+                rxfin = os.path.join(dirpath, rxfile)
+                txfin = os.path.join(dirpath, txfile)
 
-        #         makedir(os.path.join(dirpath, "..", "analysis"))
+                makedir(os.path.join(dirpath, "..", "analysis"))
 
-        #         t1 = TicToc()  # create instance of class
-        #         t1.tic()  # Start timer
-        #         rxdf = pd.read_csv(rxfin, sep='@')
-        #         ### Filtering
-        #         print(">>>>>", rxfin)
-        #         rxdf = filter(rxdf, 'client', 'downlink', 'udp')
-        #         ### Parse packet payload information
-        #         rxfout = os.path.join(dirpath, "..", "analysis", "clt_dwnlnk_udp_packet_info.csv")
-        #         rxdf = parse_packet_info(rxdf, 'rx', rxfout)
-        #         ### Parse packet brief information
-        #         rxfout = os.path.join(dirpath, "..", "analysis", "clt_dwnlnk_udp_packet_brief.csv")
-        #         parse_brief_info(rxdf, 'rx', rxfout)
-        #         t1.toc()
+                t1 = TicToc()  # create instance of class
+                t1.tic()  # Start timer
+                rxdf = pd.read_csv(rxfin, sep='@')
+                ### Filtering
+                print(">>>>>", rxfin)
+                rxdf = filter(rxdf, 'client', 'downlink', 'udp')
+                ### Parse packet payload information
+                rxfout = os.path.join(dirpath, "..", "analysis", "clt_dwnlnk_udp_packet_info.csv")
+                rxdf = parse_packet_info(rxdf, 'rx', rxfout)
+                ### Parse packet brief information
+                rxfout = os.path.join(dirpath, "..", "analysis", "clt_dwnlnk_udp_packet_brief.csv")
+                parse_brief_info(rxdf, 'rx', rxfout)
+                t1.toc()
 
-        #         t1 = TicToc()  # create instance of class
-        #         t1.tic()  # Start timer
-        #         txdf = pd.read_csv(txfin, sep='@')
-        #         ### Filtering
-        #         print(">>>>>", txfin)
-        #         txdf = filter(txdf, 'server', 'downlink', 'udp')
-        #         ### Parse packet payload information
-        #         txfout = os.path.join(dirpath, "..", "analysis", "srv_dwnlnk_udp_packet_info.csv")
-        #         txdf = parse_packet_info(txdf, 'tx', txfout)
-        #         ### Parse packet brief information
-        #         txfout = os.path.join(dirpath, "..", "analysis", "srv_dwnlnk_udp_packet_brief.csv")
-        #         parse_brief_info(txdf, 'tx', txfout)
-        #         t1.toc()
+                t1 = TicToc()  # create instance of class
+                t1.tic()  # Start timer
+                txdf = pd.read_csv(txfin, sep='@')
+                ### Filtering
+                print(">>>>>", txfin)
+                txdf = filter(txdf, 'server', 'downlink', 'udp')
+                ### Parse packet payload information
+                txfout = os.path.join(dirpath, "..", "analysis", "srv_dwnlnk_udp_packet_info.csv")
+                txdf = parse_packet_info(txdf, 'tx', txfout)
+                ### Parse packet brief information
+                txfout = os.path.join(dirpath, "..", "analysis", "srv_dwnlnk_udp_packet_brief.csv")
+                parse_brief_info(txdf, 'tx', txfout)
+                t1.toc()
 
-        # ##### Uplink
-        # ### Read files: client_UL (Tx), server_UL (Rx)
-        # print(_exp)
-        # for j in range(_times):
-        #     for i, dev in enumerate(devices):
-        #         print(exp_dirs[i][j])
-        #         dirpath = os.path.join(exp_dirs[i][j], "data")
-        #         filenames = os.listdir(dirpath)
-        #         for filename in filenames:
-        #             if filename.startswith(("server_pcap_UL", "server_pcap_BL")) and filename.endswith(".csv"):
-        #                 rxfile = filename
-        #             if filename.startswith(("client_pcap_UL", "client_pcap_BL")) and filename.endswith(".csv"):
-        #                 txfile = filename
-        #         rxfin = os.path.join(dirpath, rxfile)
-        #         txfin = os.path.join(dirpath, txfile)
+        ##### Uplink
+        ### Read files: client_UL (Tx), server_UL (Rx)
+        print(_exp)
+        for j in range(_times):
+            for i, dev in enumerate(devices):
+                print(exp_dirs[i][j])
+                dirpath = os.path.join(exp_dirs[i][j], "data")
+                filenames = os.listdir(dirpath)
+                for filename in filenames:
+                    if filename.startswith(("server_pcap_UL", "server_pcap_BL")) and filename.endswith(".csv"):
+                        rxfile = filename
+                    if filename.startswith(("client_pcap_UL", "client_pcap_BL")) and filename.endswith(".csv"):
+                        txfile = filename
+                rxfin = os.path.join(dirpath, rxfile)
+                txfin = os.path.join(dirpath, txfile)
 
-        #         makedir(os.path.join(dirpath, "..", "analysis"))
+                makedir(os.path.join(dirpath, "..", "analysis"))
 
-        #         t1 = TicToc()  # create instance of class
-        #         t1.tic()  # Start timer
-        #         rxdf = pd.read_csv(rxfin, sep='@')
-        #         ### Filtering
-        #         print(">>>>>", rxfin)
-        #         rxdf = filter(rxdf, 'server', 'uplink', 'udp')
-        #         ### Parse packet payload information
-        #         rxfout = os.path.join(dirpath, "..", "analysis", "srv_uplnk_udp_packet_info.csv")
-        #         rxdf = parse_packet_info(rxdf, 'rx', rxfout)
-        #         ### Parse packet brief information
-        #         rxfout = os.path.join(dirpath, "..", "analysis", "srv_uplnk_udp_packet_brief.csv")
-        #         parse_brief_info(rxdf, 'rx', rxfout)
-        #         t1.toc()
+                t1 = TicToc()  # create instance of class
+                t1.tic()  # Start timer
+                rxdf = pd.read_csv(rxfin, sep='@')
+                ### Filtering
+                print(">>>>>", rxfin)
+                rxdf = filter(rxdf, 'server', 'uplink', 'udp')
+                ### Parse packet payload information
+                rxfout = os.path.join(dirpath, "..", "analysis", "srv_uplnk_udp_packet_info.csv")
+                rxdf = parse_packet_info(rxdf, 'rx', rxfout)
+                ### Parse packet brief information
+                rxfout = os.path.join(dirpath, "..", "analysis", "srv_uplnk_udp_packet_brief.csv")
+                parse_brief_info(rxdf, 'rx', rxfout)
+                t1.toc()
 
-        #         t1 = TicToc()  # create instance of class
-        #         t1.tic()  # Start timer
-        #         txdf = pd.read_csv(txfin, sep='@')
-        #         ### Filtering
-        #         print(">>>>>", txfin)
-        #         txdf = filter(txdf, 'client', 'uplink', 'udp')
-        #         ### Parse packet payload information
-        #         txfout = os.path.join(dirpath, "..", "analysis", "clt_uplnk_udp_packet_info.csv")
-        #         txdf = parse_packet_info(txdf, 'tx', txfout)
-        #         ### Parse packet brief information
-        #         txfout = os.path.join(dirpath, "..", "analysis", "clt_uplnk_udp_packet_brief.csv")
-        #         parse_brief_info(txdf, 'tx', txfout)
-        #         t1.toc()
+                t1 = TicToc()  # create instance of class
+                t1.tic()  # Start timer
+                txdf = pd.read_csv(txfin, sep='@')
+                ### Filtering
+                print(">>>>>", txfin)
+                txdf = filter(txdf, 'client', 'uplink', 'udp')
+                ### Parse packet payload information
+                txfout = os.path.join(dirpath, "..", "analysis", "clt_uplnk_udp_packet_info.csv")
+                txdf = parse_packet_info(txdf, 'tx', txfout)
+                ### Parse packet brief information
+                txfout = os.path.join(dirpath, "..", "analysis", "clt_uplnk_udp_packet_brief.csv")
+                parse_brief_info(txdf, 'tx', txfout)
+                t1.toc()
         
         # --------------------- Phase 2: Parse packet loss & latency --------------------- 
         ### Read files

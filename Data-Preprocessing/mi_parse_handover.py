@@ -15,7 +15,7 @@ from pytictoc import TicToc
 
 # ********************* User Settings *********************
 database = "/home/wmnlab/D/database/"
-date = "2022-10-20"
+date = "2022-11-11"
 db_path = os.path.join(database, date)
 Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment_round)
                 # If the list is empty, it will list all directories in the current directory by default.
@@ -26,16 +26,17 @@ Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment
     # "_Bandlock_Udp":(6, []),
     # "_Bandlock_Udp":(4, []),
     # "_Bandlock_Tcp":(4, []),
-    "_Udp_Stationary_Bandlock":(1, []), 
-    "_Udp_Stationary_SameSetting":(1, []),
+    # "_Udp_Stationary_Bandlock":(1, []), 
+    # "_Udp_Stationary_SameSetting":(1, []),
+    "_Test1":(2, [])
 }
 devices = sorted([
     # "sm03",
-    "sm04",
-    "sm05", 
+    # "sm04",
+    # "sm05", 
     "sm06",
     "sm07",
-    "sm08",
+    # "sm08",
 ])
 # *********************************************************
 
