@@ -16,7 +16,7 @@ import re
 # ------------------------------ Add Arguments & Global Variables ------------------------------- #
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--devices", type=str, nargs='+',  # input list of devices sep by 'space'
-                    help="list of devices", default=["unnamed"])
+                    help="list of devices", default=["unam"])
 parser.add_argument("-p", "--ports", type=int, nargs='+',    # input list of port numbers sep by 'space'
                     help="ports to bind")
 parser.add_argument("-S", "--stream", type=str,
@@ -55,7 +55,11 @@ device_to_port = {
     "sm06": (3212, 3213),
     "sm07": (3214, 3215),
     "sm08": (3216, 3217),
-    "unam": (3268, 3269),
+    "qc00": (3270, 3271),
+    "qc01": (3272, 3273),
+    "qc02": (3274, 3275),
+    "qc03": (3276, 3277),
+    "unam": (3280, 3281),
 }
 
 # ----------------------------------------- Parameters ------------------------------------------ #
@@ -117,7 +121,7 @@ def get_ss(device, port, mode):
 os.system("echo wmnlab | sudo -S su")
 
 print("---------------------------------------------------------------------------")
-print("Supported port: 3200-3300, even number for Uplink, odd number for Downlink.")
+print("Supported port: 3200-3299, even number for Uplink, odd number for Downlink.")
 print("---------------------------------------------------------------------------")
 
 # Get time

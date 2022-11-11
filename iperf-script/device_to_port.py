@@ -29,7 +29,11 @@ device_to_port = {
     "sm06": (3212, 3213),
     "sm07": (3214, 3215),
     "sm08": (3216, 3217),
-    "reserve": (3270, 3299),
+    "qc00": (3270, 3271),
+    "qc01": (3272, 3273),
+    "qc02": (3274, 3275),
+    "qc03": (3276, 3277),
+    "unam": (3280, 3281),
 }
 
 port_to_device = {
@@ -87,7 +91,16 @@ port_to_device = {
     "3215": "sm07",
     "3216": "sm08",
     "3217": "sm08",
-    "3270": "reserve",
+    "3270": "qc00",
+    "3271": "qc00",
+    "3272": "qc01",
+    "3273": "qc01",
+    "3274": "qc02",
+    "3275": "qc02",
+    "3276": "qc03",
+    "3277": "qc03",
+    "3280": "unam",
+    "3281": "unam",
 }
 
 device_to_serial = {
@@ -114,14 +127,14 @@ device_to_serial = {
     "xm11":"df7aeaf8",
     "xm12":"e8c1eff5",
     "xm13":"ec32dc1e",
-    # xm14":"",
+    "xm14":"2aad1ac6",
     "xm15":"64545f94",
     "xm16":"613a273a",
     "xm17":"fe3df56f",
-    "quectel0":"76857c8" ,
-    "quectel1":"bc4587d" ,
-    "quectel2":"5881b62f",
-    "quectel3":"32b2bdb2",
+    "qc00":"76857c8" ,
+    "qc01":"bc4587d" ,
+    "qc02":"5881b62f",
+    "qc03":"32b2bdb2",
 }
 
 serial_to_device = {
@@ -148,12 +161,12 @@ serial_to_device = {
     "df7aeaf8":"xm11",
     "e8c1eff5":"xm12",
     "ec32dc1e":"xm13",
-    # "":"xm14",
+    "2aad1ac6":"xm14",
     "64545f94":"xm15",
     "613a273a":"xm16",
     "fe3df56f":"xm17",
-    "76857c8" :"quectel0",
-    "bc4587d" :"quectel1",
-    "5881b62f":"quectel2",
-    "32b2bdb2":"quectel3",
+    "76857c8" :"qc00",
+    "bc4587d" :"qc01",
+    "5881b62f":"qc02",
+    "32b2bdb2":"qc03",
 }

@@ -1,0 +1,7 @@
+*.pcap
+*.csv
+*.o
+*.out
+.vscode
+*.tmp
+*.swp

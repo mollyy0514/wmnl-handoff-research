@@ -41,14 +41,14 @@ serial_to_device = {
     "df7aeaf8":"xm11",
     "e8c1eff5":"xm12",
     "ec32dc1e":"xm13",
-    # "":"xm14",
+    "2aad1ac6":"xm14",
     "64545f94":"xm15",
     "613a273a":"xm16",
     "fe3df56f":"xm17",
-    "76857c8" :"quectel0",
-    "bc4587d" :"quectel1",
-    "5881b62f":"quectel2",
-    "32b2bdb2":"quectel3",
+    "76857c8" :"qc00",
+    "bc4587d" :"qc01",
+    "5881b62f":"qc02",
+    "32b2bdb2":"qc03",
 }
 
 os.system("echo wmnlab | sudo -S su")
