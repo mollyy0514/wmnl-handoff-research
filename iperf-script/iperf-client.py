@@ -18,12 +18,15 @@ import signal
 
 # ------------------------------ Add Arguments & Global Variables ------------------------------- #
 parser = argparse.ArgumentParser()
-parser.add_argument("-d", "--device", type=str,
-                    help="device name (allows only 1 device)", default="unam")
+# parser.add_argument("-d", "--device", type=str,
+#                     help="device name (allows only 1 device)", default="unam")
+parser.add_argument("-d", "--devices", type=str, nargs='+',  # input list of devices sep by 'space'
+                    help="list of devices", default=["unam"])
 parser.add_argument("-H", "--host", type=str,
-                    help="server ip address", default="140.112.20.183")
-                    # help="server ip address", default="140.112.17.209")
-                    # help="server ip address", default="210.65.88.213")
+                    help="server ip address", default="140.112.20.183")   # Lab249 外網
+                    # help="server ip address", default="192.168.1.248")  # Lab249 內網
+                    # help="server ip address", default="140.112.17.209") # Lab355 外網
+                    # help="server ip address", default="210.65.88.213")  # CHT 外網
 parser.add_argument("-p", "--ports", type=int, nargs='+',     # input list of port numbers sep by 'space'
                     help="ports to bind")
 parser.add_argument("-u", "--udp", action="store_true",       # needs no value, True if set "-u"
@@ -40,6 +43,10 @@ parser.add_argument("-L", "--logfile", action="store_true",
                     help="save iperf output to logfile")
 parser.add_argument("-K", "--keywords", type=str,
                     help="keywords for socket statistics", default=["bytes_sent", "cwnd"])
+parser.add_argument("-R", "--reverse", action="store_true",  # needs no value, True if set "-R"
+                    help="downlink or not")                  # default using uplink
+parser.add_argument("--bidir", action="store_true",          # needs no value, True if set "--bidir"
+                    help="bi-link or not")                   # default using uplink
 args = parser.parse_args()
 
 device_to_port = {
@@ -82,15 +89,19 @@ thread_stop = False
 # exit_program = False
 
 serverip = args.host
-device = args.device
-if args.ports:
-    ports = args.ports
-    if args.stream == "bl" and len(ports) != 2:
-        raise Exception("must specify at least and only 2 ports for the device to transmit bi-link.")
-    elif (args.stream == "ul" or args.stream == "dl") and len(ports) != 1:
-        raise Exception("must specify at least and only 1 port for the device to transmit uplink or downlink.")
-else:
-    ports = [device_to_port[device][0], device_to_port[device][1]]  # default port setting for each device
+devices = args.devices
+# if args.ports:
+#     ports = args.ports
+#     if args.stream == "bl" and len(ports) != 2:
+#         raise Exception("must specify at least and only 2 ports for the device to transmit bi-link.")
+#     elif (args.stream == "ul" or args.stream == "dl") and len(ports) != 1:
+#         raise Exception("must specify at least and only 1 port for the device to transmit uplink or downlink.")
+# else:
+#     ports = [device_to_port[device][0], device_to_port[device][1]]  # default port setting for each device
+ports = []
+for device in devices:
+    ports.append((device_to_port[device][0]))  # default uplink port for each device
+    ports.append((device_to_port[device][1]))  # default downlink port for each device
 
 is_udp = "-u" if args.udp else ""
 
@@ -128,6 +139,22 @@ if not os.path.exists(ss_path):
     os.mkdir(ss_path)
 
 # ----------------------------------- Define Utils Function ------------------------------------- #
+def get_network_interface_list():
+    pipe = subprocess.Popen('ifconfig', stdout=subprocess.PIPE, shell=True)
+    text = pipe.communicate()[0].decode()
+    lines = text.split('\n')
+    network_interface_list = []
+    flag = 0
+    for line in lines:
+        if not flag and r"RUNNING" in line and 'lo' not in line:
+            interface = line[:line.find(':')]
+            flag = 1
+        elif flag:
+            ip = line[line.find('inet')+5:line.find('netmask')-2]
+            network_interface_list.append((interface, ip))
+            flag = 0
+    return sorted(network_interface_list)
+
 def get_ss(device, port, mode):
     global thread_stop
     global n
@@ -160,45 +187,81 @@ n = '-'.join(n[:3]) + '_' + '-'.join(n[3:])
 
 _l = []          # command list
 ss_threads = []  # ss thread command list
-if args.stream == "bl":  # bi-link
-    # tcpdump
-    pcap_bl = os.path.join(pcap_path, "client_pcap_BL_{}_{}_{}_{}.pcap".format(device, ports[0], ports[1], n))
-    tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap_bl)
-    # iperf
-    log1 = os.path.join(log_path, "client_log_UL_{}_{}_{}.log".format(device, ports[0], n))
-    log2 = os.path.join(log_path, "client_log_UL_{}_{}_{}.log".format(device, ports[1], n))
-    if args.logfile:
-        socket_proc1 = "{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {}".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time, log1)
-        socket_proc2 = "{} -c {} -p {} -b {} -l {} {} -R -t {} -V --logfile {}".format(iperf, serverip, ports[1], bitrate, packet_size, is_udp, args.time, log2)
-    else:
-        socket_proc1 = "{} -c {} -p {} -b {} -l {} {} -t {} -V".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time)
-        socket_proc2 = "{} -c {} -p {} -b {} -l {} {} -R -t {} -V".format(iperf, serverip, ports[1], bitrate, packet_size, is_udp, args.time)
-    _l = [tcpproc, socket_proc1, socket_proc2]
-    # ss
-    ss_threads.append(threading.Thread(target = get_ss, args = (device, ports[0], 'ul')))
-    ss_threads.append(threading.Thread(target = get_ss, args = (device, ports[1], 'dl')))
-elif args.stream == "ul" or args.stream == "dl":  # uplink or downlink
-    # tcpdump
-    pcap = os.path.join(pcap_path, "client_pcap_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, ports[0], n))
-    tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap)
-    # iperf
-    log = os.path.join(log_path, "client_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, ports[0], n))
-    if args.logfile:
-        socket_proc = "{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {}".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time, log)
-    else:
-        socket_proc = "{} -c {} -p {} -b {} -l {} {} -t {} -V".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time)
-    _l = [tcpproc, socket_proc]
-    # ss
-    ss_threads.append(threading.Thread(target = get_ss, args = (device, ports[0], args.stream)))
+# if args.stream == "bl":  # bi-link
+#     # tcpdump
+#     pcap_bl = os.path.join(pcap_path, "client_pcap_BL_{}_{}_{}_{}.pcap".format(device, ports[0], ports[1], n))
+#     tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap_bl)
+#     # iperf
+#     log1 = os.path.join(log_path, "client_log_UL_{}_{}_{}.log".format(device, ports[0], n))
+#     log2 = os.path.join(log_path, "client_log_UL_{}_{}_{}.log".format(device, ports[1], n))
+#     if args.logfile:
+#         socket_proc1 = "{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {}".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time, log1)
+#         socket_proc2 = "{} -c {} -p {} -b {} -l {} {} -R -t {} -V --logfile {}".format(iperf, serverip, ports[1], bitrate, packet_size, is_udp, args.time, log2)
+#     else:
+#         socket_proc1 = "{} -c {} -p {} -b {} -l {} {} -t {} -V".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time)
+#         socket_proc2 = "{} -c {} -p {} -b {} -l {} {} -R -t {} -V".format(iperf, serverip, ports[1], bitrate, packet_size, is_udp, args.time)
+#     _l = [tcpproc, socket_proc1, socket_proc2]
+#     # ss
+#     ss_threads.append(threading.Thread(target = get_ss, args = (device, ports[0], 'ul')))
+#     ss_threads.append(threading.Thread(target = get_ss, args = (device, ports[1], 'dl')))
+# elif args.stream == "ul" or args.stream == "dl":  # uplink or downlink
+#     # tcpdump
+#     pcap = os.path.join(pcap_path, "client_pcap_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, ports[0], n))
+#     tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap)
+#     # iperf
+#     log = os.path.join(log_path, "client_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, ports[0], n))
+#     if args.logfile:
+#         socket_proc = "{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {}".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time, log)
+#     else:
+#         socket_proc = "{} -c {} -p {} -b {} -l {} {} -t {} -V".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time)
+#     _l = [tcpproc, socket_proc]
+#     # ss
+#     ss_threads.append(threading.Thread(target = get_ss, args = (device, ports[0], args.stream)))
+# else:
+#     raise Exception("must specify from {ul, dl, bl}.")
+
+interface_to_ip = {item[0] : item[1] for item in get_network_interface_list() if item[0].startswith(('qc', 'sm', 'xm'))}
+
+print("Main Ports:", ports[::2])
+print("Auxiliary Ports:", ports[1::2])
+if True:
+    ports = ports[::2]
 else:
-    raise Exception("must specify from {ul, dl, bl}.")
+    ports = ports[1::2]
+for device, port in zip(devices, ports):
+    bind_ip = '0.0.0.0'
+    if device.startswith('qc'):
+        bind_ip = interface_to_ip[device]
+    if args.bidir:
+        # tcpdump
+        pcap = os.path.join(pcap_path, "client_pcap_BL_{}_{}_{}.pcap".format(device, port, n))
+        _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
+        # iperf
+        log = os.path.join(log_path, "client_log_BL_{}_{}_{}.log".format(device, port, n))
+        if args.logfile:
+            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} --bidir -B {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log, bind_ip))
+        else:
+            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --bidir -B {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, bind_ip))
+        # ss
+        ss_threads.append(threading.Thread(target = get_ss, args = (device, port, 'bl')))
+    else:
+        # tcpdump
+        pcap = os.path.join(pcap_path, "client_pacp_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
+        _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
+        # iperf
+        log = os.path.join(log_path, "client_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, port, n))
+        if args.logfile:
+            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} -B {}".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time, log, bind_ip))
+        else:
+            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V -B {}".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time, bind_ip))
+        # ss
+        ss_threads.append(threading.Thread(target = get_ss, args = (device, port, args.stream)))
 
 # Run all commands in the collection
 run_list = []  # running session list
 for l in ss_threads:
     l.start()
-    # time.sleep(0.00001)
-    time.sleep(0.00005)
+    time.sleep(0.00001)
 for l in _l: 
     print(l)
     run_store = subprocess.Popen(l, shell=True, preexec_fn=os.setpgrp)

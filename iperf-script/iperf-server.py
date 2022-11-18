@@ -25,6 +25,10 @@ parser.add_argument("-L", "--logfile", action="store_true",
                     help="save iperf output to logfile")
 parser.add_argument("-K", "--keywords", type=str,
                     help="keywords for socket statistics", default=["bytes_sent", "cwnd"])
+parser.add_argument("-R", "--reverse", action="store_true",  # needs no value, True if set "-R"
+                    help="downlink or not")                  # default using uplink
+parser.add_argument("--bidir", action="store_true",          # needs no value, True if set "--bidir"
+                    help="bi-link or not")                   # default using uplink
 args = parser.parse_args()
 
 device_to_port = {
@@ -67,17 +71,17 @@ thread_stop = False
 # exit_program = False
 
 devices = args.devices
-if args.ports:
-    ports = args.ports
-    if args.stream == "bl" and len(ports) != 2*len(devices):
-        raise Exception("must specify at least and only 2 ports for each device to transmit bi-link.")
-    elif (args.stream == "ul" or args.stream == "dl") and len(ports) != len(devices):
-        raise Exception("must specify at least and only 1 port for each device to transmit uplink or downlink.")
-else:
-    ports = []
-    for device in devices:
-        ports.append((device_to_port[device][0]))  # default uplink port for each device
-        ports.append((device_to_port[device][1]))  # default downlink port for each device
+# if args.ports:
+#     ports = args.ports
+#     if args.stream == "bl" and len(ports) != 2*len(devices):
+#         raise Exception("must specify at least and only 2 ports for each device to transmit bi-link.")
+#     elif (args.stream == "ul" or args.stream == "dl") and len(ports) != len(devices):
+#         raise Exception("must specify at least and only 1 port for each device to transmit uplink or downlink.")
+# else:
+ports = []
+for device in devices:
+    ports.append((device_to_port[device][0]))  # default uplink port for each device
+    ports.append((device_to_port[device][1]))  # default downlink port for each device
 
 # ----------------------------------------- Save Path ------------------------------------------- #
 pcap_path = "./server_pcap"  # packet capture
@@ -98,7 +102,6 @@ def get_ss(device, port, mode):
     global n
     global args
 
-    # fp = None
     fp = open(os.path.join(ss_path, "server_stats_{}_{}_{}_{}.csv".format(mode.upper(), device, port, n)), 'a+')
     print(fp)
     while not thread_stop:
@@ -132,33 +135,67 @@ n = '-'.join(n[:3]) + '_' + '-'.join(n[3:])
 
 _l = []          # command list
 ss_threads = []  # ss thread command list
-if args.stream == "bl":  # bi-link
-    print("Uplink   Ports:", ports[::2])
-    print("Downlink Ports:", ports[1::2])
-    for device, port1, port2 in zip(devices, ports[::2], ports[1::2]):
+# if args.stream == "bl":  # bi-link
+#     print("Uplink   Ports:", ports[::2])
+#     print("Downlink Ports:", ports[1::2])
+#     for device, port1, port2 in zip(devices, ports[::2], ports[1::2]):
+#         # tcpdump
+#         pcap_ul = os.path.join(pcap_path, "server_pcap_UL_{}_{}_{}.pcap".format(device, port1, n))
+#         pcap_dl = os.path.join(pcap_path, "server_pcap_DL_{}_{}_{}.pcap".format(device, port2, n))
+#         _l.append("tcpdump -i any port {} -w {} &".format(port1, pcap_ul))
+#         _l.append("tcpdump -i any port {} -w {} &".format(port2, pcap_dl))
+#         # iperf
+#         log_ul = os.path.join(log_path, "server_log_UL_{}_{}_{}.log".format(device, port1, n))
+#         log_dl = os.path.join(log_path, "server_log_DL_{}_{}_{}.log".format(device, port2, n))
+#         if args.logfile:
+#             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V --logfile {}".format(port1, log_ul))
+#             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V --logfile {}".format(port2, log_dl))
+#         else:
+#             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port1))
+#             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port2))
+#         # ss
+#         ss_threads.append(threading.Thread(target = get_ss, args = (device, port1, 'ul')))
+#         ss_threads.append(threading.Thread(target = get_ss, args = (device, port2, 'dl')))
+# elif args.stream == "ul" or args.stream == "dl":  # uplink or downlink
+#     if args.stream == "ul":
+#         print("Uplink   Ports:", ports)
+#     else:
+#         print("Downlink Ports:", ports)
+#     for device, port in zip(devices, ports):
+#         # tcpdump
+#         pcap = os.path.join(pcap_path, "server_pacp_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
+#         _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
+#         # iperf
+#         log = os.path.join(log_path, "server_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, port, n))
+#         if args.logfile:
+#             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V --logfile".format(port, log))
+#         else:
+#             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port))
+#         # ss
+#         ss_threads.append(threading.Thread(target = get_ss, args = (device, port, args.stream)))
+# else:
+#     raise Exception("must specify from {ul, dl, bl}.")
+
+print("Main Ports:", ports[::2])
+print("Auxiliary Ports:", ports[1::2])
+if True:
+    ports = ports[::2]
+else:
+    ports = ports[1::2]
+for device, port in zip(devices, ports):
+    if args.bidir:
         # tcpdump
-        pcap_ul = os.path.join(pcap_path, "server_pcap_UL_{}_{}_{}.pcap".format(device, port1, n))
-        pcap_dl = os.path.join(pcap_path, "server_pcap_DL_{}_{}_{}.pcap".format(device, port2, n))
-        _l.append("tcpdump -i any port {} -w {} &".format(port1, pcap_ul))
-        _l.append("tcpdump -i any port {} -w {} &".format(port2, pcap_dl))
+        pcap = os.path.join(pcap_path, "server_pcap_BL_{}_{}_{}.pcap".format(device, port, n))
+        _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
         # iperf
-        log_ul = os.path.join(log_path, "server_log_UL_{}_{}_{}.log".format(device, port1, n))
-        log_dl = os.path.join(log_path, "server_log_DL_{}_{}_{}.log".format(device, port2, n))
+        log = os.path.join(log_path, "server_log_BL_{}_{}_{}.log".format(device, port, n))
         if args.logfile:
-            _l.append("iperf3 -s -B 0.0.0.0 -p {} -V --logfile {}".format(port1, log_ul))
-            _l.append("iperf3 -s -B 0.0.0.0 -p {} -V --logfile {}".format(port2, log_dl))
+            _l.append("iperf3 -s -B 0.0.0.0 -p {} -V --logfile {}".format(port, log))
         else:
-            _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port1))
-            _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port2))
+            _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port))
         # ss
-        ss_threads.append(threading.Thread(target = get_ss, args = (device, port1, 'ul')))
-        ss_threads.append(threading.Thread(target = get_ss, args = (device, port2, 'dl')))
-elif args.stream == "ul" or args.stream == "dl":  # uplink or downlink
-    if args.stream == "ul":
-        print("Uplink   Ports:", ports)
+        ss_threads.append(threading.Thread(target = get_ss, args = (device, port, 'bl')))
     else:
-        print("Downlink Ports:", ports)
-    for device, port in zip(devices, ports):
         # tcpdump
         pcap = os.path.join(pcap_path, "server_pacp_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
         _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
@@ -170,15 +207,12 @@ elif args.stream == "ul" or args.stream == "dl":  # uplink or downlink
             _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port))
         # ss
         ss_threads.append(threading.Thread(target = get_ss, args = (device, port, args.stream)))
-else:
-    raise Exception("must specify from {ul, dl, bl}.")
 
 # Run all commands in the collection
 run_list = []  # running session list
 for l in ss_threads:
     l.start()
-    # time.sleep(0.00001)
-    time.sleep(0.00005)
+    time.sleep(0.00001)
 for l in _l: 
     print(l)
     run_store = subprocess.Popen(l, shell=True, preexec_fn=os.setpgrp)
