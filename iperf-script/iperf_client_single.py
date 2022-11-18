@@ -19,7 +19,7 @@ import signal
 # ------------------------------ Add Arguments & Global Variables ------------------------------- #
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--device", type=str,
-                    help="device name (only allow 1 device)", default="unam")
+                    help="device name (allows only 1 device)", default="unam")
 parser.add_argument("-H", "--host", type=str,
                     help="server ip address", default="140.112.20.183")
                     # help="server ip address", default="140.112.17.209")

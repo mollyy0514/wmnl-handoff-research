@@ -1,21 +1,14 @@
 #!/usr/bin/env python3
+
 # Command Usage:
 # pip3 install adbutils
-# ./auto_mi_iperf.py
+# ./auto_monitor_mobile.py
+
 from adbutils import adb
 import os
 import sys
-import datetime as dt
-import argparse
 import time
-from pprint import pprint
 import subprocess
-import signal
-
-# parser = argparse.ArgumentParser()
-# parser.add_argument("-d", "--devices", type=str, nargs='+',  # input list of devices sep by 'space'
-#                     help="list of devices", default=["unnamed"])
-# args = parser.parse_args()
 
 serial_to_device = {
     "R5CRA1ET5KB":"sm00",
@@ -80,7 +73,7 @@ for info in adb.list():
 for device, info in zip(devices, devices_info):
     print(info[2], device.shell("su -c 'getprop sys.usb.config'"))
 
-# # run iperf-client
+# # run iperf-client: fail to run via through this script on Android system
 # for device, info in zip(devices, devices_info):
 #     # print(info[2], device.shell("su"))
 #     print(info[2], device.shell("su -c 'python3 /sdcard/wmnl-handoff-research/iperf-script/iperf_client_single.py -d {}'".format(info[2])))
@@ -88,15 +81,15 @@ for device, info in zip(devices, devices_info):
 # run mobileinsight
 run_list = []
 for device, info in zip(devices, devices_info):
-    device_path = os.path.join("/dev/serial/by-id", "usb-SAMSUNG_SAMSUNG_Android_{}-if00-port0".format(info[0]))
-    run_store = subprocess.Popen("sudo python3 monitor-example.py {} 9600 {}".format(device_path, info[2]), shell=True, preexec_fn=os.setpgrp)
+    # device_path = os.path.join("/dev/serial/by-id", "usb-SAMSUNG_SAMSUNG_Android_{}-if00-port0".format(info[0]))
+    run_store = subprocess.Popen("sudo python3 monitor.py -d {} -b 9600".format(info[2]), shell=True, preexec_fn=os.setpgrp)
     run_list.append(run_store)
-    # os.system("sudo python3 monitor-example.py {} 9600 {} &".format(device_path, info[2]))
+    # os.system("sudo python3 monitor-example.py -d {} -b 9600 &".format(info[2]))
 
 for item in run_list:
     print(item.pid)
     
-# Kill python3 if capture KeyboardInterrup
+# kill python3 session if capture KeyboardInterrup
 while True:
     try:
         time.sleep(1)  # detect every second
@@ -104,7 +97,7 @@ while True:
         for run_item in run_list:
             print(run_item, ", PID: ", run_item.pid)
             os.system("sudo kill -9 {}".format(run_item.pid))
-        # os.system("sudo killall -9 python3")
+        os.system("sudo pkill python3")
         break
     except Exception as e:
         print("error", e)

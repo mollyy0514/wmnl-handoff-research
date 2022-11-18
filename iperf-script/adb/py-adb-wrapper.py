@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
+
+# https://gist.github.com/TheHippo/9329179
+
 # Command Usage:
-# ./set_android_device ADB_COMMAND
-# ./set_android_device adb shell
+# ./py-adb-wrapper.py ADB_COMMAND
+# ./py-adb-wrapper.py shell
 # 1 - R5CRA1ET22M [device usb:1-4.4 product:a42xqxx model:SM_A426B device:a42xq transport_id:13] sm07
 # 2 - R5CRA2EGJ5X [device usb:1-4.3 product:a42xqxx model:SM_A426B device:a42xq transport_id:14] sm08
 
@@ -33,7 +36,7 @@ serial_to_device = {
     "df7aeaf8":"xm11",
     "e8c1eff5":"xm12",
     "ec32dc1e":"xm13",
-    # "":"xm14",
+    "2aad1ac6":"xm14",
     "64545f94":"xm15",
     "613a273a":"xm16",
     "fe3df56f":"xm17",
@@ -63,7 +66,8 @@ def get_device_list():
 def print_device_list(devices):
     for i in range(len(devices)):
         id, name, device = devices[i]
-        print("%d - %s [%s] %s" % (i+1, id, name, device))
+        # print("%d - %s [%s] %s" % (i+1, id, name, device))
+        print("%d - %s %s [%s]" % (i+1, id, device, name))
 
 def num(s):
     try:
@@ -98,10 +102,13 @@ while True:
 
 os.environ['ANDROID_SERIAL'] = devices[choosen - 1][0]
 
+print("Executing the following command:")
 if len(sys.argv) == 1:
+    print("    adb -s {} shell".format(devices[choosen - 1][0]))
     p = subprocess.Popen("adb shell", shell=True)
 else:
-    p = subprocess.Popen(sys.argv[1:])
+    print("    adb -s {} {}".format(devices[choosen - 1][0], ' '.join(sys.argv[1:])))
+    p = subprocess.Popen(["adb"] + sys.argv[1:])
 
 try:
 	p.communicate()

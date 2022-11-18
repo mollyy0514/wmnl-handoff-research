@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
+
 # Command Usage:
 # pip3 install adbutils
-# ./set_mobile.py -d DEVICE_NAME
-# ./set_mobile.py -d sm01
+# ./set-tools-mobile.py -d DEVICE_NAME
+# ./set-tools-mobile.py -d sm01
+
 from adbutils import adb
 import argparse
 import sys
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--device", type=str,
-                    help="device name (only allow 1 device)", required=True)
+                    help="device name (allows only 1 device)", required=True)
 args = parser.parse_args()
 
 device_to_serial = {
@@ -36,7 +38,7 @@ device_to_serial = {
     "xm11":"df7aeaf8",
     "xm12":"e8c1eff5",
     "xm13":"ec32dc1e",
-    # xm14":"",
+    "xm14":"2aad1ac6",
     "xm15":"64545f94",
     "xm16":"613a273a",
     "xm17":"fe3df56f",
@@ -66,10 +68,10 @@ for tool in tools:
 print("-----------------------------------")
 
 # test tools
-# print(device.shell("su -c 'iperf3 --version'"))
-# print("-----------------------------------")
 print(device.shell("su -c 'iperf3m --version'"))
 print("-----------------------------------")
+# print(device.shell("su -c 'iperf3 --version'"))
+# print("-----------------------------------")
 # print(device.shell("su -c 'tcpdump --version'"))
 # print("-----------------------------------")
 # print(device.shell("su -c 'git --version'"))

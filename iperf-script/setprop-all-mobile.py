@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
+
 # Command Usage:
 # pip3 install adbutils
-# ./set_all_mobile.py
+# ./auto_mi_iperf.py
+
 from adbutils import adb
+import os
+import sys
 
 serial_to_device = {
     "R5CRA1ET5KB":"sm00",
@@ -28,11 +32,17 @@ serial_to_device = {
     "df7aeaf8":"xm11",
     "e8c1eff5":"xm12",
     "ec32dc1e":"xm13",
-    # "":"xm14",
+    "2aad1ac6":"xm14",
     "64545f94":"xm15",
     "613a273a":"xm16",
     "fe3df56f":"xm17",
+    "76857c8" :"qc00",
+    "bc4587d" :"qc01",
+    "5881b62f":"qc02",
+    "32b2bdb2":"qc03",
 }
+
+os.system("echo wmnlab | sudo -S su")
 
 devices_info = []
 for i, info in enumerate(adb.list()):
@@ -53,19 +63,11 @@ for i, info in enumerate(devices_info):
     print("{} - {} {} {}".format(i+1, info[0], info[1], info[2]))
 print("-----------------------------------")
 
-tools = ["git", "iperf3m", "iperf3", "python3", "tcpdump", "tmux", "vim"]
-for device, info in zip(devices, devices_info):
-    print(info[2], device.shell("su -c 'cd /sdcard/wmnl-handoff-research && /data/git pull'"))
-    for tool in tools:
-        if info[2][:2] == "sm":
-            device.shell("su -c 'cp /sdcard/wmnl-handoff-research/script-sm/termux-tools/{} /bin'".format(tool))
-            device.shell("su -c 'chmod +x /bin/{}'".format(tool))
-        elif info[2][2] == "xm":
-            device.shell("su -c 'cp /sdcard/wmnl-handoff-research/script-xm/termux-tools/{} /sbin'".format(tool))
-            device.shell("su -c 'chmod +x /sbin/{}'".format(tool))
-    print("-----------------------------------")
-    
-    # test tools
-    print(info[2], device.shell("su -c 'iperf3m --version'"))
-    print("-----------------------------------")
+for info in adb.list():
+    if info.state == "unauthorized":
+        sys.exit(1)
 
+# setprop
+for device, info in zip(devices, devices_info):
+    print(info[2], device.shell("su -c 'getprop sys.usb.config'"))
+    print(info[2], device.shell("su -c 'setprop sys.usb.config diag,serial_cdev,rmnet,adb'"))
