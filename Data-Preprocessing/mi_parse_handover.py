@@ -15,7 +15,7 @@ from pytictoc import TicToc
 
 # ********************* User Settings *********************
 database = "/home/wmnlab/D/database/"
-date = "2022-11-11"
+date = "2022-09-29"
 db_path = os.path.join(database, date)
 Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment_round)
                 # If the list is empty, it will list all directories in the current directory by default.
@@ -23,20 +23,20 @@ Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment
     # "_Bandlock_Udp":(1, ["#01"]),
     # "_Bandlock_Udp":(5, ["#02", "#03", "#04", "#05", "#06"]),
     # "_Bandlock_Udp":(4, ["#01", "#02", "#03", "#04"]),
-    # "_Bandlock_Udp":(6, []),
+    "_Bandlock_Udp":(6, []),
     # "_Bandlock_Udp":(4, []),
     # "_Bandlock_Tcp":(4, []),
     # "_Udp_Stationary_Bandlock":(1, []), 
     # "_Udp_Stationary_SameSetting":(1, []),
-    "_Test1":(2, [])
+    # "_Test1":(2, [])
 }
 devices = sorted([
     # "sm03",
     # "sm04",
-    # "sm05", 
+    "sm05", 
     "sm06",
     "sm07",
-    # "sm08",
+    "sm08",
 ])
 # *********************************************************
 
@@ -401,6 +401,32 @@ def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
         print("mkdir", dirpath)
         os.mkdir(dirpath)
 
+def add_info(df, fout):
+    handoff_types = df['handoff_type'].array
+    handoff_states = df['handoff_state'].array
+    LTE_PCIs = df['PCI'].array
+    EARFCNs = df['EARFCN'].array
+    handoff_types_1 = ['-' for i in range(len(df))]
+    for i, (handoff_type, handoff_state, pci, earfcn) in enumerate(zip(handoff_types, handoff_states, LTE_PCIs, EARFCNs)):
+        if handoff_type in ['SN_addition', 'SN_removal', 'endc_SN_change']:
+            handoff_types_1[i] = 'SN_change_only'
+            continue
+        if handoff_state == 'start':
+            tmp_id = i
+            tmp_freq = earfcn
+        elif handoff_state == 'trigger':
+            continue
+        elif handoff_state == 'end':
+            if earfcn == tmp_freq:
+                handoff_types_1[i] = 'Intra_frequency'
+                handoff_types_1[tmp_id] = 'Intra_frequency'
+            else:
+                handoff_types_1[i] = 'Inter_frequency'
+                handoff_types_1[tmp_id] = 'Inter_frequency'
+    df = df.join(pd.DataFrame({'handoff_type.1' : handoff_types_1}))
+    df.to_csv(fout, index=False)
+    return df
+
 
 if __name__ == "__main__":
     t = TicToc()  # create instance of class
@@ -452,6 +478,8 @@ if __name__ == "__main__":
                         writer = csv.writer(fp)
                         writer.writerow(handover_type)
                         writer.writerow(handover_stats)
+                    df = pd.read_csv(fout)
+                    add_info(df, fout)
                 # sys.exit()
             print()
     t.toc()
