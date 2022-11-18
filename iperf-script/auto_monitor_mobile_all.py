@@ -94,17 +94,10 @@ while True:
     try:
         time.sleep(1)  # detect every second
     except KeyboardInterrupt:
-<<<<<<< HEAD:iperf-script/auto_mi_iperf_step2.py
-        # for run_item in run_list:
-        #     print(run_item, ", PID: ", run_item.pid)
-        #     os.system("sudo kill -9 {}".format(run_item.pid))
-        os.system("sudo killall -9 python3")
-=======
         for run_item in run_list:
             print(run_item, ", PID: ", run_item.pid)
             os.system("sudo kill -9 {}".format(run_item.pid))
         os.system("sudo pkill python3")
->>>>>>> a3fd77e86995eda68e23f47aa972d76129565729:iperf-script/auto_monitor_mobile_all.py
         break
     except Exception as e:
         print("error", e)
