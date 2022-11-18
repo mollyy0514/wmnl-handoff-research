@@ -10,7 +10,6 @@ def check_content(input):
             return input[1]
 
 
-
 if __name__ == "__main__":
     if(len(sys.argv) < 3):
         print("enter file_in_path file_out_path")
