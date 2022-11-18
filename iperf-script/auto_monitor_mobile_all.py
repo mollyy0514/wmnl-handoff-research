@@ -2,7 +2,7 @@
 
 # Command Usage:
 # pip3 install adbutils
-# ./auto_monitor_mobile.py
+# ./auto_monitor_mobile_all.py
 
 from adbutils import adb
 import os

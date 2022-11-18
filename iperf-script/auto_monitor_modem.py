@@ -2,76 +2,59 @@
 
 # Command Usage:
 # pip3 install adbutils
-# ./auto_monitor_mobile.py
+# ./auto_monitor_modem.py -d qc00 qc01
 
 from adbutils import adb
 import os
 import sys
 import time
 import subprocess
+import argparse
 
-serial_to_device = {
-    "R5CRA1ET5KB":"sm00",
-    "R5CRA1D2MRJ":"sm01",
-    "R5CRA1GCHFV":"sm02",
-    "R5CRA1JYYQJ":"sm03",
-    "R5CRA1EV0XH":"sm04",
-    "R5CRA1GBLAZ":"sm05",
-    "R5CRA1ESYWM":"sm06",
-    "R5CRA1ET22M":"sm07",
-    "R5CRA2EGJ5X":"sm08",
-    "73e11a9f":"xm00",
-    "491d5141":"xm01",
-    "790fc81d":"xm02",
-    "e2df293a":"xm03",
-    "28636990":"xm04",
-    "f8fe6582":"xm05",
-    "d74749ee":"xm06",
-    "10599c8d":"xm07",
-    "57f67f91":"xm08",
-    "232145e8":"xm09",
-    "70e87dd6":"xm10",
-    "df7aeaf8":"xm11",
-    "e8c1eff5":"xm12",
-    "ec32dc1e":"xm13",
-    "2aad1ac6":"xm14",
-    "64545f94":"xm15",
-    "613a273a":"xm16",
-    "fe3df56f":"xm17",
-    "76857c8" :"qc00",
-    "bc4587d" :"qc01",
-    "5881b62f":"qc02",
-    "32b2bdb2":"qc03",
+parser = argparse.ArgumentParser()
+parser.add_argument("-d", "--devices", type=str, nargs='+',  # input list of devices sep by 'space'
+                    help="list of devices", default=["unam"])
+args = parser.parse_args()
+
+device_to_serial = {
+    "sm00":"R5CRA1ET5KB",
+    "sm01":"R5CRA1D2MRJ",
+    "sm02":"R5CRA1GCHFV",
+    "sm03":"R5CRA1JYYQJ",
+    "sm04":"R5CRA1EV0XH",
+    "sm05":"R5CRA1GBLAZ",
+    "sm06":"R5CRA1ESYWM",
+    "sm07":"R5CRA1ET22M",
+    "sm08":"R5CRA2EGJ5X",
+    "xm00":"73e11a9f",
+    "xm01":"491d5141",
+    "xm02":"790fc81d",
+    "xm03":"e2df293a",
+    "xm04":"28636990",
+    "xm05":"f8fe6582",
+    "xm06":"d74749ee",
+    "xm07":"10599c8d",
+    "xm08":"57f67f91",
+    "xm09":"232145e8",
+    "xm10":"70e87dd6",
+    "xm11":"df7aeaf8",
+    "xm12":"e8c1eff5",
+    "xm13":"ec32dc1e",
+    "xm14":"2aad1ac6",
+    "xm15":"64545f94",
+    "xm16":"613a273a",
+    "xm17":"fe3df56f",
+    "qc00":"76857c8" ,
+    "qc01":"bc4587d" ,
+    "qc02":"5881b62f",
+    "qc03":"32b2bdb2",
 }
 
 os.system("echo wmnlab | sudo -S su")
 
-devices_info = []
-for i, info in enumerate(adb.list()):
-    try:
-        if info.state == "device":
-            # <serial> <device|offline> <device name>
-            devices_info.append((info.serial, info.state, serial_to_device[info.serial]))
-        else:
-            print("Unauthorized device {}: {} {}".format(serial_to_device[info.serial], info.serial, info.state))
-    except:
-        print("Unknown device: {} {}".format(info.serial, info.state))
-
-devices_info = sorted(devices_info, key=lambda v:v[2])
-
-devices = []
-for i, info in enumerate(devices_info):
-    devices.append(adb.device(info[0]))
-    print("{} - {} {} {}".format(i+1, info[0], info[1], info[2]))
+for i, dev in enumerate(args.devices):
+    print("{} - {} {}".format(i+1, device_to_serial[dev], dev))
 print("-----------------------------------")
-
-for info in adb.list():
-    if info.state == "unauthorized":
-        sys.exit(1)
-
-# getprop
-for device, info in zip(devices, devices_info):
-    print(info[2], device.shell("su -c 'getprop sys.usb.config'"))
 
 # # run iperf-client: fail to run via through this script on Android system
 # for device, info in zip(devices, devices_info):
@@ -80,11 +63,10 @@ for device, info in zip(devices, devices_info):
 
 # run mobileinsight
 run_list = []
-for device, info in zip(devices, devices_info):
-    # device_path = os.path.join("/dev/serial/by-id", "usb-SAMSUNG_SAMSUNG_Android_{}-if00-port0".format(info[0]))
-    run_store = subprocess.Popen("sudo python3 monitor.py -d {} -b 9600".format(info[2]), shell=True, preexec_fn=os.setpgrp)
+for i, dev in enumerate(args.devices):
+    run_store = subprocess.Popen("sudo python3 monitor.py -d {} -b 9600".format(dev), shell=True, preexec_fn=os.setpgrp)
     run_list.append(run_store)
-    # os.system("sudo python3 monitor-example.py -d {} -b 9600 &".format(info[2]))
+    # os.system("sudo python3 monitor-example.py -d {} -b 9600 &".format(dev))
 
 for item in run_list:
     print(item.pid)
