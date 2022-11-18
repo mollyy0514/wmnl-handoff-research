@@ -197,7 +197,8 @@ else:
 run_list = []  # running session list
 for l in ss_threads:
     l.start()
-    time.sleep(0.00001)
+    # time.sleep(0.00001)
+    time.sleep(0.00005)
 for l in _l: 
     print(l)
     run_store = subprocess.Popen(l, shell=True, preexec_fn=os.setpgrp)
