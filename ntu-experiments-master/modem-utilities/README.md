@@ -28,6 +28,8 @@ qc-at to send the at command to specific quectel module.
     e.g. sudo ./band-setting.sh -i [interface] -l 1:2:3:4  set the LTE band  
     e.g. sudo ./band-setting.sh -i [interface] -e 77:78:79 set the ENDC NR band   
     e.g. sudo  ./band-setting.sh -i [interface] -l 1:2:3:4  -e 77:78:79 set both LTE and ENDC NR band
+    LTE: 1:2:3:4:5:7:8:12:13:14:17:18:19:20:25:26:28:29:30:32:34:38:39:40:41:42:43:46:48:66:71
+    5G-NSA: 1:2:3:5:7:8:12:20:25:28:38:40:41:48:66:71:77:78:79:257:258:260:261
 
 ## qc-at.sh  
 ### Description:  
