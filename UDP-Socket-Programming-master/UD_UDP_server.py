@@ -276,8 +276,8 @@ while not exit_main_process:
     
     #Create subprocesses to capture packets (TCPDUMP)
     tcpproc_list = []
-    tcpproc =  subprocess.Popen(["sudo tcpdump -i any port 3299 -w %s/3299_%s.pcap"%(pcap_path,n)], shell=True, preexec_fn = os.setpgrp)
-    tcpproc_list.append(tcpproc)
+    # tcpproc =  subprocess.Popen(["sudo tcpdump -i any port 3299 -w %s/3299_%s.pcap"%(pcap_path,n)], shell=True, preexec_fn = os.setpgrp)
+    # tcpproc_list.append(tcpproc)
     for PORT in PORTS:
         tcpproc =  subprocess.Popen(["sudo tcpdump -i any port %s -w %s/%s_%s.pcap"%(PORT, pcap_path,PORT, n)], shell=True, preexec_fn = os.setpgrp)
         tcpproc_list.append(tcpproc)
