@@ -21,5 +21,5 @@ for dev in devices:
     time.sleep(1)
 
 for dev in devices:
-    os.system*("sudo ip r add default dev {}".format(dev))
+    os.system("sudo ip r add default dev {}".format(dev))
     break

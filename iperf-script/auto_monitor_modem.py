@@ -52,7 +52,11 @@ device_to_serial = {
 
 os.system("echo wmnlab | sudo -S su")
 
-for i, dev in enumerate(args.devices):
+devices = sorted(os.listdir("/sys/class/net/"))
+devices = [dev for dev in devices if dev.startswith('qc')]
+
+# for i, dev in enumerate(args.devices):
+for i, dev in enumerate(devices):
     print("{} - {} {}".format(i+1, device_to_serial[dev], dev))
 print("-----------------------------------")
 
@@ -63,7 +67,8 @@ print("-----------------------------------")
 
 # run mobileinsight
 run_list = []
-for i, dev in enumerate(args.devices):
+# for i, dev in enumerate(args.devices):
+for i, dev in enumerate(devices):
     run_store = subprocess.Popen("sudo python3 monitor.py -d {} -b 9600".format(dev), shell=True, preexec_fn=os.setpgrp)
     run_list.append(run_store)
     # os.system("sudo python3 monitor-example.py -d {} -b 9600 &".format(dev))
@@ -76,10 +81,27 @@ while True:
     try:
         time.sleep(1)  # detect every second
     except KeyboardInterrupt:
-        for run_item in run_list:
-            print(run_item, ", PID: ", run_item.pid)
-            os.system("sudo kill -9 {}".format(run_item.pid))
-        os.system("sudo pkill python3")
+        # for run_item in run_list:
+        #     print(run_item, ", PID: ", run_item.pid)
+        #     os.system("sudo kill -9 {}".format(run_item.pid))
+        # os.system("sudo pkill python3")
+        os.system("ps -ef | grep python3 > ps_tmp.txt")
+        with open('ps_tmp.txt', 'r') as fp:
+            lines = fp.readlines()
+        infos = [[] for i in range(len(lines))]
+        for i, line in enumerate(lines):
+            infos[i] = [s for s in line[:52].split(' ') if s]
+            infos[i].append(line[52:-1])
+        kill_list = []
+        for info in infos:
+            if info[7].startswith("python3 monitor.py"):
+                kill_list.append(info[1])
+        for info in infos:
+            if info[7].startswith("python3 ./auto_monitor_modem.py"):
+                kill_list.append(info[1])
+        for pid in kill_list:
+            os.system("sudo kill -9 {}".format(pid))
+        os.system("rm ps_tmp.txt")
         break
     except Exception as e:
         print("error", e)
