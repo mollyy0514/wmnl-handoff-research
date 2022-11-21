@@ -19,3 +19,7 @@ print(devices)
 for dev in devices:
     os.system("sudo ./dial-qmi.sh -i {}".format(dev))
     time.sleep(1)
+
+for dev in devices:
+    os.system*("sudo ip r add default dev {}".format(dev))
+    break
