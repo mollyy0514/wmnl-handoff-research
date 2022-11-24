@@ -24,11 +24,12 @@ then
     helpFunction
 fi
 
-path="./temp"
+# path="./temp"
+path="/home/wmnlab/temp"
 wds_path="$path/temp-wds_$interface"
 wds_ip_path="$path/temp-ip_$interface"
 wds_ip_filter="$path/temp-ip-setting_$interface"
-wdm=`(head -1 ./temp/$interface)`
+wdm=`(head -1 $path/$interface)`
 mux="1"
 apn="internet"
 :> $wds_path

@@ -27,7 +27,8 @@ then
     helpFunction
 fi
 
-path="./temp"
+# path="./temp"
+path="/home/wmnlab/temp"
 wds_path="$path/temp-wds_$interface"
 wdm=`(head -1 $path/$interface)`
 wds_id=`(cat $wds_path | grep CID | awk '{print $2}' | sed 's/.$//' | sed 's/^.//')`

@@ -26,7 +26,8 @@ then
     helpFunction
 fi
 
-path="./temp"
+# path="./temp"
+path="/home/wmnlab/temp"
 wdm=`ls /sys/class/net/$interface/device/usbmisc/`
 if [ -z "$wdm" ]
 then
