@@ -216,7 +216,12 @@ def transmission(s_udp_list):
     print("transmit", seq, "packets")
 
 def receive(s_udp, s_udp_list):
+<<<<<<< HEAD
     s_udp.settimeout(60)
+=======
+    # s_udp.settimeout(3)
+    s_udp.settimeout(30)
+>>>>>>> d3a9f717554c8b0877bbe7e2d31ba2e404868614
     print("wait for indata...")
     number_of_received_packets = 0
     

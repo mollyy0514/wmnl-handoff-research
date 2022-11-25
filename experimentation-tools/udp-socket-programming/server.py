@@ -36,7 +36,7 @@ parser.add_argument("-d", "--devices", type=str, nargs='+',  # input list of dev
 # parser.add_argument("-u", "--udp", action="store_true",       # needs no value, True if set "-u"
 #                     help="use UDP rather than TCP")           # default TCP
 parser.add_argument("-b", "--bitrate", type=str,
-                    help="target bitrate in bits/sec (0 for unlimited)", default="1M")
+                    help="target bitrate in bits/sec (0 for unlimited)", default="5M")
 parser.add_argument("-l", "--length", type=str,
                     help="length of buffer to read or write in bytes (packet size)", default="250")
 parser.add_argument("-t", "--time", type=int,
@@ -108,6 +108,8 @@ elif args.bitrate[-1] == 'M':
     bandwidth = int(args.bitrate[:-1]) * 1e6
 else:
     bandwidth = int(args.bitrate)
+
+print("bitrate:", bandwidth)
 
 total_time = args.time
 # number_client = args.number_client
