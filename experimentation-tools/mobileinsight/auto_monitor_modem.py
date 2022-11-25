@@ -86,7 +86,7 @@ while True:
         #     os.system("sudo kill -9 {}".format(run_item.pid))
         # os.system("sudo pkill python3")
         os.system("ps -ef | grep python3 > ps_tmp.txt")
-        with open('ps_tmp.txt', 'r') as fp:
+        with open('ps_list.txt', 'r') as fp:
             lines = fp.readlines()
         infos = [[] for i in range(len(lines))]
         for i, line in enumerate(lines):
@@ -101,7 +101,7 @@ while True:
                 kill_list.append(info[1])
         for pid in kill_list:
             os.system("sudo kill -9 {}".format(pid))
-        os.system("rm ps_tmp.txt")
+        os.system("sudo rm ps_list.txt")
         break
     except Exception as e:
         print("error", e)

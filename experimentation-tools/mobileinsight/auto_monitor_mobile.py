@@ -94,10 +94,27 @@ while True:
     try:
         time.sleep(1)  # detect every second
     except KeyboardInterrupt:
-        for run_item in run_list:
-            print(run_item, ", PID: ", run_item.pid)
-            os.system("sudo kill -9 {}".format(run_item.pid))
-        os.system("sudo pkill python3")
+        # for run_item in run_list:
+        #     print(run_item, ", PID: ", run_item.pid)
+        #     os.system("sudo kill -9 {}".format(run_item.pid))
+        # os.system("sudo pkill python3")
+        os.system("ps -ef | grep python3 > ps_tmp.txt")
+        with open('ps_list.txt', 'r') as fp:
+            lines = fp.readlines()
+        infos = [[] for i in range(len(lines))]
+        for i, line in enumerate(lines):
+            infos[i] = [s for s in line[:52].split(' ') if s]
+            infos[i].append(line[52:-1])
+        kill_list = []
+        for info in infos:
+            if info[7].startswith("python3 monitor.py"):
+                kill_list.append(info[1])
+        for info in infos:
+            if info[7].startswith("python3 ./auto_monitor_mobile.py"):
+                kill_list.append(info[1])
+        for pid in kill_list:
+            os.system("sudo kill -9 {}".format(pid))
+        os.system("sudo rm ps_list.txt")
         break
     except Exception as e:
         print("error", e)
