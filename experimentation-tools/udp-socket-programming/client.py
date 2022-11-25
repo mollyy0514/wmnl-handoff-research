@@ -36,7 +36,7 @@ parser.add_argument("-H", "--host", type=str,
 # parser.add_argument("-u", "--udp", action="store_true",       # needs no value, True if set "-u"
 #                     help="use UDP rather than TCP")           # default TCP
 parser.add_argument("-b", "--bitrate", type=str,
-                    help="target bitrate in bits/sec (0 for unlimited)", default="1M")
+                    help="target bitrate in bits/sec (0 for unlimited)", default="5M")
 parser.add_argument("-l", "--length", type=str,
                     help="length of buffer to read or write in bytes (packet size)", default="250")
 parser.add_argument("-t", "--time", type=int,
@@ -117,6 +117,8 @@ elif args.bitrate[-1] == 'M':
 else:
     bandwidth = int(args.bitrate)
 
+print("bitrate:", bandwidth)
+
 total_time = args.time
 HOST = args.host
 
@@ -146,7 +148,7 @@ def connection_setup():
     # for device, port1, port2 in zip(devices, UL_PORTS, DL_PORTS):
     for device, port in zip(devices, PORTS):
         s_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s_udp.settimeout(1)
+        s_udp.settimeout(5)
         
         #if m=1, bind to specific interface name
         # if args.multiple_interfaces == 1:
@@ -214,7 +216,7 @@ def transmission(s_udp_list):
     print("transmit", seq, "packets")
 
 def receive(s_udp, s_udp_list):
-    s_udp.settimeout(3)
+    s_udp.settimeout(60)
     print("wait for indata...")
     number_of_received_packets = 0
     
@@ -239,7 +241,7 @@ def receive(s_udp, s_udp_list):
             number_of_received_packets += 1
             
         except Exception as inst:
-            print("Error: ", inst)
+            print("Error: 1", inst)
             thread_stop = True
     thread_stop = True
     
@@ -270,7 +272,7 @@ def remote_control(s_tcp, t):
                 exit_main_process = True
                 break
         except Exception as inst:
-            print("Error: ", inst)
+            print("Error: 2", inst)
     thread_stop = True
     print("STOP remote control")
 
@@ -310,7 +312,7 @@ while not exit_main_process:
             subprocess.check_output(command.split(" "))
         exit()
     except Exception as inst:
-        print("Error: ", inst)
+        print("Error: 3", inst)
         pgid = os.getpgid(tcpproc.pid)
     
         command = "kill -9 -{}".format(pgid)
