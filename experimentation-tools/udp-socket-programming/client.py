@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+ #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import socket
@@ -217,7 +217,7 @@ def transmission(s_udp_list):
 
 def receive(s_udp, s_udp_list):
     # s_udp.settimeout(3)
-    s_udp.settimeout(30)
+    s_udp.settimeout(60)
     print("wait for indata...")
     number_of_received_packets = 0
     
