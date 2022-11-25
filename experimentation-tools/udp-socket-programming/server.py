@@ -109,6 +109,8 @@ elif args.bitrate[-1] == 'M':
 else:
     bandwidth = int(args.bitrate)
 
+print("bitrate:", bandwidth)
+
 total_time = args.time
 # number_client = args.number_client
 # number_client = len(args.devices)

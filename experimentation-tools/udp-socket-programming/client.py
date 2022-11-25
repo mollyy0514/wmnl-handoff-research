@@ -117,6 +117,8 @@ elif args.bitrate[-1] == 'M':
 else:
     bandwidth = int(args.bitrate)
 
+print("bitrate:", bandwidth)
+
 total_time = args.time
 HOST = args.host
 
@@ -214,7 +216,8 @@ def transmission(s_udp_list):
     print("transmit", seq, "packets")
 
 def receive(s_udp, s_udp_list):
-    s_udp.settimeout(3)
+    # s_udp.settimeout(3)
+    s_udp.settimeout(30)
     print("wait for indata...")
     number_of_received_packets = 0
     
@@ -239,7 +242,7 @@ def receive(s_udp, s_udp_list):
             number_of_received_packets += 1
             
         except Exception as inst:
-            print("Error: ", inst)
+            print("Error: 1", inst)
             thread_stop = True
     thread_stop = True
     
@@ -270,7 +273,7 @@ def remote_control(s_tcp, t):
                 exit_main_process = True
                 break
         except Exception as inst:
-            print("Error: ", inst)
+            print("Error: 2", inst)
     thread_stop = True
     print("STOP remote control")
 
@@ -310,7 +313,7 @@ while not exit_main_process:
             subprocess.check_output(command.split(" "))
         exit()
     except Exception as inst:
-        print("Error: ", inst)
+        print("Error: 3", inst)
         pgid = os.getpgid(tcpproc.pid)
     
         command = "kill -9 -{}".format(pgid)
