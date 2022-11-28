@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser()
 # parser.add_argument("-d", "--device", type=str,
 #                     help="device name (allows only 1 device)", default="unam")
 parser.add_argument("-d", "--devices", type=str, nargs='+',  # input list of devices sep by 'space'
-                    help="list of devices", default=["lapt"])
+                    help="list of devices", default=["unam"])
 parser.add_argument("-H", "--host", type=str,
                     help="server ip address", default="140.112.20.183")   # Lab249 外網
                     # help="server ip address", default="192.168.1.248")  # Lab249 內網
