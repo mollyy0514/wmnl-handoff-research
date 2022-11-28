@@ -156,13 +156,13 @@ def get_network_interface_list():
             interface = line[:line.find(':')]
             flag = 1
             if 'wlan0' in line:
-                flag = 'wlan0'
+                interface = 'wlan0'
             elif 'rmnet_data0' in line:
-                flag = 'rmnet_data0'
+                interface = 'rmnet_data0'
         elif flag:
-            if flag == 'wlan0':
+            if interface == 'wlan0':
                 ip = line[line.find('inet')+5:line.find('Bcast')-2]
-            elif flag == 'rmnet_data0':
+            elif interface == 'rmnet_data0':
                 ip = line[line.find('inet')+5:line.find('Mask')-2]
             else:
                 ip = line[line.find('inet')+5:line.find('netmask')-2]
