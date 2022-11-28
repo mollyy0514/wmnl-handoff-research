@@ -245,9 +245,16 @@ interface_to_ip = {item[0] : item[1] for item in get_network_interface_list()}
 interfaces = devices
 for i, item in enumerate(interfaces):
     if item.startswith('sm') and 'wlan0' in interface_to_ip.keys():
-        print("Warning: Wi-Fi is on!!!!!")
+        if not args.tsync:
+            print("Warning: Wi-Fi is on!!!!!")
+            print("Halting the process.")
+            sys.exit(1)
         interfaces[i] = 'wlan0'
     elif item.startswith('sm') and 'rmnet_data0' in interface_to_ip.keys():
+        if args.tsync:
+            print("Warning: Wi-Fi is off!!!!!")
+            print("Halting the process.")
+            sys.exit(1)
         interfaces[i] = 'rmnet_data0'
     elif item.startswith('qc') and 'enp5s0' in interface_to_ip.keys() and args.tsync:
         interfaces[i] = 'enp5s0'
