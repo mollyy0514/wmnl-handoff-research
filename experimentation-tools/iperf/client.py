@@ -227,10 +227,11 @@ ss_threads = []  # ss thread command list
 #     raise Exception("must specify from {ul, dl, bl}.")
 
 # interface_to_ip = {item[0] : item[1] for item in get_network_interface_list() if item[0].startswith(('qc', 'sm', 'xm', 'wlan0', 'rmnet_data0', 'wlp2s0', 'enp5s0'))}
-interface_to_ip = get_network_interface_list()
+interface_to_ip = {item[0] : item[1] for item in get_network_interface_list()}
 # samsung: 4G/5G - rmnet_data0; wi-fi - wlan0; wi-fi > 4G/5G in priority
 # laptop (Ubuntu): wired - enp5s0; wi-fi - wlp2s0
 
+print(interface_to_ip)
 interfaces = devices
 if args.tsync:
     for i, item in enumerate(interfaces):
@@ -245,7 +246,6 @@ if args.tsync:
             else:
                 interfaces[i] = 'wlp2s0'
 print(interfaces)
-print(interface_to_ip)
 
 print("Main Ports:", ports[::2])
 print("Auxiliary Ports:", ports[1::2])
