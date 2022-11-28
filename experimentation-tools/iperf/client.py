@@ -221,6 +221,7 @@ ss_threads = []  # ss thread command list
 #     raise Exception("must specify from {ul, dl, bl}.")
 
 interface_to_ip = {item[0] : item[1] for item in get_network_interface_list() if item[0].startswith(('qc', 'sm', 'xm'))}
+print(interface_to_ip)
 
 print("Main Ports:", ports[::2])
 print("Auxiliary Ports:", ports[1::2])
