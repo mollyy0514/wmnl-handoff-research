@@ -32,9 +32,11 @@ parser.add_argument("-p", "--ports", type=int, nargs='+',     # input list of po
 parser.add_argument("-u", "--udp", action="store_true",       # needs no value, True if set "-u"
                     help="use UDP rather than TCP")           # default TCP
 parser.add_argument("-b", "--bitrate", type=str,
-                    help="target bitrate in bits/sec (0 for unlimited)", default=["1M", "1M"])  # [UDP, TCP]
+                    # help="target bitrate in bits/sec (0 for unlimited)", default=["1M", "1M"])  # [UDP, TCP]
+                    help="target bitrate in bits/sec (0 for unlimited)", default='1M')
 parser.add_argument("-l", "--length", type=str,
-                    help="length of buffer to read or write in bytes (packet size)", default=["250", "250"])  # [UDP, TCP]
+                    # help="length of buffer to read or write in bytes (packet size)", default=["250", "250"])  # [UDP, TCP]
+                    help="length of buffer to read or write in bytes (packet size)", default='250')
 parser.add_argument("-t", "--time", type=int,
                     help="time in seconds to transmit for (default 1 hour = 3600 secs)", default=3600)
 parser.add_argument("-S", "--stream", type=str,
@@ -112,14 +114,17 @@ for device in devices:
 
 is_udp = "-u" if args.udp else ""
 
-if type(args.bitrate) is list:  # unit: bps
-    bitrate = args.bitrate[0] if args.udp else args.bitrate[1]
-else:
-    bitrate = args.bitrate
-if type(args.length) is list:  # unit: bytes
-    packet_size = args.length[0] if args.udp else args.length[1]
-else:
-    packet_size = args.length
+# if type(args.bitrate) is list:  # unit: bps
+#     bitrate = args.bitrate[0] if args.udp else args.bitrate[1]
+# else:
+#     bitrate = args.bitrate
+# if type(args.length) is list:  # unit: bytes
+#     packet_size = args.length[0] if args.udp else args.length[1]
+# else:
+#     packet_size = args.length
+
+bitrate = args.bitrate     # unit: bps
+packet_size = args.length  # unit: bytes
 
 if args.stream == "ul":
     is_reverse = ""
