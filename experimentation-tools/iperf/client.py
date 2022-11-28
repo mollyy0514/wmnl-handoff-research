@@ -241,6 +241,9 @@ interface_to_ip = {item[0] : item[1] for item in get_network_interface_list()}
 
 print(interface_to_ip)
 interfaces = devices
+for i, item in enumerate(interfaces):
+    if item.startswith('sm') and 'wlan0' in interface_to_ip.keys():
+        print("Warning: Wi-Fi is on!!!!!")
 if args.tsync:
     for i, item in enumerate(interfaces):
         if item.startswith('sm'):
