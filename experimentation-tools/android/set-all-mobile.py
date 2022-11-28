@@ -60,10 +60,10 @@ for device, info in zip(devices, devices_info):
     print(info[2], device.shell("su -c 'cd /sdcard/wmnl-handoff-research && /data/git pull'"))
     for tool in tools:
         if info[2][:2] == "sm":
-            device.shell("su -c 'cp /sdcard/wmnl-handoff-research/script-sm/termux-tools/{} /bin'".format(tool))
+            device.shell("su -c 'cp /sdcard/wmnl-handoff-research/experimentation-tools/android/script-sm/termux-tools/{} /bin'".format(tool))
             device.shell("su -c 'chmod +x /bin/{}'".format(tool))
         elif info[2][2] == "xm":
-            device.shell("su -c 'cp /sdcard/wmnl-handoff-research/script-xm/termux-tools/{} /sbin'".format(tool))
+            device.shell("su -c 'cp /sdcard/wmnl-handoff-research/experimentation-tools/android/script-xm/termux-tools/{} /sbin'".format(tool))
             device.shell("su -c 'chmod +x /sbin/{}'".format(tool))
     print("-----------------------------------")
     
