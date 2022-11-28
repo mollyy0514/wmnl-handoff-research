@@ -235,7 +235,7 @@ if args.timesync:
     for i, item in enumerate(interfaces):
         if item.startswith('sm'):
             interfaces[i] = 'wlan0'
-        elif item == 'laptop':
+        elif item == 'unam':
             try:
                 interfaces[i] = 'enp5s0'
             except:
@@ -252,7 +252,7 @@ else:
 for device, port, intf in zip(devices, ports, interfaces):
     bind_ip = '0.0.0.0'
     # if device.startswith('qc'):
-    if device.startswith(('qc', 'sm', 'laptop')):
+    if device.startswith(('qc', 'sm', 'unam')):
         # bind_ip = interface_to_ip[device]
         bind_ip = interface_to_ip[intf]
     # if args.bidir:
