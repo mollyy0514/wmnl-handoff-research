@@ -234,11 +234,14 @@ interfaces = devices
 if args.timesync:
     for i, item in enumerate(interfaces):
         if item.startswith('sm'):
-            interfaces[i] = 'wlan0'
-        elif item == 'unam':
-            try:
+            if 'wlan0' in interface_to_ip.keys():
+                interfaces[i] = 'wlan0'
+            else:
+                interfaces[i] = 'rmnet_data0'
+        elif item.startswith(('unam', 'qc')):
+            if 'enp5s0' in interface_to_ip.keys():
                 interfaces[i] = 'enp5s0'
-            except:
+            else:
                 interfaces[i] = 'wlp2s0'
 print(interfaces)
 print(interface_to_ip)
