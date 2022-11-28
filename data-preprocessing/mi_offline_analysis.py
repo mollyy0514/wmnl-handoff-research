@@ -49,7 +49,7 @@ args = parser.parse_args()
 
 # ********************* User Settings *********************
 database = "/home/wmnlab/D/database/"
-date = "2022-11-11"
+date = "2022-11-25"
 db_path = os.path.join(database, date)
 Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment_round)
                 # If the list is empty, it will list all directories in the current directory by default.
@@ -62,14 +62,15 @@ Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment
     # "_Bandlock_Tcp":(4, []),
     # "_Udp_Stationary_Bandlock":(1, []), 
     # "_Udp_Stationary_SameSetting":(1, []),
-    "_Test1":(2, [])
+    # "_Test1":(2, [])
+    "_Modem_Test":(1, [])
 }
 devices = sorted([
     # "sm03",
     # "sm04",
     # "sm05", 
-    "sm06",
-    "sm07",
+    "qc00",
+    "qc01",
     # "sm08",
 ])
 # *********************************************************

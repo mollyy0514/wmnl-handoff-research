@@ -15,7 +15,7 @@ from pytictoc import TicToc
 
 # ********************* User Settings *********************
 database = "/home/wmnlab/D/database/"
-date = "2022-09-29"
+date = "2022-11-25"
 db_path = os.path.join(database, date)
 Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment_round)
                 # If the list is empty, it will list all directories in the current directory by default.
@@ -23,20 +23,23 @@ Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment
     # "_Bandlock_Udp":(1, ["#01"]),
     # "_Bandlock_Udp":(5, ["#02", "#03", "#04", "#05", "#06"]),
     # "_Bandlock_Udp":(4, ["#01", "#02", "#03", "#04"]),
-    "_Bandlock_Udp":(6, []),
+    # "_Bandlock_Udp":(6, []),
     # "_Bandlock_Udp":(4, []),
     # "_Bandlock_Tcp":(4, []),
     # "_Udp_Stationary_Bandlock":(1, []), 
     # "_Udp_Stationary_SameSetting":(1, []),
     # "_Test1":(2, [])
+    "_Modem_Test":(1, [])
 }
 devices = sorted([
     # "sm03",
     # "sm04",
-    "sm05", 
-    "sm06",
-    "sm07",
-    "sm08",
+    # "sm05", 
+    # "sm06",
+    # "sm07",
+    # "sm08",
+    "qc00",
+    "qc01",
 ])
 # *********************************************************
 
@@ -79,12 +82,19 @@ def parse_handover(fin, fout):
             nr_freq = str(round(df.loc[i, "Freq"]))
         return nr_pci, nr_freq
     
+    def eci_track(mode=1):
+        if mode:
+            eci = df.loc[i, "Cell Identity"]
+        else:
+            eci = df.loc[k, "Cell Identity"]
+        return eci
+    
     df = pd.read_csv(fin)
     df.loc[:, 'Timestamp'] = pd.to_datetime(df.loc[:, 'Timestamp']) + dt.timedelta(hours=8)
     exp_time = (df['Timestamp'].iloc[-1] - df['Timestamp'].iloc[0]).total_seconds()
 
     ### add new columns
-    newCols = ['handoff_type', 'handoff_state', 'handoff_duration', 'nr_PCI', 'nr_Freq']
+    newCols = ['handoff_type', 'handoff_state', 'handoff_duration', 'nr_PCI', 'nr_Freq', 'eNB.ID', 'CID']
     df = df.reindex(df.columns.tolist() + newCols, axis=1)
     
     ### filter by packet type
@@ -115,6 +125,7 @@ def parse_handover(fin, fout):
     nr_freq = '-'
     post_nr_pci = '-'
     post_nr_freq = '-'
+    eci = '-'
     handover_num = 0
     ### Successful handover
     nr_handover = 0
@@ -137,6 +148,10 @@ def parse_handover(fin, fout):
                 post_nr_freq = df.loc[i, "ssbFrequency"] if df.loc[i, "ssbFrequency"] else nr_freq
                 nr_reserved = 1
             continue
+        if df.loc[i, "type_id"] == "LTE_RRC_Serv_Cell_Info":
+            eci = eci_track()
+            continue
+        
         if df.loc[i, "nr-rrc.t304"]:
             if nr_handover == 0:    
                 nr_handover = 1
@@ -162,11 +177,23 @@ def parse_handover(fin, fout):
             df.loc[lte_handover_start_index, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[lte_handover_start_index, "Timestamp"]).total_seconds()
             df.loc[lte_handover_start_index, 'nr_PCI'] = nr_pci
             df.loc[lte_handover_start_index, 'nr_Freq'] = nr_freq
+            df.loc[lte_handover_start_index, 'eNB.ID'] = eci // 256
+            df.loc[lte_handover_start_index, 'CID'] = eci % 256
             df.loc[i, 'handoff_type'] = 'lte_handover'
             df.loc[i, 'handoff_state'] = 'end'
             df.loc[i, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[lte_handover_start_index, "Timestamp"]).total_seconds()
             df.loc[i, 'nr_PCI'] = nr_pci
             df.loc[i, 'nr_Freq'] = nr_freq
+            k = i
+            while df.loc[k, 'type_id'] != "LTE_RRC_Serv_Cell_Info":
+                k += 1
+                if k == len(df):
+                    k = i
+                    break
+            if k != i:
+                eci = eci_track(0)
+            df.loc[i, 'eNB.ID'] = eci // 256
+            df.loc[i, 'CID'] = eci % 256
             # lte_handover_list.append((df.loc[lte_handover_start_index, "Timestamp"], df.loc[i, "Timestamp"]))
             lte_handover_list.append(1)
         elif lte_handover and not nr_handover and nr_release and df.loc[i, "rrcConnectionReconfigurationComplete"]:
@@ -178,11 +205,23 @@ def parse_handover(fin, fout):
             df.loc[lte_handover_start_index, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[lte_handover_start_index, "Timestamp"]).total_seconds()
             df.loc[lte_handover_start_index, 'nr_PCI'] = nr_pci
             df.loc[lte_handover_start_index, 'nr_Freq'] = nr_freq
+            df.loc[lte_handover_start_index, 'eNB.ID'] = eci // 256
+            df.loc[lte_handover_start_index, 'CID'] = eci % 256
             df.loc[i, 'handoff_type'] = 'endc2lte_MN_change'
             df.loc[i, 'handoff_state'] = 'end'
             df.loc[i, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[lte_handover_start_index, "Timestamp"]).total_seconds()
             df.loc[i, 'nr_PCI'] = post_nr_pci
             df.loc[i, 'nr_Freq'] = post_nr_freq
+            k = i
+            while df.loc[k, 'type_id'] != "LTE_RRC_Serv_Cell_Info":
+                k += 1
+                if k == len(df):
+                    k = i
+                    break
+            if k != i:
+                eci = eci_track(0)
+            df.loc[i, 'eNB.ID'] = eci // 256
+            df.loc[i, 'CID'] = eci % 256
             # endc2lte_MN_change_list.append((df.loc[lte_handover_start_index, "Timestamp"], df.loc[i, "Timestamp"]))
             endc2lte_MN_change_list.append(1)
             # nr_pci == '-'
@@ -196,11 +235,15 @@ def parse_handover(fin, fout):
                 df.loc[nr_handover_start_index, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[nr_handover_start_index, "Timestamp"]).total_seconds()
                 df.loc[nr_handover_start_index, 'nr_PCI'] = nr_pci
                 df.loc[nr_handover_start_index, 'nr_Freq'] = nr_freq
+                df.loc[nr_handover_start_index, 'eNB.ID'] = eci // 256
+                df.loc[nr_handover_start_index, 'CID'] = eci % 256
                 df.loc[i, 'handoff_type'] = 'SN_addition'
                 df.loc[i, 'handoff_state'] = 'end'
                 df.loc[i, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[nr_handover_start_index, "Timestamp"]).total_seconds()
                 df.loc[i, 'nr_PCI'] = post_nr_pci
                 df.loc[i, 'nr_Freq'] = post_nr_freq
+                df.loc[i, 'eNB.ID'] = eci // 256
+                df.loc[i, 'CID'] = eci % 256
                 # SN_addition_list.append((df.loc[nr_handover_start_index, "Timestamp"], df.loc[i, "Timestamp"]))
                 SN_addition_list.append(1)
             else:
@@ -209,11 +252,15 @@ def parse_handover(fin, fout):
                 df.loc[nr_handover_start_index, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[nr_handover_start_index, "Timestamp"]).total_seconds()
                 df.loc[nr_handover_start_index, 'nr_PCI'] = nr_pci
                 df.loc[nr_handover_start_index, 'nr_Freq'] = nr_freq
+                df.loc[nr_handover_start_index, 'eNB.ID'] = eci // 256
+                df.loc[nr_handover_start_index, 'CID'] = eci % 256
                 df.loc[i, 'handoff_type'] = 'endc_SN_change'
                 df.loc[i, 'handoff_state'] = 'end'
                 df.loc[i, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[nr_handover_start_index, "Timestamp"]).total_seconds()
                 df.loc[i, 'nr_PCI'] = post_nr_pci
                 df.loc[i, 'nr_Freq'] = post_nr_freq
+                df.loc[i, 'eNB.ID'] = eci // 256
+                df.loc[i, 'CID'] = eci % 256
                 # endc_SN_change_list.append((df.loc[nr_handover_start_index, "Timestamp"], df.loc[i, "Timestamp"]))
                 endc_SN_change_list.append(1)
                 
@@ -240,11 +287,23 @@ def parse_handover(fin, fout):
                 df.loc[lte_handover_start_index, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[lte_handover_start_index, "Timestamp"]).total_seconds()
                 df.loc[lte_handover_start_index, 'nr_PCI'] = nr_pci
                 df.loc[lte_handover_start_index, 'nr_Freq'] = nr_freq
+                df.loc[lte_handover_start_index, 'eNB.ID'] = eci // 256
+                df.loc[lte_handover_start_index, 'CID'] = eci % 256
                 df.loc[i, 'handoff_type'] = 'endc_MN_change'
                 df.loc[i, 'handoff_state'] = 'end'
                 df.loc[i, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[lte_handover_start_index, "Timestamp"]).total_seconds()
                 df.loc[i, 'nr_PCI'] = nr_pci
                 df.loc[i, 'nr_Freq'] = nr_freq
+                k = i
+                while df.loc[k, 'type_id'] != "LTE_RRC_Serv_Cell_Info":
+                    k += 1
+                    if k == len(df):
+                        k = i
+                        break
+                if k != i:
+                    eci = eci_track(0)
+                df.loc[i, 'eNB.ID'] = eci // 256
+                df.loc[i, 'CID'] = eci % 256
                 # endc_MN_change_list.append((df.loc[lte_handover_start_index, "Timestamp"], df.loc[i, "Timestamp"]))
                 endc_MN_change_list.append(1)
             else:
@@ -254,11 +313,23 @@ def parse_handover(fin, fout):
                     df.loc[nr_handover_start_index, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[nr_handover_start_index, "Timestamp"]).total_seconds()
                     df.loc[nr_handover_start_index, 'nr_PCI'] = nr_pci
                     df.loc[nr_handover_start_index, 'nr_Freq'] = nr_freq
+                    df.loc[lte_handover_start_index, 'eNB.ID'] = eci // 256
+                    df.loc[lte_handover_start_index, 'CID'] = eci % 256
                     df.loc[i, 'handoff_type'] = 'lte2endc_MN_change'
                     df.loc[i, 'handoff_state'] = 'end'
                     df.loc[i, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[nr_handover_start_index, "Timestamp"]).total_seconds()
                     df.loc[i, 'nr_PCI'] = post_nr_pci
                     df.loc[i, 'nr_Freq'] = post_nr_freq
+                    k = i
+                    while df.loc[k, 'type_id'] != "LTE_RRC_Serv_Cell_Info":
+                        k += 1
+                        if k == len(df):
+                            k = i
+                            break
+                    if k != i:
+                        eci = eci_track(0)
+                    df.loc[i, 'eNB.ID'] = eci // 256
+                    df.loc[i, 'CID'] = eci % 256
                     # lte2endc_MN_change_list.append((df.loc[nr_handover_start_index, "Timestamp"], df.loc[i, "Timestamp"]))
                     lte2endc_MN_change_list.append(1)
                 else:
@@ -267,11 +338,23 @@ def parse_handover(fin, fout):
                     df.loc[lte_handover_start_index, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[lte_handover_start_index, "Timestamp"]).total_seconds()
                     df.loc[lte_handover_start_index, 'nr_PCI'] = nr_pci
                     df.loc[lte_handover_start_index, 'nr_Freq'] = nr_freq
+                    df.loc[lte_handover_start_index, 'eNB.ID'] = eci // 256
+                    df.loc[lte_handover_start_index, 'CID'] = eci % 256
                     df.loc[i, 'handoff_type'] = 'endc_MNSN_change'
                     df.loc[i, 'handoff_state'] = 'end'
                     df.loc[i, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[lte_handover_start_index, "Timestamp"]).total_seconds()
                     df.loc[i, 'nr_PCI'] = post_nr_pci
                     df.loc[i, 'nr_Freq'] = post_nr_freq
+                    k = i
+                    while df.loc[k, 'type_id'] != "LTE_RRC_Serv_Cell_Info":
+                        k += 1
+                        if k == len(df):
+                            k = i
+                            break
+                    if k != i:
+                        eci = eci_track(0)
+                    df.loc[i, 'eNB.ID'] = eci // 256
+                    df.loc[i, 'CID'] = eci % 256
                     # endc_MNSN_change_list.append((df.loc[lte_handover_start_index, "Timestamp"], df.loc[i, "Timestamp"]))
                     endc_MNSN_change_list.append(1)
             
@@ -297,11 +380,15 @@ def parse_handover(fin, fout):
             df.loc[nr_release_start_index, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[nr_release_start_index, "Timestamp"]).total_seconds()
             df.loc[nr_release_start_index, 'nr_PCI'] = nr_pci
             df.loc[nr_release_start_index, 'nr_Freq'] = nr_freq
+            df.loc[nr_handover_start_index, 'eNB.ID'] = eci // 256
+            df.loc[nr_handover_start_index, 'CID'] = eci % 256
             df.loc[i, 'handoff_type'] = 'SN_removal'
             df.loc[i, 'handoff_state'] = 'end'
             df.loc[i, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[nr_release_start_index, "Timestamp"]).total_seconds()
             df.loc[i, 'nr_PCI'] = post_nr_pci
             df.loc[i, 'nr_Freq'] = post_nr_freq
+            df.loc[i, 'eNB.ID'] = eci // 256
+            df.loc[i, 'CID'] = eci % 256
             # SN_removal_list.append((df.loc[nr_release_start_index, "Timestamp"], df.loc[i, "Timestamp"]))
             SN_removal_list.append(1)
 
@@ -314,6 +401,8 @@ def parse_handover(fin, fout):
             df.loc[i, 'handoff_state'] = 'trigger'
             df.loc[i, 'nr_PCI'] = df.loc[i, "nr_physCellId"] if df.loc[i, "nr_physCellId"] else nr_pci   # report the failed target nr_pci
             df.loc[i, 'nr_Freq'] = df.loc[i, "ssbFrequency"] if df.loc[i, "nr_physCellId"] else nr_freq  # report the failed target nr_freq
+            df.loc[i, 'eNB.ID'] = eci // 256
+            df.loc[i, 'CID'] = eci % 256
             # df.loc[i, 'nr_PCI'] = nr_pci    # report the original nr_pci
             # df.loc[i, 'nr_Freq'] = nr_freq  # report the original nr_freq
             # scg_failure_list.append((df.loc[i, "Timestamp"], df.loc[i, "Timestamp"]))
@@ -330,6 +419,8 @@ def parse_handover(fin, fout):
             df.loc[lte_failure_start_index, 'handoff_state'] = 'trigger'
             df.loc[lte_failure_start_index, 'nr_PCI'] = nr_pci    # report the original nr_pci
             df.loc[lte_failure_start_index, 'nr_Freq'] = nr_freq  # report the original nr_freq
+            df.loc[i, 'eNB.ID'] = eci // 256
+            df.loc[i, 'CID'] = eci % 256
             # radio_link_failure_list.append((df.loc[lte_failure_start_index, "Timestamp"], df.loc[lte_failure_start_index, "Timestamp"]))
             radio_link_failure_list.append(1)
         
@@ -339,6 +430,8 @@ def parse_handover(fin, fout):
             df.loc[lte_failure_start_index, 'handoff_state'] = 'trigger'
             df.loc[lte_failure_start_index, 'nr_PCI'] = nr_pci    # report the original nr_pci
             df.loc[lte_failure_start_index, 'nr_Freq'] = nr_freq  # report the original nr_freq
+            df.loc[i, 'eNB.ID'] = eci // 256
+            df.loc[i, 'CID'] = eci % 256
             # nas_recovery_list.append((df.loc[lte_failure_start_index, "Timestamp"], df.loc[lte_failure_start_index, "Timestamp"]))
             nas_recovery_list.append(1)
 
@@ -358,7 +451,7 @@ def parse_handover(fin, fout):
     ### select subset columns
     subset = [
         'Timestamp', 'type_id', 'handoff_type', 'handoff_state', 'handoff_duration', 
-        'PCI', 'Freq', 'nr_PCI', 'nr_Freq',
+        'eNB.ID', 'CID', 'PCI', 'Freq', 'nr_PCI', 'nr_Freq',
         # 'UL_DL',
         # 'measurementReport',                        # 手機給基地台資訊
         # 'rrcConnectionReconfiguration',             # 基地台叫手機做的事情，會包住 nr-rrc.t304 或 lte-rrc.t304 或 nr-Config-r15: release (0) 或 nr-Config-r15: setup (1)

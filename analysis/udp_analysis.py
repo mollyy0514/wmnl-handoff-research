@@ -63,7 +63,7 @@ PKT_RATE = DATA_RATE / Payload.LENGTH / 8  # packets-per-second
 print("packet_rate (pps):", PKT_RATE, "\n")
 
 database = "/home/wmnlab/D/database/"
-date = "2022-11-11"
+date = "2022-11-25"
 db_path = os.path.join(database, date)
 Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment_round)
                 # If the list is empty, it will list all directories in the current directory by default.
@@ -76,14 +76,15 @@ Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment
     # "_Bandlock_Udp":(4, []),
     # "_Udp_Stationary_Bandlock":(1, []),
     # "_Udp_Stationary_SameSetting":(1, []),
-    "_Test1":(2, [])
+    # "_Test1":(2, [])
+    "_Modem_Test":(1, [])
 }
 devices = sorted([
     # "sm03",
     # "sm04",
     # "sm05", 
-    "sm06",
-    "sm07",
+    "qc00",
+    "qc01",
     # "sm08",
 ])
 # *****************************************************************************
@@ -327,13 +328,14 @@ def filter(df, terminal, direction, protocol):
     # df = df[df['data.data'] != np.nan]
     # df = df[df['data.len'] != 0]
     # df = df[df['data.len'] % Payload.LENGTH == 0]
-    ### Modified iPerf3
-    if protocol == 'udp':
-        # condition3 = df['udp.payload'].str.contains(Payload.TAG)
-        df = df[df['udp.payload'].str.contains(Payload.TAG)]
-    elif protocol == 'tcp':
-        # condition3 = df['tcp.payload'].str.contains(Payload.TAG)
-        df = df[df['tcp.payload'].str.contains(Payload.TAG)]
+    df = df[(df['udp.length'] % Payload.LENGTH == 8) & (df['udp.length'] > Payload.LENGTH)]
+    # ### Modified iPerf3
+    # if protocol == 'udp':
+    #     # condition3 = df['udp.payload'].str.contains(Payload.TAG)
+    #     df = df[df['udp.payload'].str.contains(Payload.TAG)]
+    # elif protocol == 'tcp':
+    #     # condition3 = df['tcp.payload'].str.contains(Payload.TAG)
+    #     df = df[df['tcp.payload'].str.contains(Payload.TAG)]
     # df = df[condition1 & condition2 & condition3]
     return df
 

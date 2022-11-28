@@ -49,7 +49,7 @@ args = parser.parse_args()
 
 # ********************* User Settings *********************
 database = "/home/wmnlab/D/database/"
-date = "2022-11-11"
+date = "2022-11-25"
 db_path = os.path.join(database, date)
 Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment_round)
                 # If the list is empty, it will list all directories in the current directory by default.
@@ -61,14 +61,15 @@ Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment
     # "_Bandlock_Udp":(4, []),
     # "_Udp_Stationary_Bandlock":(1, []), 
     # "_Udp_Stationary_SameSetting":(1, []),
-    "_Test1":(2, [])
+    # "_Test1":(2, [])
+    "_Modem_Test":(1, [])
 }
 devices = sorted([
     # "sm03",
     # "sm04",
     # "sm05", 
-    "sm06",
-    "sm07",
+    "qc00",
+    "qc01",
     # "sm08",
 ])
 # *********************************************************
@@ -100,7 +101,7 @@ def pcap_to_csv(fin, fout):
             -E header=y -E separator=@ > {}".format(fin, fout)
         subprocess.Popen(s, shell=True)
         time.sleep(1)  # Not enough for 30min-500pps-pcap 
-        # time.sleep(4)
+        time.sleep(4)
     except:
         ### Record error message without halting the program
         return (fin, fout, traceback.format_exc())

@@ -23,7 +23,7 @@ args = parser.parse_args()
 
 # ********************* User Settings *********************
 database = "/home/wmnlab/D/database/"
-date = "2022-11-11"
+date = "2022-11-25"
 db_path = os.path.join(database, date)
 Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment_round)
                 # If the list is empty, it will list all directories in the current directory by default.
@@ -36,14 +36,15 @@ Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment
     # "_Bandlock_Tcp":(4, []),
     # "_Udp_Stationary_Bandlock":(1, []), 
     # "_Udp_Stationary_SameSetting":(1, []),
-    "_Test1":(2, [])
+    # "_Test1":(2, [])
+    "_Modem_Test":(1, [])
 }
 devices = sorted([
     # "sm03",
     # "sm04",
     # "sm05", 
-    "sm06",
-    "sm07",
+    "qc00",
+    "qc01",
     # "sm08",
 ])
 # *********************************************************
@@ -181,6 +182,17 @@ def xml_to_csv_rrc(fin, fout):
         "PCI",
         "UL_DL",
         "Freq",
+
+        "DL frequency",
+        "UL frequency",
+        "DL bandwidth",
+        "UL bandwidth",
+        "Cell Identity",
+        "TAC",
+        "Band ID",
+        "MCC",
+        "MNC",
+        "MNC digit",
 
         ## Measure report related
         "measurementReport",
@@ -380,7 +392,7 @@ def xml_to_csv_rrc(fin, fout):
                 PCI = "-"
                 Freq = '-'
 
-            if type_id != 'LTE_RRC_OTA_Packet' and type_id != '5G_NR_RRC_OTA_Packet': ## 只處理RRC
+            if type_id != 'LTE_RRC_OTA_Packet' and type_id != '5G_NR_RRC_OTA_Packet' and type_id != "LTE_RRC_Serv_Cell_Info": ## 只處理RRC
                 while l and r"</dm_log_packet>" not in l:
                     l = f.readline()
                 l = f.readline()
@@ -390,6 +402,24 @@ def xml_to_csv_rrc(fin, fout):
             #     continue
             #     f2.write(",".join([timestamp, type_id, PCI, "-"] + type_code)+'\n')
             # print(222)
+
+            elif type_id == "LTE_RRC_Serv_Cell_Info":
+                # print("LTE_RRC_Serv_Cell_Info")
+                PCI = soup.find(key="Cell ID").get_text()
+                DL_f = soup.find(key="Downlink frequency").get_text()
+                UL_f = soup.find(key="Uplink frequency").get_text()
+                DL_BW = soup.find(key="Downlink bandwidth").get_text()
+                UL_BW = soup.find(key="Uplink bandwidth").get_text()
+                Cell_identity = soup.find(key="Cell Identity").get_text()
+                TAC = soup.find(key="TAC").get_text()
+                Band_ID = soup.find(key="Band Indicator").get_text()
+                MCC = soup.find(key="MCC").get_text()
+                MNC_d = soup.find(key="MNC Digit").get_text()
+                MNC = soup.find(key="MNC").get_text()
+                # f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ["", "", "", "", "", "", "", "", "", ""] + type_code)+'\n')
+                f2.write(",".join([timestamp, type_id, PCI, "", "", DL_f, UL_f, DL_BW, UL_BW, Cell_identity, TAC, Band_ID, MCC, MNC, MNC_d] )+'\n')
+                # print("LTE_RRC_Serv_Cell_Info end!!")
+                l = f.readline()
 
             else:
                 UL_DL = '-'
@@ -565,7 +595,8 @@ def xml_to_csv_rrc(fin, fout):
                     
                     l = f.readline()
                 l = f.readline()
-                f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + type_code)+'\n')
+                f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ["", "", "", "", "", "", "", "", "", ""] + type_code)+'\n')
+                # f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + type_code)+'\n')
         else:
             print(l,"Error!")
             break 
