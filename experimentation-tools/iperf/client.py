@@ -152,11 +152,20 @@ def get_network_interface_list():
     network_interface_list = []
     flag = 0
     for line in lines:
-        if not flag and r"RUNNING" in line and 'lo' not in line:
+        if not flag and (r"RUNNING" in line and 'lo' not in line and 'Metric' not in line) or 'wlan0' in line or 'rmnet_data0' in line:
             interface = line[:line.find(':')]
             flag = 1
+            if 'wlan0' in line:
+                flag = 'wlan0'
+            elif 'rmnet_data0' in line:
+                flag = 'rmnet_data0'
         elif flag:
-            ip = line[line.find('inet')+5:line.find('netmask')-2]
+            if flag == 'wlan0':
+                ip = line[line.find('inet')+5:line.find('Bcast')-2]
+            elif flag == 'rmnet_data0':
+                ip = line[line.find('inet')+5:line.find('Mask')-2]
+            else:
+                ip = line[line.find('inet')+5:line.find('netmask')-2]
             network_interface_list.append((interface, ip))
             flag = 0
     return sorted(network_interface_list)
