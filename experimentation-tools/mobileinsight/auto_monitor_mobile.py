@@ -98,8 +98,8 @@ while True:
         #     print(run_item, ", PID: ", run_item.pid)
         #     os.system("sudo kill -9 {}".format(run_item.pid))
         # os.system("sudo pkill python3")
-        os.system("ps -ef | grep python3 > ps_tmp.txt")
-        with open('ps_list.txt', 'r') as fp:
+        os.system("ps -ef | grep python3 > ps_temp.txt")
+        with open('ps_temp.txt', 'r') as fp:
             lines = fp.readlines()
         infos = [[] for i in range(len(lines))]
         for i, line in enumerate(lines):
@@ -112,9 +112,10 @@ while True:
         for info in infos:
             if info[7].startswith("python3 ./auto_monitor_mobile.py"):
                 kill_list.append(info[1])
-        for pid in kill_list:
+        for pid in kill_list[:-1]:
             os.system("sudo kill -9 {}".format(pid))
-        os.system("sudo rm ps_list.txt")
+        os.system("sudo rm ps_temp.txt")
+        os.system("sudo kill -9 {}".format(kill_list[-1]))
         break
     except Exception as e:
         print("error", e)
