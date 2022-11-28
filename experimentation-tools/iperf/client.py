@@ -160,6 +160,9 @@ def get_network_interface_list():
                 interface = 'rmnet_data0'
         elif flag:
             if interface == 'wlan0':
+                if 'inet' not in line:
+                    flag = 0
+                    continue
                 ip = line[line.find('inet')+5:line.find('Bcast')-2]
             elif interface == 'rmnet_data0':
                 ip = line[line.find('inet')+5:line.find('Mask')-2]
