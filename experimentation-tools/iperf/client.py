@@ -246,20 +246,26 @@ interfaces = devices
 for i, item in enumerate(interfaces):
     if item.startswith('sm') and 'wlan0' in interface_to_ip.keys():
         print("Warning: Wi-Fi is on!!!!!")
-
+        interfaces[i] = 'wlan0'
+    elif item.startswith('sm') and 'rmnet_data0' in interface_to_ip.keys():
+        interfaces[i] = 'rmnet_data0'
+    elif item.startswith('qc') and 'enp5s0' in interface_to_ip.keys() and args.tsync:
+        interfaces[i] = 'enp5s0'
+    elif item.startswith('qc') and 'wlp2s0' in interface_to_ip.keys() and args.tsync:
+        interfaces[i] = 'wlp2s0'
 print(interface_to_ip)
-if args.tsync:
-    for i, item in enumerate(interfaces):
-        if item.startswith('sm'):
-            if 'wlan0' in interface_to_ip.keys():
-                interfaces[i] = 'wlan0'
-            else:
-                interfaces[i] = 'rmnet_data0'
-        elif item.startswith('qc'):
-            if 'enp5s0' in interface_to_ip.keys():
-                interfaces[i] = 'enp5s0'
-            else:
-                interfaces[i] = 'wlp2s0'
+# if args.tsync:
+#     for i, item in enumerate(interfaces):
+#         if item.startswith('sm'):
+#             if 'wlan0' in interface_to_ip.keys():
+#                 interfaces[i] = 'wlan0'
+#             else:
+#                 interfaces[i] = 'rmnet_data0'
+#         elif item.startswith('qc'):
+#             if 'enp5s0' in interface_to_ip.keys():
+#                 interfaces[i] = 'enp5s0'
+#             else:
+#                 interfaces[i] = 'wlp2s0'
 print("Selected Interface:", interfaces)
 
 print("Main Ports:", ports[::2])
