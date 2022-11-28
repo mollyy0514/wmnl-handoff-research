@@ -43,10 +43,10 @@ parser.add_argument("-L", "--logfile", action="store_true",
                     help="save iperf output to logfile")
 parser.add_argument("-K", "--keywords", type=str,
                     help="keywords for socket statistics", default=["bytes_sent", "cwnd"])
-parser.add_argument("-R", "--reverse", action="store_true",  # needs no value, True if set "-R"
-                    help="downlink or not")                  # default using uplink
-parser.add_argument("--bidir", action="store_true",          # needs no value, True if set "--bidir"
-                    help="bi-link or not")                   # default using uplink
+# parser.add_argument("-R", "--reverse", action="store_true",  # needs no value, True if set "-R"
+#                     help="downlink or not")                  # default using uplink
+# parser.add_argument("--bidir", action="store_true",          # needs no value, True if set "--bidir"
+#                     help="bi-link or not")                   # default using uplink
 args = parser.parse_args()
 
 device_to_port = {
@@ -230,32 +230,35 @@ else:
     ports = ports[1::2]
 for device, port in zip(devices, ports):
     bind_ip = '0.0.0.0'
-    if device.startswith('qc'):
+    # if device.startswith('qc'):
+    if device.startswith(('qc', 'sm')):
         bind_ip = interface_to_ip[device]
-    if args.bidir:
-        # tcpdump
-        pcap = os.path.join(pcap_path, "client_pcap_BL_{}_{}_{}.pcap".format(device, port, n))
-        _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
-        # iperf
-        log = os.path.join(log_path, "client_log_BL_{}_{}_{}.log".format(device, port, n))
-        if args.logfile:
-            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} --bidir -B {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log, bind_ip))
-        else:
-            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --bidir -B {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, bind_ip))
-        # ss
-        ss_threads.append(threading.Thread(target = get_ss, args = (device, port, 'bl')))
+    # if args.bidir:
+    #     # tcpdump
+    #     pcap = os.path.join(pcap_path, "client_pcap_BL_{}_{}_{}.pcap".format(device, port, n))
+    #     _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
+    #     # iperf
+    #     log = os.path.join(log_path, "client_log_BL_{}_{}_{}.log".format(device, port, n))
+    #     if args.logfile:
+    #         _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} --bidir -B {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log, bind_ip))
+    #     else:
+    #         _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --bidir -B {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, bind_ip))
+    #     # ss
+    #     ss_threads.append(threading.Thread(target = get_ss, args = (device, port, 'bl')))
+    # else:
+    # tcpdump
+    pcap = os.path.join(pcap_path, "client_pacp_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
+    _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
+    # iperf
+    log = os.path.join(log_path, "client_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, port, n))
+    if args.logfile:
+        _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} -B {} --bind-dev {}".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time, log, bind_ip, device))
+        # _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {}".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time, log))
     else:
-        # tcpdump
-        pcap = os.path.join(pcap_path, "client_pacp_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
-        _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
-        # iperf
-        log = os.path.join(log_path, "client_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, port, n))
-        if args.logfile:
-            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} -B {}".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time, log, bind_ip))
-        else:
-            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V -B {}".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time, bind_ip))
-        # ss
-        ss_threads.append(threading.Thread(target = get_ss, args = (device, port, args.stream)))
+        _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V -B {} --bind-dev {}".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time, bind_ip, device))
+        # _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time))
+    # ss
+    ss_threads.append(threading.Thread(target = get_ss, args = (device, port, args.stream)))
 
 # Run all commands in the collection
 run_list = []  # running session list
