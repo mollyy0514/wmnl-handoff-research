@@ -57,6 +57,7 @@ if args.tsync:
     if args.host == "140.112.20.183":
         args.host = "192.168.1.248"
     args.udp = True
+    args.time = 60
 
 device_to_port = {
     "xm00": (3230, 3231),
