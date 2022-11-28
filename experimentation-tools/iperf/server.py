@@ -25,6 +25,8 @@ parser.add_argument("-L", "--logfile", action="store_true",
                     help="save iperf output to logfile")
 parser.add_argument("-K", "--keywords", type=str,
                     help="keywords for socket statistics", default=["bytes_sent", "cwnd"])
+parser.add_argument("--tsync", action="store_true",          # needs no value, True if set "--timesync"
+                    help="time sync mode")                   # default "experiment" mode
 # parser.add_argument("-R", "--reverse", action="store_true",  # needs no value, True if set "-R"
 #                     help="downlink or not")                  # default using uplink
 # parser.add_argument("--bidir", action="store_true",          # needs no value, True if set "--bidir"
@@ -97,12 +99,15 @@ if not os.path.exists(ss_path):
     os.mkdir(ss_path)
 
 # ----------------------------------- Define Utils Function ------------------------------------- #
-def get_ss(device, port, mode):
+def get_ss(device, port, mode, tsync=False):
     global thread_stop
     global n
     global args
 
-    fp = open(os.path.join(ss_path, "server_stats_{}_{}_{}_{}.csv".format(mode.upper(), device, port, n)), 'a+')
+    if tsync:
+        fp = open(os.path.join(ss_path, "server_stats_{}_{}_{}_{}_tsync.csv".format(mode.upper(), device, port, n)), 'a+')
+    else:
+        fp = open(os.path.join(ss_path, "server_stats_{}_{}_{}_{}.csv".format(mode.upper(), device, port, n)), 'a+')
     print(fp)
     while not thread_stop:
         # ss --help (Linux/Android)
@@ -197,16 +202,22 @@ for device, port in zip(devices, ports):
     #     ss_threads.append(threading.Thread(target = get_ss, args = (device, port, 'bl')))
     # else:
     # tcpdump
-    pcap = os.path.join(pcap_path, "server_pacp_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
+    if args.tsync:
+        pcap = os.path.join(pcap_path, "server_pacp_{}_{}_{}_{}_tsync.pcap".format(args.stream.upper(), device, port, n))
+    else:
+        pcap = os.path.join(pcap_path, "server_pacp_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
     _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
     # iperf
-    log = os.path.join(log_path, "server_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, port, n))
+    if args.tsync:
+        log = os.path.join(log_path, "server_log_{}_{}_{}_{}_tsync.log".format(args.stream.upper(), device, port, n))
+    else:
+        log = os.path.join(log_path, "server_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, port, n))
     if args.logfile:
         _l.append("iperf3 -s -B 0.0.0.0 -p {} -V --logfile".format(port, log))
     else:
         _l.append("iperf3 -s -B 0.0.0.0 -p {} -V".format(port))
     # ss
-    ss_threads.append(threading.Thread(target = get_ss, args = (device, port, args.stream)))
+    ss_threads.append(threading.Thread(target = get_ss, args = (device, port, args.stream, args.tsync)))
 
 # Run all commands in the collection
 run_list = []  # running session list
