@@ -52,7 +52,9 @@ parser.add_argument("--tsync", action="store_true",          # needs no value, T
 args = parser.parse_args()
 
 if args.tsync:
-    args.host = "192.168.1.248"
+    if args.host == "140.112.20.183":
+        args.host = "192.168.1.248"
+    args.udp = True
 
 device_to_port = {
     "xm00": (3230, 3231),
