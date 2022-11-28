@@ -239,11 +239,12 @@ interface_to_ip = {item[0] : item[1] for item in get_network_interface_list()}
 # samsung: 4G/5G - rmnet_data0; wi-fi - wlan0; wi-fi > 4G/5G in priority
 # laptop (Ubuntu): wired - enp5s0; wi-fi - wlp2s0
 
-print(interface_to_ip)
 interfaces = devices
 for i, item in enumerate(interfaces):
     if item.startswith('sm') and 'wlan0' in interface_to_ip.keys():
         print("Warning: Wi-Fi is on!!!!!")
+
+print(interface_to_ip)
 if args.tsync:
     for i, item in enumerate(interfaces):
         if item.startswith('sm'):
@@ -256,7 +257,7 @@ if args.tsync:
                 interfaces[i] = 'enp5s0'
             else:
                 interfaces[i] = 'wlp2s0'
-print(interfaces)
+print("Selected Interface:", interfaces)
 
 print("Main Ports:", ports[::2])
 print("Auxiliary Ports:", ports[1::2])
