@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser()
 # parser.add_argument("-d", "--device", type=str,
 #                     help="device name (allows only 1 device)", default="unam")
 parser.add_argument("-d", "--devices", type=str, nargs='+',  # input list of devices sep by 'space'
-                    help="list of devices", default=["unam"])
+                    help="list of devices", default=["lapt"])
 parser.add_argument("-H", "--host", type=str,
                     help="server ip address", default="140.112.20.183")   # Lab249 外網
                     # help="server ip address", default="192.168.1.248")  # Lab249 內網
@@ -43,7 +43,7 @@ parser.add_argument("-L", "--logfile", action="store_true",
                     help="save iperf output to logfile")
 parser.add_argument("-K", "--keywords", type=str,
                     help="keywords for socket statistics", default=["bytes_sent", "cwnd"])
-parser.add_argument("--timesync", action="store_true",       # needs no value, True if set "--timesync"
+parser.add_argument("--tsync", action="store_true",       # needs no value, True if set "--timesync"
                     help="time sync mode")                   # default "experiment" mode
 # parser.add_argument("-R", "--reverse", action="store_true",  # needs no value, True if set "-R"
 #                     help="downlink or not")                  # default using uplink
@@ -51,7 +51,7 @@ parser.add_argument("--timesync", action="store_true",       # needs no value, T
 #                     help="bi-link or not")                   # default using uplink
 args = parser.parse_args()
 
-if args.timesync:
+if args.tsync:
     args.host = "192.168.1.248"
 
 device_to_port = {
@@ -86,8 +86,8 @@ device_to_port = {
     "qc01": (3272, 3273),
     "qc02": (3274, 3275),
     "qc03": (3276, 3277),
+    "lapt": (3280, 3281),
     "unam": (3280, 3281),
-    "laptop": (3280, 3281),
 }
 
 # ----------------------------------------- Parameters ------------------------------------------ #
@@ -231,14 +231,14 @@ interface_to_ip = {item[0] : item[1] for item in get_network_interface_list() if
 # laptop (Ubuntu): wired - enp5s0; wi-fi - wlp2s0
 
 interfaces = devices
-if args.timesync:
+if args.tsync:
     for i, item in enumerate(interfaces):
         if item.startswith('sm'):
             if 'wlan0' in interface_to_ip.keys():
                 interfaces[i] = 'wlan0'
             else:
                 interfaces[i] = 'rmnet_data0'
-        elif item.startswith(('unam', 'qc')):
+        elif item.startswith(('lapt', 'qc')):
             if 'enp5s0' in interface_to_ip.keys():
                 interfaces[i] = 'enp5s0'
             else:

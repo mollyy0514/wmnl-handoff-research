@@ -16,7 +16,7 @@ import re
 # ------------------------------ Add Arguments & Global Variables ------------------------------- #
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--devices", type=str, nargs='+',  # input list of devices sep by 'space'
-                    help="list of devices", default=["unam"])
+                    help="list of devices", default=["lapt"])
 parser.add_argument("-p", "--ports", type=int, nargs='+',    # input list of port numbers sep by 'space'
                     help="ports to bind")
 parser.add_argument("-S", "--stream", type=str,
@@ -63,8 +63,8 @@ device_to_port = {
     "qc01": (3272, 3273),
     "qc02": (3274, 3275),
     "qc03": (3276, 3277),
+    "lapt": (3280, 3281),
     "unam": (3280, 3281),
-    "laptop": (3280, 3281),
 }
 
 # ----------------------------------------- Parameters ------------------------------------------ #
