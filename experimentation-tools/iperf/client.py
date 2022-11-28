@@ -253,11 +253,25 @@ for device, port in zip(devices, ports):
     # iperf
     log = os.path.join(log_path, "client_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, port, n))
     if args.logfile:
-        _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} -B {} --bind-dev {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log, bind_ip, device))
-        # _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log))
+        if args.stream == 'bl':
+            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} -B {} --bind-dev {} --bidir".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log, bind_ip, device))
+            # _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} --bidir".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log))
+        elif args.stream == 'dl':
+            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} -B {} --bind-dev {} -R".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log, bind_ip, device))
+            # _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} -R".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log))
+        elif args.stream == 'ul':
+            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} -B {} --bind-dev {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log, bind_ip, device))
+            # _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log))
     else:
-        _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V -B {} --bind-dev {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, bind_ip, device))
-        # _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time))
+        if args.stream == 'bl':
+            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V -B {} --bind-dev {} --bidir".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, bind_ip, device))
+            # _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --bidir".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time))
+        elif args.stream == 'dl':
+            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V -B {} --bind-dev {} -R".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, bind_ip, device))
+            # _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V -R".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time))
+        elif args.stream == 'ul':
+            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V -B {} --bind-dev {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, bind_ip, device))
+            # _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time))
     # ss
     ss_threads.append(threading.Thread(target = get_ss, args = (device, port, args.stream)))
 
