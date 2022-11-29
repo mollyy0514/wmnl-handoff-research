@@ -27,7 +27,7 @@ START_DAEMON="true"
 '''
 
 # Restart gpsd
-service gpsd restart
+sudo service gpsd restart
 
 # check gps
 cgps
@@ -53,4 +53,4 @@ fudge 127.127.28.1 refid PPS
 '''
 
 # Restart ntpd
-service ntp restart
+sudo service ntp restart
