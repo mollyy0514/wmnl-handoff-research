@@ -10,6 +10,13 @@ sudo rmmod usbserial
 # lsmod
 # lsmod | grep usbserial
 
+# Edit "/etc/modprobe.d/blacklist.conf"
+''' 
+### sudo vim /etc/modprobe.d/blacklist.conf
+blacklist pl2303
+### reboot
+''' 
+
 sudo modprobe usbserial vendor=0x05c6 product=0x9091
 # sudo modprobe usbserial vendor=0x2c7c product=0x0800
 sleep 1
