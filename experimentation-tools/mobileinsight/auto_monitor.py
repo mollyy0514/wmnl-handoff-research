@@ -83,6 +83,7 @@ for i, info in enumerate(mobile_info):
     devices.append(info[2])
 
 print("Device List:", devices)
+time.sleep(5)
 
 ### Run MobileInsight
 run_list = []
