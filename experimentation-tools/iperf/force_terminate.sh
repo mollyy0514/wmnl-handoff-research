@@ -1,4 +1,4 @@
-#! /usr/bin/sh
+#!/usr/bin/sh
 
 sudo killall -9 python3
 sleep 1
