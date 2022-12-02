@@ -83,7 +83,6 @@ for i, info in enumerate(mobile_info):
     devices.append(info[2])
 
 print("Device List:", devices)
-time.sleep(5)
 
 ### Run MobileInsight
 run_list = []
@@ -93,6 +92,8 @@ for i, dev in enumerate(devices):
 
 for item in run_list:
     print(item.pid)
+
+time.sleep(3)
     
 ### Kill Python3 sessions when capturing KeyboardInterrupt
 while True:
