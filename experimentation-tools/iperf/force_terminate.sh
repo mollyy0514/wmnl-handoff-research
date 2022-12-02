@@ -1,8 +1,11 @@
 #!/usr/bin/sh
 
-sudo killall -9 python3
+sudo pkill python3
 sleep 1
-sudo killall -9 sh
+sudo pkill sh
 sleep 1
-sudo killall -9 tcpdump
+sudo pkill tcpdump
 sleep 1
+sudo pkill iperf3
+sleep 1
+ 
