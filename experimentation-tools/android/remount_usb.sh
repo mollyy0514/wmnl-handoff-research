@@ -1,21 +1,21 @@
 #! /usr/bin/sh
 
-# getprop sys.usb.config
-# setprop sys.usb.config diag,serial_cdev,rmnet,adb
-
-sudo rmmod option
-sudo rmmod usb_wwan
-sudo rmmod usbserial
-
-# lsmod
-# lsmod | grep usbserial
-
 # Edit "/etc/modprobe.d/blacklist.conf"
 ''' 
 ### sudo vim /etc/modprobe.d/blacklist.conf
 blacklist pl2303
 ### reboot
 ''' 
+
+# getprop sys.usb.config
+# setprop sys.usb.config diag,serial_cdev,rmnet,adb
+
+# lsmod
+# lsmod | grep usbserial
+
+sudo rmmod option
+sudo rmmod usb_wwan
+sudo rmmod usbserial
 
 sudo modprobe usbserial vendor=0x05c6 product=0x9091
 # sudo modprobe usbserial vendor=0x2c7c product=0x0800
