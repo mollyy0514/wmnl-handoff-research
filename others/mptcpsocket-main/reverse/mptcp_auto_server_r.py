@@ -16,7 +16,7 @@ parser.add_argument("-p1", "--port1", type=int,
                     help="port to bind", default=3271)
 args = parser.parse_args()
 
-HOST = '192.168.1.248'
+HOST = '192.168.1.251'
 PORT = args.port1           # UL
 
 thread_stop = False

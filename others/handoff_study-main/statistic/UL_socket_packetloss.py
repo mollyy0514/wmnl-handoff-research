@@ -35,7 +35,7 @@ def get_loss_latency(pcap_filename):
             udp = ip.data
             
             dst_ip_addr_str = socket.inet_ntoa(ip.dst)
-            if dst_ip_addr_str == "192.168.1.248":
+            if dst_ip_addr_str == "192.168.1.251":
                 continue
             #print("haha")
             

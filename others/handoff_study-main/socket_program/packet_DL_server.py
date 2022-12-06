@@ -6,7 +6,7 @@ import threading
 import os
 import datetime as dt
 
-HOST = '192.168.1.248'
+HOST = '192.168.1.251'
 PORT = 3237
 thread_stop = False
 exit_program = False

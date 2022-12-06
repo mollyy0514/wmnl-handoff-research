@@ -19,7 +19,7 @@ class StrEnum(str, enum.Enum):
 class Server(StrEnum):
     # !!! Define Server IP (Public/Private) !!!
     PUB_IP = '140.112.20.183'
-    PVT_IP = '192.168.1.248'  # ifconfig
+    PVT_IP = '192.168.1.251'  # ifconfig
 
 def to_utc8(ts):
     """Convert a timestamp to a readable type (at utc-8)

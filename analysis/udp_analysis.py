@@ -54,7 +54,7 @@ class Payload:
     OFS_SEQN = (32, 40)       # sequence number (start from 1)     : 4-bytes
 class ServerIP:
     PUBLIC = "140.112.20.183"  # 2F    
-    PRIVATE = "192.168.1.248"  # 2F
+    PRIVATE = "192.168.1.251"  # 2F
     # PUBLIC = "140.112.17.209"  # 3F
     # PRIVATE = "192.168.1.108"  # 3F
 

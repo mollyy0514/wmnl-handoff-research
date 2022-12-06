@@ -24,7 +24,7 @@ parser.add_argument("-d", "--devices", type=str, nargs='+',  # input list of dev
                     help="list of devices", default=["unam"])
 parser.add_argument("-H", "--host", type=str,
                     help="server ip address", default="140.112.20.183")   # Lab249 外網
-                    # help="server ip address", default="192.168.1.248")  # Lab249 內網
+                    # help="server ip address", default="192.168.1.251")  # Lab249 內網
                     # help="server ip address", default="140.112.17.209") # Lab355 外網
                     # help="server ip address", default="210.65.88.213")  # CHT 外網
 parser.add_argument("-p", "--ports", type=int, nargs='+',     # input list of port numbers sep by 'space'
@@ -55,7 +55,7 @@ args = parser.parse_args()
 
 if args.tsync:
     if args.host == "140.112.20.183":
-        args.host = "192.168.1.248"
+        args.host = "192.168.1.251"
     args.udp = True
     args.time = 60
 
