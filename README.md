@@ -3,7 +3,7 @@ Utils and analysis code for research in handoff.
 
 ## Related Repo
 
-[`ntu-experiment`](https://github.com/chihyangchen/ntu-experiments)
+[`ntu-experiments`](https://github.com/chihyangchen/ntu-experiments)
 
 ## Reload mobile tools for smartphone (if phone restart)
 
