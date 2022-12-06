@@ -253,7 +253,8 @@ interface_to_ip = {item[0] : item[1] for item in get_network_interface_list()}
 # samsung: 4G/5G - rmnet_data0; wi-fi - wlan0; wi-fi > 4G/5G in priority
 # laptop (Ubuntu): wired - enp5s0; wi-fi - wlp2s0
 
-interfaces = devices
+# interfaces = devices[:]
+interfaces = devices.copy()
 for i, item in enumerate(interfaces):
     if item.startswith('sm') and 'wlan0' in interface_to_ip.keys():
         if not args.tsync:
@@ -314,9 +315,9 @@ for device, port, intf in zip(devices, ports, interfaces):
     # else:
     # tcpdump
     if args.tsync:
-        pcap = os.path.join(pcap_path, "client_pacp_{}_{}_{}_{}_tsync.pcap".format(args.stream.upper(), device, port, n))
+        pcap = os.path.join(pcap_path, "client_pcap_{}_{}_{}_{}_tsync.pcap".format(args.stream.upper(), device, port, n))
     else:
-        pcap = os.path.join(pcap_path, "client_pacp_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
+        pcap = os.path.join(pcap_path, "client_pcap_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
     _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
     # iperf
     if args.tsync:
@@ -328,7 +329,7 @@ for device, port, intf in zip(devices, ports, interfaces):
             if device == 'unam':
                 _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} --bidir".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log))
             else:
-                _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} -B {} --bind-dev {} --bidir".format(iperf, serverip, port,   bitrate, packet_size, is_udp, args.time, log, bind_ip, intf))
+                _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} -B {} --bind-dev {} --bidir".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log, bind_ip, intf))
         elif args.stream == 'dl':
             if device == 'unam':
                 _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} -R".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log))

@@ -168,7 +168,7 @@ ss_threads = []  # ss thread command list
 #         print("Downlink Ports:", ports)
 #     for device, port in zip(devices, ports):
 #         # tcpdump
-#         pcap = os.path.join(pcap_path, "server_pacp_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
+#         pcap = os.path.join(pcap_path, "server_pcap_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
 #         _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
 #         # iperf
 #         log = os.path.join(log_path, "server_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, port, n))
@@ -203,9 +203,9 @@ for device, port in zip(devices, ports):
     # else:
     # tcpdump
     if args.tsync:
-        pcap = os.path.join(pcap_path, "server_pacp_{}_{}_{}_{}_tsync.pcap".format(args.stream.upper(), device, port, n))
+        pcap = os.path.join(pcap_path, "server_pcap_{}_{}_{}_{}_tsync.pcap".format(args.stream.upper(), device, port, n))
     else:
-        pcap = os.path.join(pcap_path, "server_pacp_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
+        pcap = os.path.join(pcap_path, "server_pcap_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
     _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
     # iperf
     if args.tsync:
