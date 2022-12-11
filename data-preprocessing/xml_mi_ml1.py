@@ -1,41 +1,16 @@
-#!/usr/bin/python3
-### Filename: udp_pcap_to_csv.py
+######xml_mi.py#########
+#==============instructions==============
+######This file requires the txt file which is generated from offline_analysis.py and the mi2log file
+######The rows shows the information of each diag mode packets (dm_log_packet) from Mobile Insight 
+######The columns are indicators about whether a packet has the type of the message
 
-"""
-Convert udp pcap into csv format.
-Extract the features that you need.
-
-Usages:
-
-(1) decode only one files. If you do not set [output_filepath], it would decode inplace and change the suffix from '.pcap' into '.csv'.
-$ python3 udp_pcap_to_csv.py -i [input_filepath]
-
-(2) decode files in one directory. If you do not set [output_dirpath], it would decode inplace.
-$ python3 udp_pcap_to_csv.py -D [input_dirpath]
-$ python3 udp_pcap_to_csv.py -D [input_dirpath] -O [output_dirpath]
-
-(3) decode a batch of files => go to Users Settings and modify.
-$ python3 udp_pcap_to_csv.py
-
-Author: Yuan-Jye Chen
-Update: Yuan-Jye Chen 2022-10-06
-"""
-
-"""
-    Future Development Plan
-        (1) Neglect filename start with ".~lock". (e.g., ".~lock.packet_info.csv#", ".~lock.client_pcap_BL_sm05_3210_3211_2022-09-29_16-24-57.csv#")
-            => solved by not str.startswith()
-    
-"""
-import subprocess
-import os
+from bs4 import BeautifulSoup
 import sys
-import time
-import argparse
-import traceback
-from operator import sub
+import os
 from pprint import pprint
+import argparse
 from pytictoc import TicToc
+from itertools import chain
 
 # --------------------- Arguments ---------------------
 parser = argparse.ArgumentParser()
@@ -81,37 +56,75 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
 # *****************************************************************************
 
 # **************************** Auxiliary Functions ****************************
-def pcap_to_csv(fin, fout):
-    try:
-        # Frame Number: (frame.number) the number of packet captured by tcpdump, start from 1
-        # Arrival Time: (frame.time) packet arrival time 'Sep 29, 2022 16:24:58.254416000' (utc-8, CST)
-        # Epoch Time: (frame.time_epoch) packet arrival time '1664439898.254416000' (utc-0)
-        # Frame Length (frame.len)
-        # Protocol (_ws.col.Protocol) ~= Protocol (ip.proto): TCP (6), UDP (17)
-        # Packet type (sll.pkttype): Sent by us (4) => TX, Unicast to us (0) => RX
-        # IP Length (ip.len)
-        # Source Address (ip.src)
-        # Destination Address (ip.dst)
-        # UDP Length / TCP Length (udp.length / tcp.len)
-        # Source Port (udp.srcport / tcp.srcport)
-        # Destination (udp.dstport / tcp.srcport)
-        # Data Length (data.len)
-        # Data (data.data) == UDP payload / TCP payload (udp.payload / tcp.payload)
-        # Info (_ws.col.Info): 48530 → 3211 [PSH, ACK] Seq=1 Ack=1 Win=128 Len=37 TSval=2269012485 TSecr=969346414
-        s = "tshark -r {} -T fields \
-            -e frame.number -e frame.time -e frame.time_epoch -e frame.len \
-            -e sll.pkttype -e _ws.col.Protocol \
-            -e ip.proto -e ip.len -e ip.src -e ip.dst \
-            -e udp.length -e udp.srcport -e udp.dstport \
-            -e data.len -e udp.payload -e _ws.col.Info \
-            -E header=y -E separator=@ > {}".format(fin, fout)
-        subprocess.Popen(s, shell=True)
-        time.sleep(1)  # Not enough for 30min-500pps-pcap 
-        time.sleep(2)
-    except:
-        ### Record error message without halting the program
-        return (fin, fout, traceback.format_exc())
-    return (fin, fout, None)
+def xml_to_csv_ml1(fin, fout):
+    f = open(fin, encoding="utf-8")
+    f2 = open(fout, 'w') # _ml1.csv
+    # print("ml1 >>>>>")
+    # Writing the column names...
+    # -------------------------------------------------
+    f2.write(",".join(["time", "type_id",
+        "PCI",
+        "RSRP(dBm)",
+        "RSRQ(dB)",
+        "Serving Cell Index",
+        "EARFCN",
+        "Number of Neighbor Cells",
+        "Number of Detected Cells",
+        "PCI1",
+        "LTE_RSRP1",
+        "LTE_RSRQ1"
+        ])+'\n')
+
+    l = f.readline()
+
+    #For each dm_log_packet, we will check that whether strings in type_list are shown in it.
+    #If yes, type_code will record what types in type_list are shown in the packet.
+    #-------------------------------------------------
+    type_list = [
+        
+    ]
+
+    while l:
+        if r"<dm_log_packet>" in l:
+            # type_code = ["0"] * len(type_list)
+            
+            soup = BeautifulSoup(l, 'html.parser')
+            timestamp = soup.find(key="timestamp").get_text()
+            type_id = soup.find(key="type_id").get_text()
+
+            try:
+                PCI = soup.find(key="Serving Physical Cell ID").get_text() ## This is current serving cell PCI.
+            except:
+                PCI = "-"
+
+            if type_id == 'LTE_PHY_Connected_Mode_Intra_Freq_Meas':
+                rsrps = [rsrp.get_text() for rsrp in soup.findAll(key="RSRP(dBm)")]
+                rsrqs = [rsrq.get_text() for rsrq in soup.findAll(key="RSRQ(dB)")]
+                serving_cell = soup.find(key="Serving Cell Index").get_text()
+                earfcn = soup.find(key="E-ARFCN").get_text()
+                n_nei_c = soup.find(key="Number of Neighbor Cells").get_text()
+                n_det_c = soup.find(key="Number of Detected Cells").get_text()
+                PCIs = [pci.get_text() for pci in soup.findAll(key="Physical Cell ID")] ## This is neighbor measured cells PCI.
+                if int(n_det_c) != 0:
+                    PCIs = PCIs[:-int(n_det_c)]
+                A = [[PCIs[i], rsrps[i+1], rsrqs[i+1]] for i in range(len(PCIs))] ## Information of neighbor cell
+                A = list(chain.from_iterable(A))
+                f2.write(",".join([timestamp, type_id, PCI, rsrps[0], rsrqs[0], serving_cell, earfcn, n_nei_c, n_det_c] + A)+'\n')
+            elif type_id == 'LTE_PHY_Connected_Mode_Neighbor_Measurement': # or type_id == 'LTE_PHY_Serv_Cell_Measurement': ## 無法parse暫時忽略
+                f2.write(",".join([timestamp, type_id, PCI, '-', '-', '-', '-', '-', '-']  )+'\n')
+                pass
+            else: # 只處理ml1資料過濾其他type
+                while l and r"</dm_log_packet>" not in l:
+                    l = f.readline()
+
+            l = f.readline()
+
+        else:
+            print(l,"Error!")
+            break 
+            
+    f2.close()
+    f.close()
 # *****************************************************************************
 
 # ****************************** Utils Functions ******************************
@@ -129,33 +142,15 @@ def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
         dirpath = _temp.pop()
         print("mkdir", dirpath)
         os.mkdir(dirpath)
-
-def error_handling(err_handle):
-    """
-    Print the error messages during the process.
-
-    Args:
-        err_handle (str-tuple): (input_filename, output_filename, error_messages : traceback.format_exc())
-    Returns:
-        (bool): check if the error_messages occurs, i.e., whether it is None.
-    """
-    if err_handle[2]:
-        print()
-        print("**************************************************")
-        print("File decoding from '{}' into '{}' was interrupted.".format(err_handle[0], err_handle[1]))
-        print()
-        print(err_handle[2])
-        return True
-    return False
 # *****************************************************************************
 
 
 if __name__ == "__main__":
     def fgetter():
         files_collection = []
-        tags = ("server_pcap", "client_pcap")
+        tags = "diag_log"
         for filename in filenames:
-            if filename.startswith(tags) and filename.endswith(".pcap"):
+            if filename.startswith(tags) and filename.endswith(".txt"):
                 files_collection.append(filename)
         return files_collection
     
@@ -165,12 +160,11 @@ if __name__ == "__main__":
             print("No candidate file.")
         for filename in files_collection:
             fin = os.path.join(source_dir, filename)
-            fout = os.path.join(target_dir, "{}.csv".format(filename[:-5]))
+            fout = os.path.join(target_dir, "{}_ml1.csv".format(filename[:-4]))
             print(">>>>> convert from '{}' into '{}'...".format(fin, fout))
-            err_handle = pcap_to_csv(fin, fout)
-            err_handles.append(err_handle)
+            xml_to_csv_ml1(fin, fout)
         print()
-    
+
     # ******************************* Check Files *********************************
     for expr, (times, traces) in exps.items():
         print(os.path.join(database, date, expr))
@@ -225,45 +219,31 @@ if __name__ == "__main__":
                 print("------------------------------------------")
                 print(date, expr, dev, trace)
                 print("------------------------------------------")
-                source_dir = os.path.join(database, date, expr, dev, trace, "raw")
+                source_dir = os.path.join(database, date, expr, dev, trace, "middle")
                 target_dir = os.path.join(database, date, expr, dev, trace, "middle")
                 makedir(target_dir)
                 filenames = os.listdir(source_dir)
                 main()
-    ### Check errors
-    flag = False
-    for err_handle in err_handles:
-        flag = error_handling(err_handle)
-    if not flag and err_handles:
-        print("**************************************************")
-        print("No error occurs!!")
-        print("**************************************************")
     t.toc()  # Time elapsed since t.tic()
     # *****************************************************************************
 
 
 
 
-    
     # t = TicToc()  # create instance of class
     # t.tic()  # Start timer
     # # --------------------- (1) convert only one file (set arguments) ---------------------
     # if args.input:
     #     fin = args.input
     #     ### Check the input filename format, and whether users specify output filename.
-    #     if not fin.endswith(".pcap"):
-    #         print("Input: '{}' does not endswith 'pcap', the program is terminated.".format(fin))
+    #     if not fin.endswith(".txt"):
+    #         print("Input: '{}' does not endswith 'txt', the program is terminated.".format(fin))
     #         sys.exit()
-    #     fout = "{}.csv".format(fin[:-5])
+    #     fout = "{}_rrc.csv".format(fin[:-4])
     #     ### decoding ...
     #     print(">>>>> convert from '{}' into '{}'...".format(fin, fout))
-    #     err_handle = pcap_to_csv(fin, fout)
-    #     flag = error_handling(err_handle)
+    #     xml_to_csv_rrc(fin, fout)
     #     print()
-    #     if not flag:
-    #         print("**************************************************")
-    #         print("No error occurs!!")
-    #         print("**************************************************")
     #     t.toc()
     #     sys.exit()
 
@@ -280,32 +260,22 @@ if __name__ == "__main__":
     #     pprint(filenames)
     #     for filename in filenames:
     #         # if not filename.endswith(".pcap"):
-    #         if not filename.startswith(("server_pcap", "client_pcap")) or not filename.endswith(".pcap"):
+    #         if not filename.startswith("diag_log") or not filename.endswith(".txt"):
     #             continue
     #         fin = os.path.join(input_path, filename)
-    #         fout = os.path.join(output_path, "{}.csv".format(filename[:-5]))
+    #         fout = os.path.join(output_path, "{}_rrc.csv".format(filename[:-4]))
     #         makedir(output_path)
     #         ### decoding ...
     #         print(">>>>> convert from '{}' into '{}'...".format(fin, fout))
-    #         err_handle = pcap_to_csv(fin, fout)
-    #         err_handles.append(err_handle)
+    #         xml_to_csv_rrc(fin, fout)
     #     print()
-    #     ### Check errors
-    #     flag = False
-    #     for err_handle in err_handles:
-    #         flag = error_handling(err_handle)
-    #     if not flag:
-    #         print("**************************************************")
-    #         print("No error occurs!!")
-    #         print("**************************************************")
     #     t.toc()
     #     sys.exit()
 
-    # # --------------------- (3) convert a batch of files (User Settings) ---------------------
-    # err_handles = []
-    # ### iteratively decode every pcap file
+    # # --------------------- (3) decode a batch of files (User Settings) ---------------------
+    # ### iteratively decode every diag_log.txt file
     # for _exp, (_times, _rounds) in Exp_Name.items():
-    #     ### Check if these directories exist
+    #     ### Check if the directories exist
     #     exp_path = os.path.join(db_path, _exp)
     #     print(exp_path)
     #     exp_dirs = []
@@ -325,32 +295,23 @@ if __name__ == "__main__":
     #             print()
     #             sys.exit()
     #     print()
-    #     ### Check if pcap files exist, and then run decoding
+    #     ### Check if a diag_log.txt file exists, and then run decoding
     #     print(_exp)
     #     for j in range(_times):
     #         for i, dev in enumerate(devices):
     #             print(exp_dirs[i][j])
-    #             dir = os.path.join(exp_dirs[i][j], "raw")
+    #             dir = os.path.join(exp_dirs[i][j], "data")
     #             filenames = os.listdir(dir)
     #             for filename in filenames:
-    #                 # if not filename.endswith(".pcap"):
-    #                 if not filename.startswith(("server_pcap", "client_pcap")) or not filename.endswith(".pcap"):
+    #                 # if "diag_log" not in filename or not filename.endswith(".mi2log"):
+    #                 if not filename.startswith("diag_log") or not filename.endswith(".txt"):
     #                     continue
     #                 # print(filename)
     #                 fin = os.path.join(dir, filename)
-    #                 fout = os.path.join(dir, "..", "data", "{}.csv".format(filename[:-5]))
-    #                 makedir(os.path.join(dir, "..", "data"))
+    #                 fout = os.path.join(dir, "{}_rrc.csv".format(filename[:-4]))
+    #                 # makedir(os.path.join(dir, "..", "data"))
     #                 ### decoding ...
-    #                 print(">>>>> convert from '{}' into '{}'...".format(fin, fout))
-    #                 err_handle = pcap_to_csv(fin, fout)
-    #                 err_handles.append(err_handle)
+    #                 print(">>>>> decode from '{}' into '{}'...".format(fin, fout))
+    #                 xml_to_csv_rrc(fin, fout)
     #         print()
-    # ### Check errors
-    # flag = False
-    # for err_handle in err_handles:
-    #     flag = error_handling(err_handle)
-    # if not flag and err_handles:
-    #     print("**************************************************")
-    #     print("No error occurs!!")
-    #     print("**************************************************")
     # t.toc()

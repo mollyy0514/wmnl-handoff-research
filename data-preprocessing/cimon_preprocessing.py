@@ -52,33 +52,39 @@ parser.add_argument("-v", "--version", type=str,
                     help="CellInfoMonitor (latest version, v2)", default='v2')
 args = parser.parse_args()
 
-# ********************* User Settings *********************
+# ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-date = "2022-11-11"
-db_path = os.path.join(database, date)
-Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment_round)
-                # If the list is empty, it will list all directories in the current directory by default.
-                # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    # "_Bandlock_Udp":(1, ["#01"]),
-    # "_Bandlock_Udp":(5, ["#02", "#03", "#04", "#05", "#06"]),
-    # "_Bandlock_Udp":(4, ["#01", "#02", "#03", "#04"]),
-    # "_Bandlock_Udp":(6, []),
-    # "_Bandlock_Udp":(4, []),
-    # "_Bandlock_Tcp":(4, []),
-    # "_Udp_Stationary_Bandlock":(1, []), 
-    # "_Udp_Stationary_SameSetting":(1, []),
-    "_Test1":(2, [])
-}
+date = "2022-11-29"
 devices = sorted([
+    # "sm00",
+    # "sm01",
+    # "sm02",
     # "sm03",
     # "sm04",
-    # "sm05", 
+    "sm05",
     "sm06",
     "sm07",
-    # "sm08",
+    "sm08",
+    # "qc00",
+    # "qc01",
+    # "qc02",
+    # "qc03",
 ])
+exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_round)
+            # If the list is None, it will not list as directories.
+            # If the list is empty, it will list all directories in the current directory by default.
+            # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
+    # "tsync": (1, None),
+    # "_Bandlock_Udp": (4, ["#01", "#02", "#03", "#04"]),
+    # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),
+    # "_Bandlock_Udp": (4, []),
+    # "_Bandlock_Udp": (6, []),
+    "_Bandlock_Udp_B1_B3":  (4, []),
+    "_Bandlock_Udp_B3_B28": (4, []),
+    "_Bandlock_Udp_B28_B1": (4, []),
+}
 cimon_version = 'v2'
-# *********************************************************
+# *****************************************************************************
 
 # ******************************************************************************************************
 # https://www.quora.com/How-are-cells-defined-in-LTE-if-a-single-eNodeB-can-serve-multiple-cells
@@ -416,9 +422,9 @@ if __name__ == "__main__":
     
     # --------------------- (3) convert a batch of files (User Settings) ---------------------
     ### iteratively preprocess every cimon file
-    for _exp, (_times, _rounds) in Exp_Name.items():
+    for _exp, (_times, _rounds) in exps.items():
         ### Check if the directories exist
-        exp_path = os.path.join(db_path, _exp)
+        exp_path = os.path.join(database, date, _exp)
         print(exp_path)
         exp_dirs = []
         for i, dev in enumerate(devices):
@@ -450,8 +456,9 @@ if __name__ == "__main__":
                         continue
                     # print(filename)
                     fin = os.path.join(dir, filename)
-                    fmiddle = os.path.join(dir, "..", "data", "{}_new.csv".format(filename[:-4]))
+                    fmiddle = os.path.join(dir, "..", "middle", "{}_new.csv".format(filename[:-4]))
                     fout = os.path.join(dir, "..", "data", "{}_preproc.csv".format(filename[:-4]))
+                    makedir(os.path.join(dir, "..", "middle"))
                     makedir(os.path.join(dir, "..", "data"))
                     ### preprocessing ...
                     print(">>>>> convert from '{}' into '{}'...".format(fin, fout))

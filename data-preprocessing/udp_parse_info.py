@@ -58,8 +58,8 @@ devices = sorted([
     "sm06",
     "sm07",
     "sm08",
-    "qc00",
-    "qc01",
+    # "qc00",
+    # "qc01",
     # "qc02",
     # "qc03",
 ])
@@ -67,7 +67,7 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    "tsync": (1, None),
+    # "tsync": (1, None),
     # "_Bandlock_Udp": (4, ["#01", "#02", "#03", "#04"]),
     # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),
     # "_Bandlock_Udp": (4, []),
@@ -401,7 +401,6 @@ if __name__ == "__main__":
                 print("|___ {} does not exist.".format(os.path.join(database, date, expr, dev)))
                 continue
             
-            # print(times)
             print("|___", os.path.join(database, date, expr, dev))
             if traces == None:
                 # print(os.path.join(database, date, expr, dev))
