@@ -11,6 +11,7 @@ from pprint import pprint
 import argparse
 from pytictoc import TicToc
 from itertools import chain
+import shutil
 
 # --------------------- Arguments ---------------------
 parser = argparse.ArgumentParser()
@@ -753,6 +754,12 @@ def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
         dirpath = _temp.pop()
         print("mkdir", dirpath)
         os.mkdir(dirpath)
+
+def savemove(filepath, targetdir, filename):
+    ### filename can be different from basename of filepath, can be used to rename a file.
+    makedir(targetdir)
+    print("mv", filepath, os.path.join(targetdir, filename))
+    shutil.move(filepath, os.path.join(targetdir, filename))
 # *****************************************************************************
 
 
@@ -776,10 +783,13 @@ if __name__ == "__main__":
             fout3 = os.path.join(target_dir, "{}_nr_ml1.csv".format(filename[:-4]))
             print(">>>>> convert from '{}' into '{}'...".format(fin, fout1))
             xml_to_csv_rrc(fin, fout1)
+            # savemove(os.path.join(source_dir, "{}_rrc.csv".format(filename[:-4])), target_dir, "{}_rrc.csv".format(filename[:-4]))
             print(">>>>> convert from '{}' into '{}'...".format(fin, fout2))
             xml_to_csv_ml1(fin, fout2)
+            # savemove(os.path.join(source_dir, "{}_ml1.csv".format(filename[:-4])), target_dir, "{}_ml1.csv".format(filename[:-4]))
             print(">>>>> convert from '{}' into '{}'...".format(fin, fout3))
             xml_to_csv_nr_ml1(fin, fout3)
+            # savemove(os.path.join(source_dir, "{}_nr_ml1.csv".format(filename[:-4])), target_dir, "{}_nr_ml1.csv".format(filename[:-4]))
         print()
 
     # ******************************* Check Files *********************************

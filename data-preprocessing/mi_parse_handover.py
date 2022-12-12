@@ -15,7 +15,7 @@ from pytictoc import TicToc
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-date = "2022-12-09-mobile-test"
+date = "2022-11-29"
 devices = sorted([
     # "sm00",
     # "sm01",
@@ -40,10 +40,10 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
     # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),
     # "_Bandlock_Udp": (4, []),
     # "_Bandlock_Udp": (6, []),
-    # "_Bandlock_Udp_B1_B3":  (4, []),
-    # "_Bandlock_Udp_B3_B28": (4, []),
-    # "_Bandlock_Udp_B28_B1": (4, []),
-    "_Mobile_Bandlock_Test": (1, None),
+    "_Bandlock_Udp_B1_B3":  (4, []),
+    "_Bandlock_Udp_B3_B28": (4, []),
+    "_Bandlock_Udp_B28_B1": (4, []),
+    # "_Mobile_Bandlock_Test": (1, None),
 }
 # *****************************************************************************
 
@@ -524,11 +524,11 @@ def add_info(df, fout):
                 handoff_types_2[i] = 'Intra_sector'
                 handoff_types_2[tmp_id] = 'Intra_sector'
             elif enb == tmp_enb:
-                handoff_types_2[i] = 'Intra_BS'
-                handoff_types_2[tmp_id] = 'Intra_BS'
+                handoff_types_2[i] = 'Intra_eNB'
+                handoff_types_2[tmp_id] = 'Intra_eNB'
             else:
-                handoff_types_2[i] = 'Inter_BS'
-                handoff_types_2[tmp_id] = 'Inter_BS'
+                handoff_types_2[i] = 'Inter_eNB'
+                handoff_types_2[tmp_id] = 'Inter_eNB'
     ### add information
     df = df.join(pd.DataFrame({'handoff_type.1' : handoff_types_1}))
     df = df.join(pd.DataFrame({'handoff_type.2' : handoff_types_2}))
@@ -569,8 +569,8 @@ if __name__ == "__main__":
             print("No candidate file.")
         for filename in files_collection:
             fin = os.path.join(source_dir, filename)
-            fout1 = os.path.join(target_dir, "diag_log_ho-info.csv")
-            fout2 = os.path.join(target_dir, "diag_log_ho-stats.csv")
+            fout1 = os.path.join(target_dir1, "diag_log_ho-info.csv")
+            fout2 = os.path.join(target_dir2, "diag_log_ho-statistics.csv")
             print(">>>>> decode from '{}' into '{}'...".format(fin, fout1))
             handover_type, handover_stats = parse_handover(fin, fout1)
             df = pd.read_csv(fout1)
@@ -622,8 +622,10 @@ if __name__ == "__main__":
                 print(date, expr, dev)
                 print("------------------------------------------")
                 source_dir = os.path.join(database, date, expr, dev)
-                target_dir = os.path.join(database, date, expr, dev)
-                makedir(target_dir)
+                target_dir1 = os.path.join(database, date, expr, dev)
+                target_dir2 = os.path.join(database, date, expr, dev)
+                makedir(target_dir1)
+                makedir(target_dir2)
                 filenames = os.listdir(source_dir)
                 main()
                 continue
@@ -635,9 +637,11 @@ if __name__ == "__main__":
                 print("------------------------------------------")
                 print(date, expr, dev, trace)
                 print("------------------------------------------")
-                source_dir = os.path.join(database, date, expr, dev, trace, "middle")
-                target_dir = os.path.join(database, date, expr, dev, trace, "middle")
-                makedir(target_dir)
+                source_dir = os.path.join(database, date, expr, dev, trace, "data")
+                target_dir1 = os.path.join(database, date, expr, dev, trace, "data")
+                target_dir2 = os.path.join(database, date, expr, dev, trace, "statistics")
+                makedir(target_dir1)
+                makedir(target_dir2)
                 filenames = os.listdir(source_dir)
                 main()
     t.toc()  # Time elapsed since t.tic()
