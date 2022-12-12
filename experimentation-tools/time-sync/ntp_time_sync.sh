@@ -1,16 +1,16 @@
 #! /usr/bin/sh
 
 # sudo apt install ntp
-echo "restart ntp.service"
+echo "sudo systemctl restart ntp.service"
 sudo systemctl restart ntp.service
-sleep 10
+sleep 7
 
 ntpq -p
-sleep 4.5
+sleep 3.5
 ntpq -p
-sleep 4.5
+sleep 3.5
 
-echo "stop ntp.service"
+echo "sudo systemctl stop ntp.service"
 sudo systemctl stop ntp.service
 sleep 1
 
