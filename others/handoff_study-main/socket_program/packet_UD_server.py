@@ -18,7 +18,7 @@ print(args.port)
 
 
 
-HOST = '192.168.1.248'
+HOST = '192.168.1.251'
 PORT = args.port
 thread_stop = False
 exit_program = False

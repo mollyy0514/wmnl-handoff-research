@@ -13,35 +13,39 @@ import datetime as dt
 from pprint import pprint
 from pytictoc import TicToc
 
-# ********************* User Settings *********************
+# ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-date = "2022-11-25"
-db_path = os.path.join(database, date)
-Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment_round)
-                # If the list is empty, it will list all directories in the current directory by default.
-                # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    # "_Bandlock_Udp":(1, ["#01"]),
-    # "_Bandlock_Udp":(5, ["#02", "#03", "#04", "#05", "#06"]),
-    # "_Bandlock_Udp":(4, ["#01", "#02", "#03", "#04"]),
-    # "_Bandlock_Udp":(6, []),
-    # "_Bandlock_Udp":(4, []),
-    # "_Bandlock_Tcp":(4, []),
-    # "_Udp_Stationary_Bandlock":(1, []), 
-    # "_Udp_Stationary_SameSetting":(1, []),
-    # "_Test1":(2, [])
-    "_Modem_Test":(1, [])
-}
+date = "2022-11-29"
 devices = sorted([
+    # "sm00",
+    # "sm01",
+    # "sm02",
     # "sm03",
     # "sm04",
-    # "sm05", 
-    # "sm06",
-    # "sm07",
-    # "sm08",
-    "qc00",
-    "qc01",
+    "sm05",
+    "sm06",
+    "sm07",
+    "sm08",
+    # "qc00",
+    # "qc01",
+    # "qc02",
+    # "qc03",
 ])
-# *********************************************************
+exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_round)
+            # If the list is None, it will not list as directories.
+            # If the list is empty, it will list all directories in the current directory by default.
+            # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
+    # "tsync": (1, None),
+    # "_Bandlock_Udp": (4, ["#01", "#02", "#03", "#04"]),
+    # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),
+    # "_Bandlock_Udp": (4, []),
+    # "_Bandlock_Udp": (6, []),
+    "_Bandlock_Udp_B1_B3":  (4, []),
+    "_Bandlock_Udp_B3_B28": (4, []),
+    "_Bandlock_Udp_B28_B1": (4, []),
+    # "_Mobile_Bandlock_Test": (1, None),
+}
+# *****************************************************************************
 
 # ******************************************************************************************************
 # https://www.commresearch.com.tw/blog/ViewArticle.aspx?guid=384d9fe0-8d68-499e-85ad-09b421974670
@@ -70,7 +74,7 @@ devices = sorted([
 # (3) nas_recovery:       re-establishment reject           # reestablish_type3
 # ******************************************************************************************************
 
-# --------------------- Util Functions ---------------------
+# **************************** Auxiliary Functions ****************************
 def parse_handover(fin, fout):
     def nr_pci_track():
         # if df.loc[i, "PCI"] == 65535:  ## 65535 is for samgsung phone.
@@ -177,8 +181,8 @@ def parse_handover(fin, fout):
             df.loc[lte_handover_start_index, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[lte_handover_start_index, "Timestamp"]).total_seconds()
             df.loc[lte_handover_start_index, 'nr_PCI'] = nr_pci
             df.loc[lte_handover_start_index, 'nr_Freq'] = nr_freq
-            df.loc[lte_handover_start_index, 'eNB.ID'] = eci // 256
-            df.loc[lte_handover_start_index, 'CID'] = eci % 256
+            df.loc[lte_handover_start_index, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+            df.loc[lte_handover_start_index, 'CID'] = eci % 256 if eci != '-' else '-'
             df.loc[i, 'handoff_type'] = 'lte_handover'
             df.loc[i, 'handoff_state'] = 'end'
             df.loc[i, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[lte_handover_start_index, "Timestamp"]).total_seconds()
@@ -192,8 +196,8 @@ def parse_handover(fin, fout):
                     break
             if k != i:
                 eci = eci_track(0)
-            df.loc[i, 'eNB.ID'] = eci // 256
-            df.loc[i, 'CID'] = eci % 256
+            df.loc[i, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+            df.loc[i, 'CID'] = eci % 256 if eci != '-' else '-'
             # lte_handover_list.append((df.loc[lte_handover_start_index, "Timestamp"], df.loc[i, "Timestamp"]))
             lte_handover_list.append(1)
         elif lte_handover and not nr_handover and nr_release and df.loc[i, "rrcConnectionReconfigurationComplete"]:
@@ -205,8 +209,8 @@ def parse_handover(fin, fout):
             df.loc[lte_handover_start_index, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[lte_handover_start_index, "Timestamp"]).total_seconds()
             df.loc[lte_handover_start_index, 'nr_PCI'] = nr_pci
             df.loc[lte_handover_start_index, 'nr_Freq'] = nr_freq
-            df.loc[lte_handover_start_index, 'eNB.ID'] = eci // 256
-            df.loc[lte_handover_start_index, 'CID'] = eci % 256
+            df.loc[lte_handover_start_index, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+            df.loc[lte_handover_start_index, 'CID'] = eci % 256 if eci != '-' else '-'
             df.loc[i, 'handoff_type'] = 'endc2lte_MN_change'
             df.loc[i, 'handoff_state'] = 'end'
             df.loc[i, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[lte_handover_start_index, "Timestamp"]).total_seconds()
@@ -220,8 +224,8 @@ def parse_handover(fin, fout):
                     break
             if k != i:
                 eci = eci_track(0)
-            df.loc[i, 'eNB.ID'] = eci // 256
-            df.loc[i, 'CID'] = eci % 256
+            df.loc[i, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+            df.loc[i, 'CID'] = eci % 256 if eci != '-' else '-'
             # endc2lte_MN_change_list.append((df.loc[lte_handover_start_index, "Timestamp"], df.loc[i, "Timestamp"]))
             endc2lte_MN_change_list.append(1)
             # nr_pci == '-'
@@ -235,15 +239,15 @@ def parse_handover(fin, fout):
                 df.loc[nr_handover_start_index, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[nr_handover_start_index, "Timestamp"]).total_seconds()
                 df.loc[nr_handover_start_index, 'nr_PCI'] = nr_pci
                 df.loc[nr_handover_start_index, 'nr_Freq'] = nr_freq
-                df.loc[nr_handover_start_index, 'eNB.ID'] = eci // 256
-                df.loc[nr_handover_start_index, 'CID'] = eci % 256
+                df.loc[nr_handover_start_index, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+                df.loc[nr_handover_start_index, 'CID'] = eci % 256 if eci != '-' else '-'
                 df.loc[i, 'handoff_type'] = 'SN_addition'
                 df.loc[i, 'handoff_state'] = 'end'
                 df.loc[i, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[nr_handover_start_index, "Timestamp"]).total_seconds()
                 df.loc[i, 'nr_PCI'] = post_nr_pci
                 df.loc[i, 'nr_Freq'] = post_nr_freq
-                df.loc[i, 'eNB.ID'] = eci // 256
-                df.loc[i, 'CID'] = eci % 256
+                df.loc[i, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+                df.loc[i, 'CID'] = eci % 256 if eci != '-' else '-'
                 # SN_addition_list.append((df.loc[nr_handover_start_index, "Timestamp"], df.loc[i, "Timestamp"]))
                 SN_addition_list.append(1)
             else:
@@ -252,15 +256,15 @@ def parse_handover(fin, fout):
                 df.loc[nr_handover_start_index, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[nr_handover_start_index, "Timestamp"]).total_seconds()
                 df.loc[nr_handover_start_index, 'nr_PCI'] = nr_pci
                 df.loc[nr_handover_start_index, 'nr_Freq'] = nr_freq
-                df.loc[nr_handover_start_index, 'eNB.ID'] = eci // 256
-                df.loc[nr_handover_start_index, 'CID'] = eci % 256
+                df.loc[nr_handover_start_index, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+                df.loc[nr_handover_start_index, 'CID'] = eci % 256 if eci != '-' else '-'
                 df.loc[i, 'handoff_type'] = 'endc_SN_change'
                 df.loc[i, 'handoff_state'] = 'end'
                 df.loc[i, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[nr_handover_start_index, "Timestamp"]).total_seconds()
                 df.loc[i, 'nr_PCI'] = post_nr_pci
                 df.loc[i, 'nr_Freq'] = post_nr_freq
-                df.loc[i, 'eNB.ID'] = eci // 256
-                df.loc[i, 'CID'] = eci % 256
+                df.loc[i, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+                df.loc[i, 'CID'] = eci % 256 if eci != '-' else '-'
                 # endc_SN_change_list.append((df.loc[nr_handover_start_index, "Timestamp"], df.loc[i, "Timestamp"]))
                 endc_SN_change_list.append(1)
                 
@@ -287,8 +291,8 @@ def parse_handover(fin, fout):
                 df.loc[lte_handover_start_index, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[lte_handover_start_index, "Timestamp"]).total_seconds()
                 df.loc[lte_handover_start_index, 'nr_PCI'] = nr_pci
                 df.loc[lte_handover_start_index, 'nr_Freq'] = nr_freq
-                df.loc[lte_handover_start_index, 'eNB.ID'] = eci // 256
-                df.loc[lte_handover_start_index, 'CID'] = eci % 256
+                df.loc[lte_handover_start_index, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+                df.loc[lte_handover_start_index, 'CID'] = eci % 256 if eci != '-' else '-'
                 df.loc[i, 'handoff_type'] = 'endc_MN_change'
                 df.loc[i, 'handoff_state'] = 'end'
                 df.loc[i, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[lte_handover_start_index, "Timestamp"]).total_seconds()
@@ -302,8 +306,8 @@ def parse_handover(fin, fout):
                         break
                 if k != i:
                     eci = eci_track(0)
-                df.loc[i, 'eNB.ID'] = eci // 256
-                df.loc[i, 'CID'] = eci % 256
+                df.loc[i, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+                df.loc[i, 'CID'] = eci % 256 if eci != '-' else '-'
                 # endc_MN_change_list.append((df.loc[lte_handover_start_index, "Timestamp"], df.loc[i, "Timestamp"]))
                 endc_MN_change_list.append(1)
             else:
@@ -313,8 +317,8 @@ def parse_handover(fin, fout):
                     df.loc[nr_handover_start_index, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[nr_handover_start_index, "Timestamp"]).total_seconds()
                     df.loc[nr_handover_start_index, 'nr_PCI'] = nr_pci
                     df.loc[nr_handover_start_index, 'nr_Freq'] = nr_freq
-                    df.loc[lte_handover_start_index, 'eNB.ID'] = eci // 256
-                    df.loc[lte_handover_start_index, 'CID'] = eci % 256
+                    df.loc[nr_handover_start_index, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+                    df.loc[nr_handover_start_index, 'CID'] = eci % 256 if eci != '-' else '-'
                     df.loc[i, 'handoff_type'] = 'lte2endc_MN_change'
                     df.loc[i, 'handoff_state'] = 'end'
                     df.loc[i, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[nr_handover_start_index, "Timestamp"]).total_seconds()
@@ -328,8 +332,8 @@ def parse_handover(fin, fout):
                             break
                     if k != i:
                         eci = eci_track(0)
-                    df.loc[i, 'eNB.ID'] = eci // 256
-                    df.loc[i, 'CID'] = eci % 256
+                    df.loc[i, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+                    df.loc[i, 'CID'] = eci % 256 if eci != '-' else '-'
                     # lte2endc_MN_change_list.append((df.loc[nr_handover_start_index, "Timestamp"], df.loc[i, "Timestamp"]))
                     lte2endc_MN_change_list.append(1)
                 else:
@@ -338,8 +342,8 @@ def parse_handover(fin, fout):
                     df.loc[lte_handover_start_index, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[lte_handover_start_index, "Timestamp"]).total_seconds()
                     df.loc[lte_handover_start_index, 'nr_PCI'] = nr_pci
                     df.loc[lte_handover_start_index, 'nr_Freq'] = nr_freq
-                    df.loc[lte_handover_start_index, 'eNB.ID'] = eci // 256
-                    df.loc[lte_handover_start_index, 'CID'] = eci % 256
+                    df.loc[lte_handover_start_index, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+                    df.loc[lte_handover_start_index, 'CID'] = eci % 256 if eci != '-' else '-'
                     df.loc[i, 'handoff_type'] = 'endc_MNSN_change'
                     df.loc[i, 'handoff_state'] = 'end'
                     df.loc[i, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[lte_handover_start_index, "Timestamp"]).total_seconds()
@@ -353,8 +357,8 @@ def parse_handover(fin, fout):
                             break
                     if k != i:
                         eci = eci_track(0)
-                    df.loc[i, 'eNB.ID'] = eci // 256
-                    df.loc[i, 'CID'] = eci % 256
+                    df.loc[i, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+                    df.loc[i, 'CID'] = eci % 256 if eci != '-' else '-'
                     # endc_MNSN_change_list.append((df.loc[lte_handover_start_index, "Timestamp"], df.loc[i, "Timestamp"]))
                     endc_MNSN_change_list.append(1)
             
@@ -380,15 +384,15 @@ def parse_handover(fin, fout):
             df.loc[nr_release_start_index, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[nr_release_start_index, "Timestamp"]).total_seconds()
             df.loc[nr_release_start_index, 'nr_PCI'] = nr_pci
             df.loc[nr_release_start_index, 'nr_Freq'] = nr_freq
-            df.loc[nr_handover_start_index, 'eNB.ID'] = eci // 256
-            df.loc[nr_handover_start_index, 'CID'] = eci % 256
+            df.loc[nr_release_start_index, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+            df.loc[nr_release_start_index, 'CID'] = eci % 256 if eci != '-' else '-'
             df.loc[i, 'handoff_type'] = 'SN_removal'
             df.loc[i, 'handoff_state'] = 'end'
             df.loc[i, 'handoff_duration'] = (df.loc[i, "Timestamp"] - df.loc[nr_release_start_index, "Timestamp"]).total_seconds()
             df.loc[i, 'nr_PCI'] = post_nr_pci
             df.loc[i, 'nr_Freq'] = post_nr_freq
-            df.loc[i, 'eNB.ID'] = eci // 256
-            df.loc[i, 'CID'] = eci % 256
+            df.loc[i, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+            df.loc[i, 'CID'] = eci % 256 if eci != '-' else '-'
             # SN_removal_list.append((df.loc[nr_release_start_index, "Timestamp"], df.loc[i, "Timestamp"]))
             SN_removal_list.append(1)
 
@@ -401,8 +405,8 @@ def parse_handover(fin, fout):
             df.loc[i, 'handoff_state'] = 'trigger'
             df.loc[i, 'nr_PCI'] = df.loc[i, "nr_physCellId"] if df.loc[i, "nr_physCellId"] else nr_pci   # report the failed target nr_pci
             df.loc[i, 'nr_Freq'] = df.loc[i, "ssbFrequency"] if df.loc[i, "nr_physCellId"] else nr_freq  # report the failed target nr_freq
-            df.loc[i, 'eNB.ID'] = eci // 256
-            df.loc[i, 'CID'] = eci % 256
+            df.loc[i, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+            df.loc[i, 'CID'] = eci % 256 if eci != '-' else '-'
             # df.loc[i, 'nr_PCI'] = nr_pci    # report the original nr_pci
             # df.loc[i, 'nr_Freq'] = nr_freq  # report the original nr_freq
             # scg_failure_list.append((df.loc[i, "Timestamp"], df.loc[i, "Timestamp"]))
@@ -419,8 +423,8 @@ def parse_handover(fin, fout):
             df.loc[lte_failure_start_index, 'handoff_state'] = 'trigger'
             df.loc[lte_failure_start_index, 'nr_PCI'] = nr_pci    # report the original nr_pci
             df.loc[lte_failure_start_index, 'nr_Freq'] = nr_freq  # report the original nr_freq
-            df.loc[i, 'eNB.ID'] = eci // 256
-            df.loc[i, 'CID'] = eci % 256
+            df.loc[i, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+            df.loc[i, 'CID'] = eci % 256 if eci != '-' else '-'
             # radio_link_failure_list.append((df.loc[lte_failure_start_index, "Timestamp"], df.loc[lte_failure_start_index, "Timestamp"]))
             radio_link_failure_list.append(1)
         
@@ -430,8 +434,8 @@ def parse_handover(fin, fout):
             df.loc[lte_failure_start_index, 'handoff_state'] = 'trigger'
             df.loc[lte_failure_start_index, 'nr_PCI'] = nr_pci    # report the original nr_pci
             df.loc[lte_failure_start_index, 'nr_Freq'] = nr_freq  # report the original nr_freq
-            df.loc[i, 'eNB.ID'] = eci // 256
-            df.loc[i, 'CID'] = eci % 256
+            df.loc[i, 'eNB.ID'] = eci // 256 if eci != '-' else '-'
+            df.loc[i, 'CID'] = eci % 256 if eci != '-' else '-'
             # nas_recovery_list.append((df.loc[lte_failure_start_index, "Timestamp"], df.loc[lte_failure_start_index, "Timestamp"]))
             nas_recovery_list.append(1)
 
@@ -479,25 +483,11 @@ def parse_handover(fin, fout):
     df.to_csv(fout, index=False)
     return ss+['experiment_time(sec)'], ss2+[exp_time]
 
-def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
-    if os.path.isdir(dirpath):
-        if mode:
-            print("mkdir: cannot create directory '{}': directory has already existed.".format(dirpath))
-        return
-    ### recursively make directory
-    _temp = []
-    while not os.path.isdir(dirpath):
-        _temp.append(dirpath)
-        dirpath = os.path.dirname(dirpath)
-    while _temp:
-        dirpath = _temp.pop()
-        print("mkdir", dirpath)
-        os.mkdir(dirpath)
-
 def add_info(df, fout):
     handoff_types = df['handoff_type'].array
     handoff_states = df['handoff_state'].array
     LTE_PCIs = df['PCI'].array
+    ### Intra-Frequency
     EARFCNs = df['EARFCN'].array
     handoff_types_1 = ['-' for i in range(len(df))]
     for i, (handoff_type, handoff_state, pci, earfcn) in enumerate(zip(handoff_types, handoff_states, LTE_PCIs, EARFCNs)):
@@ -516,63 +506,201 @@ def add_info(df, fout):
             else:
                 handoff_types_1[i] = 'Inter_frequency'
                 handoff_types_1[tmp_id] = 'Inter_frequency'
+    ### Intra-BS
+    eNBs = df['eNB.ID'].array
+    handoff_types_2 = ['-' for i in range(len(df))]
+    for i, (handoff_type, handoff_state, pci, enb) in enumerate(zip(handoff_types, handoff_states, LTE_PCIs, eNBs)):
+        if handoff_type in ['SN_addition', 'SN_removal', 'endc_SN_change']:
+            handoff_types_2[i] = 'SN_change_only'
+            continue
+        if handoff_state == 'start':
+            tmp_id = i
+            tmp_pci = pci
+            tmp_enb = enb
+        elif handoff_state == 'trigger':
+            continue
+        elif handoff_state == 'end':
+            if pci == tmp_pci:
+                handoff_types_2[i] = 'Intra_sector'
+                handoff_types_2[tmp_id] = 'Intra_sector'
+            elif enb == tmp_enb:
+                handoff_types_2[i] = 'Intra_eNB'
+                handoff_types_2[tmp_id] = 'Intra_eNB'
+            else:
+                handoff_types_2[i] = 'Inter_eNB'
+                handoff_types_2[tmp_id] = 'Inter_eNB'
+    ### add information
     df = df.join(pd.DataFrame({'handoff_type.1' : handoff_types_1}))
+    df = df.join(pd.DataFrame({'handoff_type.2' : handoff_types_2}))
     df.to_csv(fout, index=False)
     return df
+# *****************************************************************************
+
+# ****************************** Utils Functions ******************************
+def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
+    if os.path.isdir(dirpath):
+        if mode:
+            print("mkdir: cannot create directory '{}': directory has already existed.".format(dirpath))
+        return
+    ### recursively make directory
+    _temp = []
+    while not os.path.isdir(dirpath):
+        _temp.append(dirpath)
+        dirpath = os.path.dirname(dirpath)
+    while _temp:
+        dirpath = _temp.pop()
+        print("mkdir", dirpath)
+        os.mkdir(dirpath)
+# *****************************************************************************
 
 
 if __name__ == "__main__":
-    t = TicToc()  # create instance of class
-    t.tic()  # Start timer
-    # --------------------- (3) decode a batch of files (User Settings) ---------------------
-    ### iteratively decode parse every diag_log_rrc.csv file
-    for _exp, (_times, _rounds) in Exp_Name.items():
-        ### Check if the directories exist
-        exp_path = os.path.join(db_path, _exp)
-        print(exp_path)
-        exp_dirs = []
-        for i, dev in enumerate(devices):
-            if _rounds:
-                exp_dirs.append([os.path.join(exp_path, dev, _round) for _round in _rounds])
-            else:
-                _rounds = sorted(os.listdir(os.path.join(exp_path, dev)))
-                exp_dirs.append([os.path.join(exp_path, dev, item) for item in _rounds])
-            exp_dirs[i] = [item for item in exp_dirs[i] if os.path.isdir(item)]
-            print(_times)
-            pprint(exp_dirs[i])
-            if len(exp_dirs[i]) != _times:
-                print("************************************************************************************************")
-                print("Warning: the number of directories does not match your specific number of experiment times.")
-                print("************************************************************************************************")
-                print()
-                sys.exit()
+    def fgetter():
+        files_collection = []
+        tags = "diag_log"
+        for filename in filenames:
+            if filename.startswith(tags) and filename.endswith("_rrc.csv"):
+                files_collection.append(filename)
+        return files_collection
+    
+    def main():
+        files_collection = fgetter()
+        if len(files_collection) == 0:
+            print("No candidate file.")
+        for filename in files_collection:
+            fin = os.path.join(source_dir, filename)
+            fout1 = os.path.join(target_dir1, "diag_log_ho-info.csv")
+            fout2 = os.path.join(target_dir2, "diag_log_ho-statistics.csv")
+            print(">>>>> decode from '{}' into '{}'...".format(fin, fout1))
+            handover_type, handover_stats = parse_handover(fin, fout1)
+            df = pd.read_csv(fout1)
+            add_info(df, fout1)
+            with open(fout2, "w", newline='') as fp:
+                writer = csv.writer(fp)
+                writer.writerow(handover_type)
+                writer.writerow(handover_stats)
         print()
-        ### Check if a diag_log_rrc.csv file exists, and then run decoding
-        print(_exp)
-        for j in range(_times):
-            for i, dev in enumerate(devices):
-                print(exp_dirs[i][j])
-                dir = os.path.join(exp_dirs[i][j], "data")
-                filenames = os.listdir(dir)
-                for filename in filenames:
-                    # if "diag_log" not in filename or not filename.endswith(".mi2log"):
-                    if not filename.startswith("diag_log") or not filename.endswith("_rrc.csv"):
-                        continue
-                    # print(filename)
-                    fin = os.path.join(dir, filename)
-                    # fout = os.path.join(dir, "..", "analysis", "{}_parse-ho.csv".format(filename[:-4]))
-                    fout = os.path.join(dir, "..", "analysis", "diag_log_ho-info.csv")
-                    makedir(os.path.join(dir, "..", "analysis"))
-                    ### decoding ...
-                    print(">>>>> decode from '{}' into '{}'...".format(fin, fout))
-                    handover_type, handover_stats = parse_handover(fin, fout)
-                    # with open(os.path.join(dir, "..", "analysis", "{}_ho-statistics.csv".format(filename[:-4])), "w", newline='') as fp:
-                    with open(os.path.join(dir, "..", "analysis", "diag_log_ho-statistics.csv"), "w", newline='') as fp:
-                        writer = csv.writer(fp)
-                        writer.writerow(handover_type)
-                        writer.writerow(handover_stats)
-                    df = pd.read_csv(fout)
-                    add_info(df, fout)
-                # sys.exit()
-            print()
-    t.toc()
+    
+    # ******************************* Check Files *********************************
+    for expr, (times, traces) in exps.items():
+        print(os.path.join(database, date, expr))
+        for dev in devices:
+            if not os.path.isdir(os.path.join(database, date, expr, dev)):
+                print("|___ {} does not exist.".format(os.path.join(database, date, expr, dev)))
+                continue
+            
+            print("|___", os.path.join(database, date, expr, dev))
+            if traces == None:
+                # print(os.path.join(database, date, expr, dev))
+                continue
+            elif len(traces) == 0:
+                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+            
+            print("|    ", times)
+            traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
+            if len(traces) != times:
+                print("***************************************************************************************")
+                print("Warning: the number of traces does not match the specified number of experiment times.")
+                print("***************************************************************************************")
+            for trace in traces:
+                print("|    |___", os.path.join(database, date, expr, dev, trace))
+        print()
+    # *****************************************************************************
+
+    # ******************************** Processing *********************************
+    t = TicToc()  # create instance of class
+    t.tic()       # Start timer
+    err_handles = []
+    for expr, (times, traces) in exps.items():
+        for dev in devices:
+            if not os.path.isdir(os.path.join(database, date, expr, dev)):
+                print("{} does not exist.\n".format(os.path.join(database, date, expr, dev)))
+                continue
+
+            if traces == None:
+                print("------------------------------------------")
+                print(date, expr, dev)
+                print("------------------------------------------")
+                source_dir = os.path.join(database, date, expr, dev)
+                target_dir1 = os.path.join(database, date, expr, dev)
+                target_dir2 = os.path.join(database, date, expr, dev)
+                makedir(target_dir1)
+                makedir(target_dir2)
+                filenames = os.listdir(source_dir)
+                main()
+                continue
+            elif len(traces) == 0:
+                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+            
+            traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
+            for trace in traces:
+                print("------------------------------------------")
+                print(date, expr, dev, trace)
+                print("------------------------------------------")
+                source_dir = os.path.join(database, date, expr, dev, trace, "data")
+                target_dir1 = os.path.join(database, date, expr, dev, trace, "data")
+                target_dir2 = os.path.join(database, date, expr, dev, trace, "statistics")
+                makedir(target_dir1)
+                makedir(target_dir2)
+                filenames = os.listdir(source_dir)
+                main()
+    t.toc()  # Time elapsed since t.tic()
+    # *****************************************************************************
+
+
+
+
+    # t = TicToc()  # create instance of class
+    # t.tic()  # Start timer
+    # # --------------------- (3) decode a batch of files (User Settings) ---------------------
+    # ### iteratively decode parse every diag_log_rrc.csv file
+    # for _exp, (_times, _rounds) in Exp_Name.items():
+    #     ### Check if the directories exist
+    #     exp_path = os.path.join(db_path, _exp)
+    #     print(exp_path)
+    #     exp_dirs = []
+    #     for i, dev in enumerate(devices):
+    #         if _rounds:
+    #             exp_dirs.append([os.path.join(exp_path, dev, _round) for _round in _rounds])
+    #         else:
+    #             _rounds = sorted(os.listdir(os.path.join(exp_path, dev)))
+    #             exp_dirs.append([os.path.join(exp_path, dev, item) for item in _rounds])
+    #         exp_dirs[i] = [item for item in exp_dirs[i] if os.path.isdir(item)]
+    #         print(_times)
+    #         pprint(exp_dirs[i])
+    #         if len(exp_dirs[i]) != _times:
+    #             print("************************************************************************************************")
+    #             print("Warning: the number of directories does not match your specific number of experiment times.")
+    #             print("************************************************************************************************")
+    #             print()
+    #             sys.exit()
+    #     print()
+    #     ### Check if a diag_log_rrc.csv file exists, and then run decoding
+    #     print(_exp)
+    #     for j in range(_times):
+    #         for i, dev in enumerate(devices):
+    #             print(exp_dirs[i][j])
+    #             dir = os.path.join(exp_dirs[i][j], "data")
+    #             filenames = os.listdir(dir)
+    #             for filename in filenames:
+    #                 # if "diag_log" not in filename or not filename.endswith(".mi2log"):
+    #                 if not filename.startswith("diag_log") or not filename.endswith("_rrc.csv"):
+    #                     continue
+    #                 # print(filename)
+    #                 fin = os.path.join(dir, filename)
+    #                 # fout = os.path.join(dir, "..", "analysis", "{}_parse-ho.csv".format(filename[:-4]))
+    #                 fout = os.path.join(dir, "..", "analysis", "diag_log_ho-info.csv")
+    #                 makedir(os.path.join(dir, "..", "analysis"))
+    #                 ### decoding ...
+    #                 print(">>>>> decode from '{}' into '{}'...".format(fin, fout))
+    #                 handover_type, handover_stats = parse_handover(fin, fout)
+    #                 # with open(os.path.join(dir, "..", "analysis", "{}_ho-statistics.csv".format(filename[:-4])), "w", newline='') as fp:
+    #                 with open(os.path.join(dir, "..", "analysis", "diag_log_ho-statistics.csv"), "w", newline='') as fp:
+    #                     writer = csv.writer(fp)
+    #                     writer.writerow(handover_type)
+    #                     writer.writerow(handover_stats)
+    #                 df = pd.read_csv(fout)
+    #                 add_info(df, fout)
+    #             # sys.exit()
+    #         print()
+    # t.toc()

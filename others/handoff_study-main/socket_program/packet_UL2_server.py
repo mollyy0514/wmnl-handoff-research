@@ -10,7 +10,7 @@ import sys
 import os
 import queue
 
-HOST = '192.168.1.248'
+HOST = '192.168.1.251'
 PORT = 3237
 PORT2 = 3238
 # HOST2 = "192.168.1.153"  # The server's hostname or IP address

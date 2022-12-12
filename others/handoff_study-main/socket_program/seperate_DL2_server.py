@@ -22,7 +22,7 @@ parser.add_argument("-p2", "--port2", type=int,
 args = parser.parse_args()
 print(args.port1, args.port2)
 
-HOST = '192.168.1.248'
+HOST = '192.168.1.251'
 PORT = args.port1
 PORT2 = args.port2
 thread_stop = False

@@ -11,7 +11,7 @@ import sys
 import os
 import queue
 
-HOST = '192.168.1.248'
+HOST = '192.168.1.251'
 PORT = 3237
 PORT2 = 3238
 thread_stop = False

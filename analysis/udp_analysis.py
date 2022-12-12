@@ -46,6 +46,38 @@ from scipy import signal
 import portion as P
 
 # ******************************* User Settings *******************************
+database = "/home/wmnlab/D/database/"
+date = "2022-11-29"
+devices = sorted([
+    # "sm00",
+    # "sm01",
+    # "sm02",
+    # "sm03",
+    # "sm04",
+    "sm05",
+    "sm06",
+    "sm07",
+    "sm08",
+    # "qc00",
+    # "qc01",
+    # "qc02",
+    # "qc03",
+])
+exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_round)
+            # If the list is None, it will not list as directories.
+            # If the list is empty, it will list all directories in the current directory by default.
+            # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
+    # "tsync": (1, None),
+    # "_Bandlock_Udp": (4, ["#01", "#02", "#03", "#04"]),
+    # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),
+    # "_Bandlock_Udp": (4, []),
+    # "_Bandlock_Udp": (6, []),
+    # "_Bandlock_Udp_B1_B3":  (1, ["#01"]),
+    "_Bandlock_Udp_B1_B3":  (4, []),
+    "_Bandlock_Udp_B3_B28": (4, []),
+    "_Bandlock_Udp_B28_B1": (4, []),
+}
+
 class Payload:
     LENGTH = 250              # (Bytes)
     TAG = "000425d401df5e76"  # 2 71828 3 1415926 (hex)            : 8-bytes
@@ -54,39 +86,14 @@ class Payload:
     OFS_SEQN = (32, 40)       # sequence number (start from 1)     : 4-bytes
 class ServerIP:
     PUBLIC = "140.112.20.183"  # 2F    
-    PRIVATE = "192.168.1.248"  # 2F
+    PRIVATE = "192.168.1.251"  # 2F
+    # PRIVATE = "192.168.1.248"  # 2F previous
     # PUBLIC = "140.112.17.209"  # 3F
     # PRIVATE = "192.168.1.108"  # 3F
 
 DATA_RATE = 1000e3  # bits-per-second
 PKT_RATE = DATA_RATE / Payload.LENGTH / 8  # packets-per-second
 print("packet_rate (pps):", PKT_RATE, "\n")
-
-database = "/home/wmnlab/D/database/"
-date = "2022-11-25"
-db_path = os.path.join(database, date)
-Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment_round)
-                # If the list is empty, it will list all directories in the current directory by default.
-                # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    # "_Bandlock_Udp":(1, ["#01"]),
-    # "_Bandlock_Udp":(1, ["#06"]),
-    # "_Bandlock_Udp":(5, ["#02", "#03", "#04", "#05", "#06"]),
-    # "_Bandlock_Udp":(4, ["#01", "#02", "#03", "#04"]),
-    # "_Bandlock_Udp":(6, []),
-    # "_Bandlock_Udp":(4, []),
-    # "_Udp_Stationary_Bandlock":(1, []),
-    # "_Udp_Stationary_SameSetting":(1, []),
-    # "_Test1":(2, [])
-    "_Modem_Test":(1, [])
-}
-devices = sorted([
-    # "sm03",
-    # "sm04",
-    # "sm05", 
-    "qc00",
-    "qc01",
-    # "sm08",
-])
 # *****************************************************************************
 
 # --------------------- Global Variables ---------------------
@@ -278,181 +285,6 @@ def datetime_to_str(ts):
         ts_string = dt.datetime.strftime(ts, '%Y-%m-%d %H:%M:%S')
     return ts_string
 
-def filter(df, terminal, direction, protocol):
-    """
-    Filter out the content that you need.
-
-    Args:
-        df (pandas.Dataframe): Original dataframe
-        terminal  (str)      : 'server' or 'client'
-        direction (str)      : 'uplink' or 'downlink'
-        protocol  (str)      : 'tcp' or 'udp'
-    Returns:
-        df (pandas.Dataframe): Filtered dataframe
-    """
-    ### Convert frame.time into datetime
-    try:
-        df['frame.time'] = pd.to_datetime(df['frame.time']).dt.tz_localize(None)  # to remove the time zone information while keeping the local time
-        # df['frame.time'] = pd.to_datetime(df['frame.time'])  # to remove the time zone information while keeping the local time
-        # # with pd.option_context('display.max_rows', None):
-        # #     print(df['frame.time'])
-        # df['frame.time'] = df['frame.time'].dt.tz_localize(None)
-    except:
-        print(traceback.format_exc())
-        sys.exit(1)
-
-    ### UpLink or DownLink
-    if terminal == 'client':
-        if direction == 'uplink':
-            # condition1 = df['sll.pkttype'] == TRANS
-            df = df[df['sll.pkttype'] == TRANS]
-        elif direction == 'downlink':
-            # condition1 = df['sll.pkttype'] == RECV
-            df = df[df['sll.pkttype'] == RECV]
-    elif terminal == 'server':
-        if direction == 'downlink':
-            # condition1 = df['sll.pkttype'] == TRANS
-            df = df[df['sll.pkttype'] == TRANS]
-        elif direction == 'uplink':
-            # condition1 = df['sll.pkttype'] == RECV
-            df = df[df['sll.pkttype'] == RECV]
-    ### TCP or UDP
-    if protocol == 'udp':
-        # condition2 = df['ip.proto'] == UDP
-        df = df[df['ip.proto'] == UDP]
-    elif protocol == 'tcp':
-        # condition2 = df['ip.proto'] == TCP
-        df = df[df['ip.proto'] == TCP]
-    ### iPerf3 Payloads
-    ### Original iPerf3
-    # df = df[df['data.data'] != np.nan]
-    # df = df[df['data.len'] != 0]
-    # df = df[df['data.len'] % Payload.LENGTH == 0]
-    df = df[(df['udp.length'] % Payload.LENGTH == 8) & (df['udp.length'] > Payload.LENGTH)]
-    # ### Modified iPerf3
-    # if protocol == 'udp':
-    #     # condition3 = df['udp.payload'].str.contains(Payload.TAG)
-    #     df = df[df['udp.payload'].str.contains(Payload.TAG)]
-    # elif protocol == 'tcp':
-    #     # condition3 = df['tcp.payload'].str.contains(Payload.TAG)
-    #     df = df[df['tcp.payload'].str.contains(Payload.TAG)]
-    # df = df[condition1 & condition2 & condition3]
-    return df
-
-def parse_packet_info(df, mode, fout):
-    """
-    Parse packet info.
-
-    Args:
-        df (pandas.Dataframe)
-        mode (str): 'tx' or 'rx
-    Returns:
-        df (pandas.Dataframe)
-    """
-    ### Parse packet info | Stage 1
-    # repackage: transport layer protocol may repackage multiple payload into 1 frame (capture),
-    #            so data.len would be an integer multiple of customized Payload.LENTGH.
-    # solution. => repkg_num
-
-    ### Extract the features that we need
-    df = df[['frame.time', 'frame.time_epoch', 'udp.length', 'data.len', '_ws.col.Protocol', 'ip.proto', 'ip.src', 'ip.dst', 'udp.payload']]
-    # df = df[['frame.time', 'frame.time_epoch', 'tcp.len', 'data.len', '_ws.col.Protocol', ''ip.proto', ip.src', 'ip.dst', 'tcp.payload']]
-    ### Reset index
-    df = df.reset_index(drop=True)
-    ### Add features
-    df = pd.DataFrame(df, columns=df.columns.tolist()+['repackage.num', 'sequence.number', 'payload.time', 'payload.time_epoch'])
-    df = df.reindex(['frame.time', 'frame.time_epoch', 'udp.length', 'data.len', 'repackage.num', 'sequence.number', 'payload.time', 'payload.time_epoch', '_ws.col.Protocol', 'ip.proto', 'ip.src', 'ip.dst', 'udp.payload'], axis=1)
-
-    for i in tqdm(range(len(df))):
-        repkg_num = int(df.loc[i, 'udp.length'] // Payload.LENGTH)
-        _offset = [s * Payload.LENGTH * 2 for s in list(range(repkg_num))]  # 1-Byte == 2-hex-digits
-        payload = df.loc[i, 'udp.payload']  # string-type
-        # print(repkg_num)
-        _temp = [[], [], []]  # [[seq,], [gen_time,], [gen_time_epoch,]]
-        for ofs in _offset:
-            try:
-                datetimedec = int(payload[ofs + Payload.OFS_TIME[0] : ofs + Payload.OFS_TIME[1]], 16)
-                microsec = int(payload[ofs + Payload.OFS_USEC[0] : ofs + Payload.OFS_USEC[1]], 16)
-                seq = int(payload[ofs + Payload.OFS_SEQN[0] : ofs + Payload.OFS_SEQN[1]], 16)
-            except:
-                print(traceback.format_exc())
-                # print(df.loc[i-1, 'frame.time'])
-                # print(df.loc[i-1, 'udp.payload'])
-                print(df.loc[i, 'frame.time'])
-                print(payload)
-                sys.exit(1)
-            gen_time = str(to_utc8(datetimedec + microsec * 1e-6))
-            # print("   ", seq)
-            # print("   ", gen_time)
-            _temp[0].append(str(seq))
-            _temp[1].append(gen_time)
-            _temp[2].append(str(datetimedec + microsec * 1e-6))
-        df.loc[i, 'repackage.num'] = str(round(repkg_num))
-        df.loc[i, 'sequence.number'] = '@'.join(_temp[0])
-        df.loc[i, 'payload.time'] = '@'.join(_temp[1])
-        df.loc[i, 'payload.time_epoch'] = '@'.join(_temp[2])
-    
-    df.rename(columns = {'frame.time':'Timestamp', 'frame.time_epoch':'Timestamp_epoch'}, inplace=True)
-    # if mode == 'rx':
-    #     df.rename(columns = {'frame.time':'arrival.time', 'frame.time_epoch':'arrival.time_epoch'}, inplace=True)
-    # elif mode == 'tx':
-    #     df.rename(columns = {'frame.time':'transmit.time', 'frame.time_epoch':'transmit.time_epoch'}, inplace=True)
-    print("output >>>", fout)
-    df.to_csv(fout, index=False)
-    return df
-
-def parse_brief_info(df, mode, fout):
-    """
-    Parse packet brief info.
-
-    Args:
-        df (pandas.Dataframe)
-        mode (str): 'tx' or 'rx
-    Returns:
-        df (pandas.Dataframe)
-    """
-    ### Parse packet loss | Stage 2
-    # duplicate packets: It was found that we may receive the same payload data (with the same generating time & sequence number) on different arrival time.
-    #                    However, UDP should not do retransmission, so we only take the first arrival payload data into account.
-    # solution. => seq_set()
-    # !!! When running experiment, iPerf3 & tcpdump should always start / restart synchronously.
-
-    df['Timestamp'] = pd.to_datetime(df['Timestamp'])
-    # if mode == 'rx':
-    #     df['arrival.time'] = pd.to_datetime(df['arrival.time'])
-    # elif mode == 'tx':
-    #     df['transmit.time'] = pd.to_datetime(df['transmit.time'])
-
-    timestamp_list = []
-    seq_set = set()
-    for i in tqdm(range(len(df))):
-        # ftime = df.loc[i, 'arrival.time'] if mode == 'rx' else df.loc[i, 'transmit.time']
-        # ftime_epoch = df.loc[i, 'arrival.time_epoch'] if mode == 'rx' else df.loc[i, 'transmit.time_epoch']
-        ftime = df.loc[i, 'Timestamp']
-        ftime_epoch = df.loc[i, 'Timestamp_epoch']
-        _seq = [int(s) for s in df.loc[i, 'sequence.number'].split('@')]
-        _ptime = [str_to_datetime(s) for s in df.loc[i, 'payload.time'].split('@')]
-        _ptime_epoch = [float(s) for s in df.loc[i, 'payload.time_epoch'].split('@')]
-        for seq, ptime, ptime_epoch in zip(_seq, _ptime, _ptime_epoch):
-            if seq not in seq_set:
-                timestamp_list.append([seq, ftime, ftime_epoch, ptime, ptime_epoch])
-                seq_set.add(seq)
-
-    ### Consider there are out-of-order packets
-    timestamp_list = sorted(timestamp_list, key = lambda v : v[0])
-
-    ### Output the results
-    print("output >>>", fout)
-    with open(fout, "w", newline='') as fp:
-        writer = csv.writer(fp)
-        writer.writerow(['sequence.number', 'Timestamp', 'Timestamp_epoch', 'payload.time', 'payload.time_epoch'])
-        # if mode == 'rx':
-        #     writer.writerow(['sequence.number', 'arrival.time', 'arrival.time_epoch', 'payload.time', 'payload.time_epoch'])
-        # elif mode == 'tx':
-        #     writer.writerow(['sequence.number', 'transmit.time', 'transmit.time_epoch', 'payload.time', 'payload.time_epoch'])
-        writer.writerows(timestamp_list)
-    return df
-
 ### get latency needs to apply da-shen's method to synchronize the data, so get packet loss first.
 def get_latency_jitter(rxdf, txdf, fout, mode):
     ### !!! Downlink: arrival time (client, rxdf.frame.time) | payload generating time (client, rxdf.payload.time) | transmitted time (server, txdf.frame.time)
@@ -500,13 +332,14 @@ def get_latency_jitter(rxdf, txdf, fout, mode):
         if rx_lat_arr[i] < 0:
             # print("******************************************************")
             # print("Latency should not be negative!!! Force to terminate.")
-            print("Latency should not be negative!!!")
+            # print("Latency should not be negative!!!")
             # if i > 0:
             #     print(rxdf[['sequence.number', 'Timestamp', 'latency']].iloc[i-1])
             # print(rxdf[['sequence.number', 'Timestamp', 'latency']].iloc[i])
             # print("******************************************************")
             # sys.exit(1)
             # break
+            pass
         if i == 0:
             continue
         # jitter = jitter + abs(rxdf.loc[i, 'latency'] - rxdf.loc[i-1, 'latency'])
@@ -523,7 +356,7 @@ def get_latency_jitter(rxdf, txdf, fout, mode):
     rxdf.to_csv(fout, index=False)
 
     if len(rxdf):
-        return jitter, min(rxdf['latency']), max(rxdf['latency'])
+        return jitter, min(rxdf['latency']), max(rxdf['latency']), mean(rxdf['latency']), stdev(rxdf['latency'])
     else:
         return 0, 0, 0
 
@@ -633,9 +466,9 @@ if __name__ == "__main__":
     t.tic()  # Start timer
     # --------------------- (3) decode a batch of files (User Settings) ---------------------
     # err_handles = []
-    for _exp, (_times, _rounds) in Exp_Name.items():
+    for _exp, (_times, _rounds) in exps.items():
         ### Check if these directories exist
-        exp_path = os.path.join(db_path, _exp)
+        exp_path = os.path.join(database, date, _exp)
         print(exp_path)
         exp_dirs = []
         for i, dev in enumerate(devices):
@@ -656,97 +489,6 @@ if __name__ == "__main__":
         print()
 
         # --------------------- Phase 1: Parse basic information --------------------- 
-        ##### Downlink
-        ### Read files: server_DL (Tx), client_DL (Rx)
-        print(_exp)
-        for j in range(_times):
-            for i, dev in enumerate(devices):
-                print(exp_dirs[i][j])
-                dirpath = os.path.join(exp_dirs[i][j], "data")
-                filenames = os.listdir(dirpath)
-                for filename in filenames:
-                    if filename.startswith(("client_pcap_DL", "client_pcap_BL")) and filename.endswith(".csv"):
-                        rxfile = filename
-                    if filename.startswith(("server_pcap_DL", "server_pcap_BL")) and filename.endswith(".csv"):
-                        txfile = filename
-                rxfin = os.path.join(dirpath, rxfile)
-                txfin = os.path.join(dirpath, txfile)
-
-                makedir(os.path.join(dirpath, "..", "analysis"))
-
-                t1 = TicToc()  # create instance of class
-                t1.tic()  # Start timer
-                rxdf = pd.read_csv(rxfin, sep='@')
-                ### Filtering
-                print(">>>>>", rxfin)
-                rxdf = filter(rxdf, 'client', 'downlink', 'udp')
-                ### Parse packet payload information
-                rxfout = os.path.join(dirpath, "..", "analysis", "clt_dwnlnk_udp_packet_info.csv")
-                rxdf = parse_packet_info(rxdf, 'rx', rxfout)
-                ### Parse packet brief information
-                rxfout = os.path.join(dirpath, "..", "analysis", "clt_dwnlnk_udp_packet_brief.csv")
-                parse_brief_info(rxdf, 'rx', rxfout)
-                t1.toc()
-
-                t1 = TicToc()  # create instance of class
-                t1.tic()  # Start timer
-                txdf = pd.read_csv(txfin, sep='@')
-                ### Filtering
-                print(">>>>>", txfin)
-                txdf = filter(txdf, 'server', 'downlink', 'udp')
-                ### Parse packet payload information
-                txfout = os.path.join(dirpath, "..", "analysis", "srv_dwnlnk_udp_packet_info.csv")
-                txdf = parse_packet_info(txdf, 'tx', txfout)
-                ### Parse packet brief information
-                txfout = os.path.join(dirpath, "..", "analysis", "srv_dwnlnk_udp_packet_brief.csv")
-                parse_brief_info(txdf, 'tx', txfout)
-                t1.toc()
-
-        ##### Uplink
-        ### Read files: client_UL (Tx), server_UL (Rx)
-        print(_exp)
-        for j in range(_times):
-            for i, dev in enumerate(devices):
-                print(exp_dirs[i][j])
-                dirpath = os.path.join(exp_dirs[i][j], "data")
-                filenames = os.listdir(dirpath)
-                for filename in filenames:
-                    if filename.startswith(("server_pcap_UL", "server_pcap_BL")) and filename.endswith(".csv"):
-                        rxfile = filename
-                    if filename.startswith(("client_pcap_UL", "client_pcap_BL")) and filename.endswith(".csv"):
-                        txfile = filename
-                rxfin = os.path.join(dirpath, rxfile)
-                txfin = os.path.join(dirpath, txfile)
-
-                makedir(os.path.join(dirpath, "..", "analysis"))
-
-                t1 = TicToc()  # create instance of class
-                t1.tic()  # Start timer
-                rxdf = pd.read_csv(rxfin, sep='@')
-                ### Filtering
-                print(">>>>>", rxfin)
-                rxdf = filter(rxdf, 'server', 'uplink', 'udp')
-                ### Parse packet payload information
-                rxfout = os.path.join(dirpath, "..", "analysis", "srv_uplnk_udp_packet_info.csv")
-                rxdf = parse_packet_info(rxdf, 'rx', rxfout)
-                ### Parse packet brief information
-                rxfout = os.path.join(dirpath, "..", "analysis", "srv_uplnk_udp_packet_brief.csv")
-                parse_brief_info(rxdf, 'rx', rxfout)
-                t1.toc()
-
-                t1 = TicToc()  # create instance of class
-                t1.tic()  # Start timer
-                txdf = pd.read_csv(txfin, sep='@')
-                ### Filtering
-                print(">>>>>", txfin)
-                txdf = filter(txdf, 'client', 'uplink', 'udp')
-                ### Parse packet payload information
-                txfout = os.path.join(dirpath, "..", "analysis", "clt_uplnk_udp_packet_info.csv")
-                txdf = parse_packet_info(txdf, 'tx', txfout)
-                ### Parse packet brief information
-                txfout = os.path.join(dirpath, "..", "analysis", "clt_uplnk_udp_packet_brief.csv")
-                parse_brief_info(txdf, 'tx', txfout)
-                t1.toc()
         
         # --------------------- Phase 2: Parse packet loss & latency --------------------- 
         ### Read files
@@ -754,14 +496,14 @@ if __name__ == "__main__":
         for j in range(_times):
             for i, dev in enumerate(devices):
                 print(exp_dirs[i][j])
-                dirpath = os.path.join(exp_dirs[i][j], "analysis")
+                source_dir = os.path.join(exp_dirs[i][j], "middle")
                 
                 t1 = TicToc()  # create instance of class
                 t1.tic()  # Start timer
-                txdl_df = pd.read_csv(os.path.join(dirpath, "srv_dwnlnk_udp_packet_brief.csv"))
-                rxdl_df = pd.read_csv(os.path.join(dirpath, "clt_dwnlnk_udp_packet_brief.csv"))
-                txul_df = pd.read_csv(os.path.join(dirpath, "clt_uplnk_udp_packet_brief.csv"))
-                rxul_df = pd.read_csv(os.path.join(dirpath, "srv_uplnk_udp_packet_brief.csv"))
+                txdl_df = pd.read_csv(os.path.join(source_dir, "udp_dnlk_server_pkt_brief.csv"))
+                rxdl_df = pd.read_csv(os.path.join(source_dir, "udp_dnlk_client_pkt_brief.csv"))
+                txul_df = pd.read_csv(os.path.join(source_dir, "udp_uplk_client_pkt_brief.csv"))
+                rxul_df = pd.read_csv(os.path.join(source_dir, "udp_uplk_server_pkt_brief.csv"))
                 txdl_df['Timestamp'] = pd.to_datetime(txdl_df['Timestamp'])  # transmitted time from server
                 rxdl_df['Timestamp'] = pd.to_datetime(rxdl_df['Timestamp'])  # arrival time to client
                 txul_df['Timestamp'] = pd.to_datetime(txul_df['Timestamp'])  # transmitted time from client
@@ -771,49 +513,77 @@ if __name__ == "__main__":
                 txul_df['payload.time'] = pd.to_datetime(txul_df['payload.time'])
                 rxul_df['payload.time'] = pd.to_datetime(rxul_df['payload.time'])
                 
-                timedelta, epoch_delta = calc_delta(txdl_df, rxdl_df, txul_df, rxul_df)
+                # timedelta, epoch_delta = calc_delta(txdl_df, rxdl_df, txul_df, rxul_df)
+                with open(os.path.join(database, date, "tsync", dev, "delta.txt"), encoding="utf-8") as f:
+                    epoch_delta = float(f.readline())
+                timedelta = pd.Timedelta(seconds=epoch_delta).round('us')
+
+                # ### Downlink handle
+                # rxdl_df['Timestamp'] = rxdl_df['Timestamp'] + timedelta[0]
+                # rxdl_df['Timestamp_epoch'] = rxdl_df['Timestamp_epoch'] + epoch_delta[0]
+                # ### Uplink handle
+                # txul_df['Timestamp'] = txul_df['Timestamp'] + timedelta[1]
+                # txul_df['Timestamp_epoch'] = txul_df['Timestamp_epoch'] + epoch_delta[1]
+                # txul_df['payload.time'] = txul_df['payload.time'] + timedelta[1]
+                # txul_df['payload.time_epoch'] = txul_df['payload.time_epoch'] + epoch_delta[1]
+                # rxul_df['payload.time'] = rxul_df['payload.time'] + timedelta[1]
+                # rxul_df['payload.time_epoch'] = rxul_df['payload.time_epoch'] + epoch_delta[1]
 
                 ### Downlink handle
-                rxdl_df['Timestamp'] = rxdl_df['Timestamp'] + timedelta[0]
-                rxdl_df['Timestamp_epoch'] = rxdl_df['Timestamp_epoch'] + epoch_delta[0]
+                rxdl_df['Timestamp'] = rxdl_df['Timestamp'] + timedelta
+                rxdl_df['Timestamp_epoch'] = rxdl_df['Timestamp_epoch'] + epoch_delta
                 ### Uplink handle
-                txul_df['Timestamp'] = txul_df['Timestamp'] + timedelta[1]
-                txul_df['Timestamp_epoch'] = txul_df['Timestamp_epoch'] + epoch_delta[1]
-                txul_df['payload.time'] = txul_df['payload.time'] + timedelta[1]
-                txul_df['payload.time_epoch'] = txul_df['payload.time_epoch'] + epoch_delta[1]
-                rxul_df['payload.time'] = rxul_df['payload.time'] + timedelta[1]
-                rxul_df['payload.time_epoch'] = rxul_df['payload.time_epoch'] + epoch_delta[1]
+                txul_df['Timestamp'] = txul_df['Timestamp'] + timedelta
+                txul_df['Timestamp_epoch'] = txul_df['Timestamp_epoch'] + epoch_delta
+                txul_df['payload.time'] = txul_df['payload.time'] + timedelta
+                txul_df['payload.time_epoch'] = txul_df['payload.time_epoch'] + epoch_delta
+                rxul_df['payload.time'] = rxul_df['payload.time'] + timedelta
+                rxul_df['payload.time_epoch'] = rxul_df['payload.time_epoch'] + epoch_delta
                 t1.toc()
                 print()
                 
-                _epoch_delta = round((epoch_delta[0] + epoch_delta[1]) / 2, 6)
+                # _epoch_delta = round((epoch_delta[0] + epoch_delta[1]) / 2, 6)
+                _epoch_delta = epoch_delta
                 if _epoch_delta >= 0:
                     print("Client time is behind by {} ms".format(abs(_epoch_delta * 1000)))
                 else:
                     print("Client time is ahead by {} ms".format(abs(_epoch_delta * 1000)))
                 
-                fout1_dl = os.path.join(dirpath, "dwnlnk_udp_loss_timestamp.csv")
-                fout2_dl = os.path.join(dirpath, "dwnlnk_udp_loss_statistics.csv")
-                fout3_dl = os.path.join(dirpath, "dwnlnk_udp_latency.csv")
-                fout1_ul = os.path.join(dirpath, "uplnk_udp_loss_timestamp.csv")
-                fout2_ul = os.path.join(dirpath, "uplnk_udp_loss_statistics.csv")
-                fout3_ul = os.path.join(dirpath, "uplnk_udp_latency.csv")
+                # fout1_dl = os.path.join(dirpath, "dwnlnk_udp_loss_timestamp.csv")
+                # fout2_dl = os.path.join(dirpath, "dwnlnk_udp_loss_statistics.csv")
+                # fout3_dl = os.path.join(dirpath, "dwnlnk_udp_latency.csv")
+                # fout1_ul = os.path.join(dirpath, "uplnk_udp_loss_timestamp.csv")
+                # fout2_ul = os.path.join(dirpath, "uplnk_udp_loss_statistics.csv")
+                # fout3_ul = os.path.join(dirpath, "uplnk_udp_latency.csv")
+
+                target_dir1 = os.path.join(source_dir, "..", "data")
+                target_dir2 = os.path.join(source_dir, "..", "statistics")
+                makedir(target_dir1)
+                makedir(target_dir2)
+                fout1_dl = os.path.join(target_dir1, "udp_dnlk_loss_timestamp.csv")
+                fout2_dl = os.path.join(target_dir2, "udp_dnlk_loss_statistics.csv")
+                fout3_dl = os.path.join(target_dir1, "udp_dnlk_latency.csv")
+                fout1_ul = os.path.join(target_dir1, "udp_uplk_loss_timestamp.csv")
+                fout2_ul = os.path.join(target_dir2, "udp_uplk_loss_statistics.csv")
+                fout3_ul = os.path.join(target_dir1, "udp_uplk_latency.csv")
                 
-                jitter, min_latency, max_latency = get_latency_jitter(rxdl_df, txdl_df, fout3_dl, 'dl')
+                jitter, min_latency, max_latency, mean_latency, stdev_latency = get_latency_jitter(rxdl_df, txdl_df, fout3_dl, 'dl')
                 loss_timestamp = get_loss(rxdl_df, txdl_df, fout1_dl, fout2_dl, 'dl')
                 # loss_timestamp, loss_statistics, err_handle = get_loss(rxdl_df, txdl_df, fout1_dl, fout2_dl)
                 # err_handles.append((os.path.join(dirpath, "clt_dwnlnk_udp_packet_brief.csv"), '-', err_handle))
 
-                dl_loss_df = pd.read_csv(os.path.join(dirpath, "dwnlnk_udp_loss_timestamp.csv"))
-                dl_lat_df = pd.read_csv(os.path.join(dirpath, "dwnlnk_udp_latency.csv"))
-                fout1_dl = os.path.join(dirpath, "dwnlnk_udp_loss_statistics.csv")
-                fout2_dl = os.path.join(dirpath, "dwnlnk_udp_ex-latency_statistics.csv")
-                _stats = get_statistics(dl_loss_df, dl_lat_df, fout1_dl, fout2_dl, 'dl')
+                dl_loss_df = pd.read_csv(os.path.join(target_dir1, "udp_dnlk_loss_timestamp.csv"))
+                dl_latn_df = pd.read_csv(os.path.join(target_dir1, "udp_dnlk_latency.csv"))
+                fout1_dl = os.path.join(target_dir2, "udp_dnlk_loss_statistics.csv")
+                fout2_dl = os.path.join(target_dir2, "udp_dnlk_excl_statistics.csv")
+                _stats = get_statistics(dl_loss_df, dl_latn_df, fout1_dl, fout2_dl, 'dl')
 
                 print("------------------------------------------")
                 print("jitter:              ", jitter)
                 print("min latency:         ", min_latency)
                 print("max latency:         ", max_latency)
+                print("mean latency:        ", mean_latency)
+                print("stdev latency:       ", stdev_latency)
                 print("total_packet_sent:   ", _stats[0])
                 print("total_packet_recv:   ", _stats[1])
                 print("total_packet_loss:   ", _stats[2])
@@ -824,21 +594,23 @@ if __name__ == "__main__":
                 print("------------------------------------------")
                 print()
                 
-                jitter, min_latency, max_latency = get_latency_jitter(rxul_df, txul_df, fout3_ul, 'ul')
+                jitter, min_latency, max_latency, mean_latency, stdev_latency = get_latency_jitter(rxul_df, txul_df, fout3_ul, 'ul')
                 loss_timestamp = get_loss(rxul_df, txul_df, fout1_ul, fout2_ul, 'ul')
                 # loss_timestamp, loss_statistics, err_handle = get_loss(rxul_df, txul_df, fout1_ul, fout2_ul)
                 # err_handles.append((os.path.join(dirpath, "srv_uplnk_udp_packet_brief.csv"), '-', err_handle))
 
-                ul_loss_df = pd.read_csv(os.path.join(dirpath, "uplnk_udp_loss_timestamp.csv"))
-                ul_lat_df = pd.read_csv(os.path.join(dirpath, "uplnk_udp_latency.csv"))
-                fout1_ul = os.path.join(dirpath, "uplnk_udp_loss_statistics.csv")
-                fout2_ul = os.path.join(dirpath, "uplnk_udp_ex-latency_statistics.csv")
-                _stats = get_statistics(ul_loss_df, ul_lat_df, fout1_ul, fout2_ul, 'ul')
+                ul_loss_df = pd.read_csv(os.path.join(target_dir1, "udp_uplk_loss_timestamp.csv"))
+                ul_latn_df = pd.read_csv(os.path.join(target_dir1, "udp_uplk_latency.csv"))
+                fout1_ul = os.path.join(target_dir2, "udp_uplk_loss_statistics.csv")
+                fout2_ul = os.path.join(target_dir2, "udp_uplk_excl_statistics.csv")
+                _stats = get_statistics(ul_loss_df, ul_latn_df, fout1_ul, fout2_ul, 'ul')
 
                 print("------------------------------------------")
                 print("jitter:              ", jitter)
                 print("min latency:         ", min_latency)
                 print("max latency:         ", max_latency)
+                print("mean latency:        ", mean_latency)
+                print("stdev latency:       ", stdev_latency)
                 print("total_packet_sent:   ", _stats[0])
                 print("total_packet_recv:   ", _stats[1])
                 print("total_packet_loss:   ", _stats[2])

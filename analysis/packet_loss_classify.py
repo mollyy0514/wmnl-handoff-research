@@ -528,14 +528,14 @@ if __name__ == "__main__":
                 fout = os.path.join(dirpath, "udp-loss-classify-50p", "dwnlnk_ho_statistics.csv")
                 fout2 = os.path.join(dirpath, "udp-loss-classify-50p", "dwnlnk_ho_info.csv")
                 ho_statistics(lossdf, recvdf, hodf, fout, fout2)
-                # for i in tqdm(range(10)):
-                #     fout = os.path.join(dirpath, "udp-loss-classify-50p", "dwnlnk_loss_ho_classify_0{}.csv".format(i))
-                #     anomaly_check_list = packet_ho_classify(hodf.copy(), lossdf.copy(), recvdf.copy(), fout, secs=i/10, overlap=False, ratio=0.5)
-                #     if i == 0 and anomaly_check_list:
-                #         anomaly_detect_list.append((os.path.join(dirpath, "diag_log_ho-info.csv"), anomaly_check_list))
-                # for i in tqdm(range(1, 11)):
-                #     fout = os.path.join(dirpath, "udp-loss-classify-50p", "dwnlnk_loss_ho_classify_{}.csv".format(i))
-                #     packet_ho_classify(hodf.copy(), lossdf.copy(), recvdf.copy(), fout, secs=i, overlap=False, ratio=0.5)
+                for i in tqdm(range(10)):
+                    fout = os.path.join(dirpath, "udp-loss-classify-50p", "dwnlnk_loss_ho_classify_0{}.csv".format(i))
+                    anomaly_check_list = packet_ho_classify(hodf.copy(), lossdf.copy(), recvdf.copy(), fout, secs=i/10, overlap=False, ratio=0.5)
+                    if i == 0 and anomaly_check_list:
+                        anomaly_detect_list.append((os.path.join(dirpath, "diag_log_ho-info.csv"), anomaly_check_list))
+                for i in tqdm(range(1, 11)):
+                    fout = os.path.join(dirpath, "udp-loss-classify-50p", "dwnlnk_loss_ho_classify_{}.csv".format(i))
+                    packet_ho_classify(hodf.copy(), lossdf.copy(), recvdf.copy(), fout, secs=i, overlap=False, ratio=0.5)
                 print()
 
                 ### test for only one data

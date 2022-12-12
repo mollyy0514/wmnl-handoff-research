@@ -1,6 +1,10 @@
 # wmnl-handoff-research
 Utils and analysis code for research in handoff.
 
+## Related Repo
+
+[`ntu-experiments`](https://github.com/chihyangchen/ntu-experiments)
+
 ## Reload mobile tools for smartphone (if phone restart)
 
 Enter adb shell with laptop or use **Termux** app on the smartphone
