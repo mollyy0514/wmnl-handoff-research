@@ -1,13 +1,13 @@
 #! /usr/bin/sh
 
-# Edit "/etc/modprobe.d/blacklist.conf"
+# Edit File: "/etc/modprobe.d/blacklist.conf"
 """
 ### sudo vim /etc/modprobe.d/blacklist.conf
 blacklist pl2303
-### sudo reboot (pisf)
+### sudo reboot (probably need)
 """ 
 
-# getprop sys.usb.config
+# getprop sys.usb.config  # (rndis,adb)
 # setprop sys.usb.config diag,serial_cdev,rmnet,adb
 
 # lsmod
