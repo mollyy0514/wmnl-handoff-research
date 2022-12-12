@@ -4,8 +4,8 @@
 """
 ### sudo vim /etc/modprobe.d/blacklist.conf
 blacklist pl2303
-### gps module needs pl2303!
 ### sudo reboot (optional)
+### However, gps module needs pl2303!
 """ 
 
 # getprop sys.usb.config  # (rndis,adb)
