@@ -25,16 +25,17 @@ args = parser.parse_args()
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-date = "2022-11-29"
+# date = "2022-11-29"
+date = "2022-12-09-mobile-test"
 devices = sorted([
     # "sm00",
     # "sm01",
     # "sm02",
     # "sm03",
     # "sm04",
-    "sm05",
-    "sm06",
-    "sm07",
+    # "sm05",
+    # "sm06",
+    # "sm07",
     "sm08",
     # "qc00",
     # "qc01",
@@ -50,9 +51,10 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
     # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),
     # "_Bandlock_Udp": (4, []),
     # "_Bandlock_Udp": (6, []),
-    "_Bandlock_Udp_B1_B3":  (4, []),
-    "_Bandlock_Udp_B3_B28": (4, []),
-    "_Bandlock_Udp_B28_B1": (4, []),
+    # "_Bandlock_Udp_B1_B3":  (4, []),
+    # "_Bandlock_Udp_B3_B28": (4, []),
+    # "_Bandlock_Udp_B28_B1": (4, []),
+    "_Mobile_Bandlock_Test": (1, None),
 }
 # *****************************************************************************
 
@@ -99,6 +101,88 @@ def get_meas_report_pairs(f, sep="&"): ## (MeasId & measObjectId & reportConfigI
     reportConfigId = get_text(l, "reportConfigId")
     return '('+measId+sep+measObjectId+sep+reportConfigId+')'
 
+# def get_event_paras(f, eventId, l):
+
+#     def lte_get_hys_and_ttt():
+#         l = passlines(4, f)
+#         hysteresis = get_text(l, "hysteresis")
+#         hysteresis = hysteresis.split(" ")[0]
+#         l = passlines(2, f)
+#         timeToTrigger = get_text(l, "timeToTrigger")
+#         timeToTrigger = timeToTrigger.split(" ")[0]
+#         return  hysteresis, timeToTrigger 
+    
+#     def nr_get_hys_and_ttt():
+#         l = passlines(3, f)
+#         hysteresis = get_text(l, "hysteresis")
+#         hysteresis = hysteresis.split(" ")[0]
+#         l = passlines(2, f)
+#         timeToTrigger = get_text(l, "timeToTrigger")
+#         timeToTrigger = timeToTrigger.split(" ")[0]
+#         return  hysteresis, timeToTrigger 
+
+#     paras = {}
+#     if eventId == "eventA1 (0)" or eventId == "eventA2 (1)": ## A1 or A2
+#         if "\"lte-rrc.eventId\"" in l:
+#             l = passlines(4, f)
+#             threshold =  get_text(l, "threshold-RSRP")
+#             threshold = threshold.split(" ")[0]
+#             hysteresis, timeToTrigger = lte_get_hys_and_ttt()
+#             paras['thr'], paras['hys'], paras['ttt'] = threshold, hysteresis, timeToTrigger
+#         elif "\"nr-rrc.eventId\"" in l:
+#             l = passlines(4, f)
+#             threshold =  get_text(l, "rsrp")
+#             threshold = '[' + threshold.split(" ")[0] + ', ' + threshold.split(" ")[4] + ')'
+#             hysteresis, timeToTrigger = nr_get_hys_and_ttt()
+#             paras['thr'], paras['hys'], paras['ttt'] = threshold, hysteresis, timeToTrigger
+#     elif eventId == "eventA3 (2)": ## A3
+#         if "\"lte-rrc.eventId\"" in l:
+#             l = passlines(2, f)
+#             offset =  get_text(l, "a3-Offset")
+#             offset = offset.split(" ")[0]
+#             hysteresis, timeToTrigger = lte_get_hys_and_ttt()
+#             paras['off'], paras['hys'], paras['ttt'] = offset, hysteresis, timeToTrigger
+#         elif "\"nr-rrc.eventId\"" in l:
+#             l = passlines(4, f)
+#             offset = get_text(l, "rsrp")
+#             hysteresis, timeToTrigger = nr_get_hys_and_ttt()
+#             paras['off'], paras['hys'], paras['ttt'] = offset, hysteresis, timeToTrigger
+#     elif eventId == "eventA5 (4)": ## A5
+#         if "\"lte-rrc.eventId\"" in l:
+#             l = passlines(4, f)
+#             threshold1 =  get_text(l, "threshold-RSRP")
+#             threshold1 = threshold1.split(" ")[0]
+#             l = passlines(4, f)
+#             threshold2 =  get_text(l, "threshold-RSRP")
+#             threshold2 = threshold2.split(" ")[0]
+#             hysteresis, timeToTrigger = lte_get_hys_and_ttt()
+#             paras['thr1'], paras['thr2'], paras['hys'], paras['ttt'] = threshold1, threshold2, hysteresis, timeToTrigger
+#         elif "\"nr-rrc.eventId\"" in l:
+#             pass
+#     elif eventId == "eventA6-r10 (5)": ## A6
+#         if "\"lte-rrc.eventId\"" in l:
+#             l = passlines(2, f)
+#             offset =  get_text(l, "a6-Offset-r10")
+#             offset = offset.split(" ")[0]
+#             hysteresis, timeToTrigger = lte_get_hys_and_ttt()
+#             paras['off'], paras['hys'], paras['ttt'] = offset, hysteresis, timeToTrigger
+#         elif "\"nr-rrc.eventId\"" in l:
+#             pass
+#     elif eventId == "eventB1-NR-r15 (5)": ## interRAT B1
+#         if "\"lte-rrc.eventId\"" in l:
+#             l = passlines(4, f)
+#             offset =  get_text(l, "nr-RSRP-r15")
+#             offset = '[' + offset.split(" ")[0] + ', ' + offset.split(" ")[4] + ')'
+#             l = f.readline()
+#             hysteresis, timeToTrigger = lte_get_hys_and_ttt()
+#             paras['thr'], paras['hys'], paras['ttt'] = offset, hysteresis, timeToTrigger
+#         elif "\"nr-rrc.eventId\"" in l:
+#             pass
+#     else:
+#         pass
+    
+#     return str(paras).replace(',', '&')
+
 def get_event_paras(f, eventId, l):
 
     def lte_get_hys_and_ttt():
@@ -123,7 +207,10 @@ def get_event_paras(f, eventId, l):
     if eventId == "eventA1 (0)" or eventId == "eventA2 (1)": ## A1 or A2
         if "\"lte-rrc.eventId\"" in l:
             l = passlines(4, f)
-            threshold =  get_text(l, "threshold-RSRP")
+            if "\"lte-rrc.threshold_RSRQ\"" in l: # Use RSRQ for event A2
+                threshold =  get_text(l, "threshold-RSRQ")   
+            else: # Use RSRP for event A2
+                threshold =  get_text(l, "threshold-RSRP")
             threshold = threshold.split(" ")[0]
             hysteresis, timeToTrigger = lte_get_hys_and_ttt()
             paras['thr'], paras['hys'], paras['ttt'] = threshold, hysteresis, timeToTrigger
@@ -148,10 +235,16 @@ def get_event_paras(f, eventId, l):
     elif eventId == "eventA5 (4)": ## A5
         if "\"lte-rrc.eventId\"" in l:
             l = passlines(4, f)
-            threshold1 =  get_text(l, "threshold-RSRP")
+            if "\"lte-rrc.threshold_RSRQ\"" in l: # Use RSRQ for event A5
+                threshold1 =  get_text(l, "threshold-RSRQ")   
+            else: # Use RSRP for event A5
+                threshold1 =  get_text(l, "threshold-RSRP")
             threshold1 = threshold1.split(" ")[0]
             l = passlines(4, f)
-            threshold2 =  get_text(l, "threshold-RSRP")
+            if "\"lte-rrc.threshold_RSRQ\"" in l: # Use RSRQ for event A5
+                threshold2 =  get_text(l, "threshold-RSRQ")   
+            else: # Use RSRP for event A5
+                threshold2 =  get_text(l, "threshold-RSRP")
             threshold2 = threshold2.split(" ")[0]
             hysteresis, timeToTrigger = lte_get_hys_and_ttt()
             paras['thr1'], paras['thr2'], paras['hys'], paras['ttt'] = threshold1, threshold2, hysteresis, timeToTrigger
@@ -173,7 +266,7 @@ def get_event_paras(f, eventId, l):
             offset = '[' + offset.split(" ")[0] + ', ' + offset.split(" ")[4] + ')'
             l = f.readline()
             hysteresis, timeToTrigger = lte_get_hys_and_ttt()
-            paras['off'], paras['hys'], paras['ttt'] = offset, hysteresis, timeToTrigger
+            paras['thr'], paras['hys'], paras['ttt'] = offset, hysteresis, timeToTrigger
         elif "\"nr-rrc.eventId\"" in l:
             pass
     else:
