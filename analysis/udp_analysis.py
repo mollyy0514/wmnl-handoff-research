@@ -514,8 +514,11 @@ if __name__ == "__main__":
                 rxul_df['payload.time'] = pd.to_datetime(rxul_df['payload.time'])
                 
                 # timedelta, epoch_delta = calc_delta(txdl_df, rxdl_df, txul_df, rxul_df)
-                with open(os.path.join(database, date, "tsync", dev, "delta.txt"), encoding="utf-8") as f:
-                    epoch_delta = float(f.readline())
+                try:
+                    with open(os.path.join(database, date, "tsync", dev, "delta.txt"), encoding="utf-8") as f:
+                        epoch_delta = float(f.readline())
+                except:
+                    epoch_delta = 0
                 timedelta = pd.Timedelta(seconds=epoch_delta).round('us')
 
                 # ### Downlink handle
