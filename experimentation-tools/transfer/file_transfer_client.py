@@ -2,7 +2,11 @@ from fileinput import filename
 import socket
 import time
 import os
-import time
+import datetime as dt
+
+now = dt.datetime.today()
+date = [str(x) for x in [now.year, now.month, now.day]]
+date = '-'.join(date)
 
 TCP_IP = '140.112.20.183'
 TCP_PORT = 3230
@@ -16,6 +20,13 @@ target_dir3 = r"/sdcard/handoff_study/socket_program/ss"
 target_dir2 = r"/sdcard/Android/data/com.example.cellinfomonitor/files/Documents"
 target_dir4 = r"/sdcard/mobileinsight/log"
 target_dir5 = r"/home/wmnlab/data"
+
+target_dirs = [
+    r"/home/wmnlab/Desktop/wmnl-handoff-research/experimentation-tools/mobileinsight/log",
+    r"/sdcard/wmnl-handoff-research/experimentation-tools/iperf/log",
+    r"/sdcard/Android/data/com.example.cellinfomonitor/files/Documents"
+    r"/sdcard/mobileinsight/log",
+]
 
 def senddir(target_dir):
     if not os.path.exists(target_dir):

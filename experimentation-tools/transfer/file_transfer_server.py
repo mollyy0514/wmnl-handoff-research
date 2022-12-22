@@ -2,11 +2,16 @@ from fileinput import filename
 import socket
 from threading import Thread
 import os
+import datetime as dt
+
+now = dt.datetime.today()
+date = [str(x) for x in [now.year, now.month, now.day]]
+date = '-'.join(date)
 
 TCP_IP = '192.168.1.251'
 TCP_PORT = 3230
 BUFFER_SIZE = 4096
-targetdir = "/home/wmnlab/D"
+targetdir = "/home/wmnlab/D/database"
 
 class ClientThread(Thread):
 
@@ -36,7 +41,7 @@ class ClientThread(Thread):
         with open(os.path.join(targetdir, devicename, filename), 'wb') as f:
             print('file opened')
             while True:
-                #print('receiving data...')
+                # print('receiving data...')
                 data = self.sock.recv(BUFFER_SIZE)
                 if not data:
                     f.close()
