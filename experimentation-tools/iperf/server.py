@@ -157,6 +157,7 @@ ss_threads = []  # ss thread command list
 
 print("Main Ports:", ports[::2])
 print("Auxiliary Ports:", ports[1::2])
+print("----------------------------------------------")
 if True:
     ports = ports[::2]
 else:

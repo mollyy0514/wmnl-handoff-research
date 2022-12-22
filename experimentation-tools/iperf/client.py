@@ -247,7 +247,7 @@ ss_threads = []  # ss thread command list
 network_interface_list = get_network_interface_list()
 print("Available Interfaces:", network_interface_list)
 print("----------------------------------------------")
-time.sleep(3)
+time.sleep(1)
 
 interfaces = devices.copy()
 for i, item in enumerate(interfaces):
@@ -276,6 +276,7 @@ print("Devices:", devices)
 print("Selected Interface:", interfaces)
 print("Main Ports:", ports[::2])
 print("Auxiliary Ports:", ports[1::2])
+print("----------------------------------------------")
 if True:
     ports = ports[::2]
 else:

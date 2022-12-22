@@ -98,7 +98,7 @@ for info in adb.list():
 # getprop
 for device, info in zip(adb_handles, mobile_info):
     print(info[2], device.shell("su -c 'getprop sys.usb.config'"))
-print("-----------------------------------")
+print("----------------------------------------------")
 
 ### Check All Devices (including mobiles and modems)
 devices = sorted(os.listdir("/sys/class/net/"))
@@ -107,6 +107,7 @@ for i, info in enumerate(mobile_info):
     devices.append(info[2])
 
 print("Device List:", devices)
+print("----------------------------------------------")
 time.sleep(3)
 
 ### Run MobileInsight
