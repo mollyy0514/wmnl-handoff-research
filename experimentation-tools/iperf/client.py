@@ -183,16 +183,20 @@ def get_network_interface_list():
     network_interface_list = []
     do = 0
     for line in lines:
-        if not do and ("enp5s0" in line or "wlp2s0" in line or "wlan0" in line or "rmnet_data0" in line):
+        if "flags=" in line or "Link encap:" in line:
             do = 1
-            if "enp5s0" in line:    # ethernet for laptop
-                interface = "enp5s0"
-            elif "wlp2s0" in line:  # wi-fi for laptop
-                interface = "wlp2s0"
-            elif "wlan0" in line:   # wi-fi for samsung
-                interface = "wlan0"
-            elif "rmnet_data0" in line:  # 4G/5G for samsung
-                interface = "rmnet_data0"
+            # if "enp5s0" in line:    # ethernet for laptop
+            #     interface = "enp5s0"
+            # elif "wlp2s0" in line:  # wi-fi for laptop
+            #     interface = "wlp2s0"
+            # elif "wlan0" in line:   # wi-fi for samsung
+            #     interface = "wlan0"
+            # elif "rmnet_data0" in line:  # 4G/5G for samsung
+            #     interface = "rmnet_data0"
+            if "flags=" in line:
+                interface = line[:line.find(':')]
+            elif "Link encap:" in line:
+                interface = line[:line.find(' ')]
         if do and r"RUNNING" in line:
             network_interface_list.append(interface)
             do = 0
@@ -241,6 +245,9 @@ _l = []          # command list
 ss_threads = []  # ss thread command list
 
 network_interface_list = get_network_interface_list()
+print(network_interface_list)
+time.sleep(5)
+
 interfaces = devices.copy()
 for i, item in enumerate(interfaces):
     if item.startswith('sm') and 'wlan0' in network_interface_list:
