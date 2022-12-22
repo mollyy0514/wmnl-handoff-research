@@ -245,22 +245,25 @@ _l = []          # command list
 ss_threads = []  # ss thread command list
 
 network_interface_list = get_network_interface_list()
-print(network_interface_list)
-time.sleep(5)
+print("Available Interfaces:", network_interface_list)
+print("----------------------------------------------")
+time.sleep(3)
 
 interfaces = devices.copy()
 for i, item in enumerate(interfaces):
     if item.startswith('sm') and 'wlan0' in network_interface_list:
         if not args.tsync:
-            print("Warning: Wi-Fi is on!!!!!")
-            print("Turn off Wi-Fi to continue the experiment.")
+            print("Warning: WiFi is on!!!!!")
+            print("If you want to do experiment with 4G/5G, please turn off wifi and continue...")
+            # print("Turn off WiFi to continue the experiment.")
             time.sleep(1)
             # sys.exit(1)
         interfaces[i] = 'wlan0'
     elif item.startswith('sm') and 'rmnet_data0' in network_interface_list:
         if args.tsync:
-            print("Warning: Wi-Fi is off!!!!!")
-            print("Turn on Wi-Fi to continue time sync process.")
+            print("Warning: WiFi is off!!!!!")
+            print("If you want to do experiment with wi-fi, please turn on wifi and continue...")
+            # print("Turn on WiFi to continue time sync process.")
             time.sleep(1)
             # sys.exit(1)
         interfaces[i] = 'rmnet_data0'
