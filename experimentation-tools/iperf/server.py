@@ -68,18 +68,35 @@ device_to_port = {
 # thread_stop = False
 # exit_program = False
 
-devices = args.devices
-# if args.ports:
-#     ports = args.ports
-#     if args.stream == "bl" and len(ports) != 2*len(devices):
-#         raise Exception("must specify at least and only 2 ports for each device to transmit bi-link.")
-#     elif (args.stream == "ul" or args.stream == "dl") and len(ports) != len(devices):
-#         raise Exception("must specify at least and only 1 port for each device to transmit uplink or downlink.")
-# else:
+devices = []
+for dev in args.devices:
+    if '-' in dev:
+        pmodel = dev[:2]
+        start = int(dev[2:4])
+        stop = int(dev[5:7]) + 1
+        for i in range(start, stop):
+            _dev = "{}{:02d}".format(pmodel, i)
+            devices.append(_dev)
+        continue
+    devices.append(dev)
+
 ports = []
-for device in devices:
-    ports.append((device_to_port[device][0]))  # default uplink port for each device
-    ports.append((device_to_port[device][1]))  # default downlink port for each device
+if not args.ports:
+    for device in devices:
+        ports.append((device_to_port[device][0]))  # default uplink port for each device
+        ports.append((device_to_port[device][1]))  # default downlink port for each device
+else:
+    for port in args.ports:
+        if '-' in port:
+            start = int(port[:port.find('-')])
+            stop = int(port[port.find('-') + 1:]) + 1
+            for i in range(start, stop):
+                ports.append(i)
+            continue
+        ports.append(int(port))
+
+print(devices)
+print(ports)
 
 # ----------------------------------------- Save Path ------------------------------------------- #
 def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
