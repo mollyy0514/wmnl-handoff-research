@@ -47,7 +47,7 @@ import portion as P
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-date = "2022-11-29"
+date = "2022-12-20"
 devices = sorted([
     # "sm00",
     # "sm01",
@@ -72,9 +72,9 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
     # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),
     # "_Bandlock_Udp": (4, []),
     # "_Bandlock_Udp": (6, []),
-    "_Bandlock_Udp_B1_B3":  (4, []),
-    "_Bandlock_Udp_B3_B28": (4, []),
-    "_Bandlock_Udp_B28_B1": (4, []),
+    "_Bandlock_Udp_B1_B3":  (6, []),
+    "_Bandlock_Udp_B3_B28": (2, []),
+    "_Bandlock_Udp_B28_B1": (2, []),
 }
 
 class Payload:
@@ -174,8 +174,8 @@ def filter(df, direction, terminal, protocol):
 
     ### Type casting: convert frame.time into datetime
     try:
-        # df["frame.time"] = pd.to_datetime(df["frame.time"]).dt.tz_localize(None)  # to remove the time zone information while keeping the local time
-        df["frame.time"] = df["frame.time"].apply(lambda x: pd.to_datetime(x).tz_localize(None))  # to remove the time zone information while keeping the local time
+        df["frame.time"] = pd.to_datetime(df["frame.time"]).dt.tz_localize(None)  # to remove the time zone information while keeping the local time
+        # df["frame.time"] = df["frame.time"].apply(lambda x: pd.to_datetime(x).tz_localize(None))  # to remove the time zone information while keeping the local time
         # df['frame.time'] = pd.to_datetime(df['frame.time'])
         # df['frame.time'] = df['frame.time'].dt.tz_localize(None)  # to remove the time zone information while keeping the local time
         # with pd.option_context('display.max_rows', None):
@@ -291,7 +291,8 @@ def parse_brief_info(df, fout):
         df (pandas.Dataframe)
     """
     ### Type casting
-    df["Timestamp"] = df["Timestamp"].apply(lambda x: pd.to_datetime(x))
+    # df["Timestamp"] = df["Timestamp"].apply(lambda x: pd.to_datetime(x))
+    df["Timestamp"] = pd.to_datetime(df["Timestamp"])
 
     ### Parsing
     timestamp_list = []
@@ -333,9 +334,12 @@ if __name__ == "__main__":
         for filename in filenames:
             if filename.startswith(tags) and filename.endswith(".csv"):
                 print(">>>>>", os.path.join(source_dir, filename))
-                return os.path.join(source_dir, filename)
+                if "BL" in filename:
+                    return os.path.join(source_dir, filename), 0
+                else:
+                    return os.path.join(source_dir, filename), 1
         print("No candidate file.")
-        return None
+        return None, 1
 
     def main():
         ### detailed information for each udp packet's frame
@@ -355,37 +359,50 @@ if __name__ == "__main__":
         # target_dir
 
         ### parse detailed information & brief information for each packet
+        
+        do = 1
         ## client_pcap_BL or client_pcap_UL
         t1 = TicToc()  # create instance of class
         t1.tic()       # Start timer
-        df = pd.read_csv(fgetter("uplink", "client"), sep='@')
+        if do:
+            filepath, do = fgetter("uplink", "client")
+            df = pd.read_csv(filepath, sep='@')
         df_ultx = filter(df, "uplink", "client", "udp")
         df_ultx = parse_packet_info(df_ultx, os.path.join(target_dir, "udp_uplk_client_pkt_info.csv"))
         df_ultx = parse_brief_info(df_ultx, os.path.join(target_dir, "udp_uplk_client_pkt_brief.csv"))
         t1.toc()  # Time elapsed since t1.tic()
-
+        
+        do = 1
         ## client_pcap_BL or client_pcap_DL
         t1 = TicToc()  # create instance of class
         t1.tic()       # Start timer
-        df = pd.read_csv(fgetter("downlink", "client"), sep='@')
+        if do:
+            filepath, do = fgetter("downlink", "client")
+            df = pd.read_csv(filepath, sep='@')
         df_dlrx = filter(df, "downlink", "client", "udp")
         df_dlrx = parse_packet_info(df_dlrx, os.path.join(target_dir, "udp_dnlk_client_pkt_info.csv"))
         df_dlrx = parse_brief_info(df_dlrx, os.path.join(target_dir, "udp_dnlk_client_pkt_brief.csv"))
         t1.toc()  # Time elapsed since t1.tic()
 
+        do = 1
         ## server_pcap_BL or server_pcap_UL
         t1 = TicToc()  # create instance of class
         t1.tic()       # Start timer
-        df = pd.read_csv(fgetter("uplink", "server"), sep='@')
+        if do:
+            filepath, do = fgetter("uplink", "server")
+            df = pd.read_csv(filepath, sep='@')
         df_ulrx = filter(df, "uplink", "server", "udp")
         df_ulrx = parse_packet_info(df_ulrx, os.path.join(target_dir, "udp_uplk_server_pkt_info.csv"))
         df_ulrx = parse_brief_info(df_ulrx, os.path.join(target_dir, "udp_uplk_server_pkt_brief.csv"))
         t1.toc()  # Time elapsed since t1.tic()
         
+        do = 1
         ## server_pcap_BL or server_pcap_DL
         t1 = TicToc()  # create instance of class
         t1.tic()       # Start timer
-        df = pd.read_csv(fgetter("downlink", "server"), sep='@')
+        if do:
+            filepath, do = fgetter("downlink", "server")
+            df = pd.read_csv(filepath, sep='@')
         df_dltx = filter(df, "downlink", "server", "udp")
         df_dltx = parse_packet_info(df_dltx, os.path.join(target_dir, "udp_dnlk_server_pkt_info.csv"))
         df_dltx = parse_brief_info(df_dltx, os.path.join(target_dir, "udp_dnlk_server_pkt_brief.csv"))

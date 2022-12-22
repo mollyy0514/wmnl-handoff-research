@@ -15,7 +15,7 @@ from pytictoc import TicToc
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-date = "2022-11-29"
+date = "2022-12-20"
 devices = sorted([
     # "sm00",
     # "sm01",
@@ -40,9 +40,9 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
     # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),
     # "_Bandlock_Udp": (4, []),
     # "_Bandlock_Udp": (6, []),
-    "_Bandlock_Udp_B1_B3":  (4, []),
-    "_Bandlock_Udp_B3_B28": (4, []),
-    "_Bandlock_Udp_B28_B1": (4, []),
+    "_Bandlock_Udp_B1_B3":  (6, []),
+    "_Bandlock_Udp_B3_B28": (2, []),
+    "_Bandlock_Udp_B28_B1": (2, []),
     # "_Mobile_Bandlock_Test": (1, None),
 }
 # *****************************************************************************
@@ -94,7 +94,8 @@ def parse_handover(fin, fout):
         return eci
     
     df = pd.read_csv(fin)
-    df.loc[:, 'Timestamp'] = pd.to_datetime(df.loc[:, 'Timestamp']) + dt.timedelta(hours=8)
+    # df.loc[:, 'Timestamp'] = pd.to_datetime(df.loc[:, 'Timestamp']) + dt.timedelta(hours=8)
+    df['Timestamp'] = pd.to_datetime(df['Timestamp']) + dt.timedelta(hours=8)
     exp_time = (df['Timestamp'].iloc[-1] - df['Timestamp'].iloc[0]).total_seconds()
 
     ### add new columns

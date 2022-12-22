@@ -18,46 +18,45 @@ import signal
 
 # ------------------------------ Add Arguments & Global Variables ------------------------------- #
 parser = argparse.ArgumentParser()
-# parser.add_argument("-d", "--device", type=str,
-#                     help="device name (allows only 1 device)", default="unam")
-parser.add_argument("-d", "--devices", type=str, nargs='+',  # input list of devices sep by 'space'
-                    help="list of devices", default=["unam"])
 parser.add_argument("-H", "--host", type=str,
                     help="server ip address", default="140.112.20.183")   # Lab249 外網
                     # help="server ip address", default="192.168.1.251")  # Lab249 內網
-                    # help="server ip address", default="140.112.17.209") # Lab355 外網
                     # help="server ip address", default="210.65.88.213")  # CHT 外網
-parser.add_argument("-p", "--ports", type=int, nargs='+',     # input list of port numbers sep by 'space'
+parser.add_argument("-d", "--devices", type=str, nargs='+',   # input list of devices sep by 'space'
+                    help="list of devices", default=["unam"])
+parser.add_argument("-p", "--ports", type=str, nargs='+',     # input list of port numbers sep by 'space'
                     help="ports to bind")
 parser.add_argument("-u", "--udp", action="store_true",       # needs no value, True if set "-u"
                     help="use UDP rather than TCP")           # default TCP
 parser.add_argument("-b", "--bitrate", type=str,
-                    # help="target bitrate in bits/sec (0 for unlimited)", default=["1M", "1M"])  # [UDP, TCP]
                     help="target bitrate in bits/sec (0 for unlimited)", default='1M')
 parser.add_argument("-l", "--length", type=str,
-                    # help="length of buffer to read or write in bytes (packet size)", default=["250", "250"])  # [UDP, TCP]
                     help="length of buffer to read or write in bytes (packet size)", default='250')
 parser.add_argument("-t", "--time", type=int,
                     help="time in seconds to transmit for (default 1 hour = 3600 secs)", default=3600)
+parser.add_argument("-k", "--keywords", type=str, nargs='+',  # input list of keywords sep by 'space'
+                    help="keywords for socket statistics", default=["bytes_sent", "cwnd"])
 parser.add_argument("-S", "--stream", type=str,
                     help="streaming direction: uplink (ul), downlink (dl), bi-link (bl, 2 ports/device)", default="bl")
 parser.add_argument("-L", "--logfile", action="store_true",
                     help="save iperf output to logfile")
-parser.add_argument("-K", "--keywords", type=str,
-                    help="keywords for socket statistics", default=["bytes_sent", "cwnd"])
-parser.add_argument("--tsync", action="store_true",          # needs no value, True if set "--timesync"
-                    help="time sync mode")                   # default "experiment" mode
-# parser.add_argument("-R", "--reverse", action="store_true",  # needs no value, True if set "-R"
-#                     help="downlink or not")                  # default using uplink
-# parser.add_argument("--bidir", action="store_true",          # needs no value, True if set "--bidir"
-#                     help="bi-link or not")                   # default using uplink
+parser.add_argument("-F", "--force", action="store_true",     # needs no value, True if set "-F" or "--force"
+                    help="public mode")                       # default "non-force" mode
+parser.add_argument("-T", "--tsync", action="store_true",     # needs no value, True if set "-S" or "--sync"
+                    help="time sync mode")                    # default "experiment" mode
+parser.add_argument("-V", "--private", action="store_true",   # needs no value, True if set "-V" or "--private"
+                    help="private mode")                      # default "public" mode
 args = parser.parse_args()
 
-if args.tsync:
-    if args.host == "140.112.20.183":
+if not args.force:
+    if args.private:
         args.host = "192.168.1.251"
-    args.udp = True
-    args.time = 60
+    if args.tsync:
+        args.host = "192.168.1.251"
+        args.udp = True
+        args.length = 250
+        args.bitrate = "1M"
+        args.time = 60
 
 device_to_port = {
     "xm00": (3230, 3231),
@@ -95,34 +94,42 @@ device_to_port = {
 }
 
 # ----------------------------------------- Parameters ------------------------------------------ #
-thread_stop = False
+# thread_stop = False
 # exit_program = False
 
 serverip = args.host
-devices = args.devices
-# if args.ports:
-#     ports = args.ports
-#     if args.stream == "bl" and len(ports) != 2:
-#         raise Exception("must specify at least and only 2 ports for the device to transmit bi-link.")
-#     elif (args.stream == "ul" or args.stream == "dl") and len(ports) != 1:
-#         raise Exception("must specify at least and only 1 port for the device to transmit uplink or downlink.")
-# else:
-#     ports = [device_to_port[device][0], device_to_port[device][1]]  # default port setting for each device
+
+devices = []
+for dev in args.devices:
+    if '-' in dev:
+        pmodel = dev[:2]
+        start = int(dev[2:4])
+        stop = int(dev[5:7]) + 1
+        for i in range(start, stop):
+            _dev = "{}{:02d}".format(pmodel, i)
+            devices.append(_dev)
+        continue
+    devices.append(dev)
+
 ports = []
-for device in devices:
-    ports.append((device_to_port[device][0]))  # default uplink port for each device
-    ports.append((device_to_port[device][1]))  # default downlink port for each device
+if not args.ports:
+    for device in devices:
+        ports.append((device_to_port[device][0]))  # default uplink port for each device
+        ports.append((device_to_port[device][1]))  # default downlink port for each device
+else:
+    for port in args.ports:
+        if '-' in port:
+            start = int(port[:port.find('-')])
+            stop = int(port[port.find('-') + 1:]) + 1
+            for i in range(start, stop):
+                ports.append(i)
+            continue
+        ports.append(int(port))
+
+print(devices)
+print(ports)
 
 is_udp = "-u" if args.udp else ""
-
-# if type(args.bitrate) is list:  # unit: bps
-#     bitrate = args.bitrate[0] if args.udp else args.bitrate[1]
-# else:
-#     bitrate = args.bitrate
-# if type(args.length) is list:  # unit: bytes
-#     packet_size = args.length[0] if args.udp else args.length[1]
-# else:
-#     packet_size = args.length
 
 bitrate = args.bitrate     # unit: bps
 packet_size = args.length  # unit: bytes
@@ -131,25 +138,42 @@ if args.stream == "ul":
     is_reverse = ""
 elif args.stream == "dl":
     is_reverse = "-R"
+elif args.stream == "bl":
+    is_reverse = "--bidir"
 
-# check whether it has iperf3m
+# check whether the device has iperf3m
 if os.path.exists("/bin/iperf3m") or os.path.exists("/sbin/iperf3m"):
     iperf = "iperf3m"
 else:
     iperf = "iperf3"
 
 # ----------------------------------------- Save Path ------------------------------------------- #
-pcap_path = "./client_pcap"  # packet capture
-if not os.path.exists(pcap_path):
-    os.mkdir(pcap_path)
+def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
+    if os.path.isdir(dirpath):
+        if mode:
+            print("mkdir: cannot create directory '{}': directory has already existed.".format(dirpath))
+        return
+    ### recursively make directory
+    _temp = []
+    while not os.path.isdir(dirpath):
+        _temp.append(dirpath)
+        dirpath = os.path.dirname(dirpath)
+    while _temp:
+        dirpath = _temp.pop()
+        print("mkdir", dirpath)
+        os.mkdir(dirpath)
 
-log_path = "./client_log"   # iperf log
-if not os.path.exists(log_path):
-    os.mkdir(log_path)
+now = dt.datetime.today()
+date = [str(x) for x in [now.year, now.month, now.day]]
+date = '-'.join(date)
+makedir("./log/{}".format(date))
 
-ss_path = "./client_stats"  # socket statistics (Linux: ss)
-if not os.path.exists(ss_path):
-    os.mkdir(ss_path)
+pcap_path = "./log/{}/{}".format(date, "client_pcap")  # wireshark capture
+makedir(pcap_path)
+ilog_path = "./log/{}/{}".format(date, "client_ilog")  # iperf log
+makedir(ilog_path)
+ss_path = "./log/{}/{}".format(date, "client_ss")      # socket statistics (Linux: ss)
+makedir(ss_path)
 
 # ----------------------------------- Define Utils Function ------------------------------------- #
 def get_network_interface_list():
@@ -157,29 +181,21 @@ def get_network_interface_list():
     text = pipe.communicate()[0].decode()
     lines = text.split('\n')
     network_interface_list = []
-    flag = 0
+    do = 0
     for line in lines:
-        if not flag and (r"RUNNING" in line and 'lo' not in line and 'Metric' not in line) or 'wlan0' in line or 'rmnet_data0' in line:
-            interface = line[:line.find(':')]
-            flag = 1
-            if 'wlan0' in line:
-                interface = 'wlan0'
-            elif 'rmnet_data0' in line:
-                interface = 'rmnet_data0'
-        elif flag:
-            if interface == 'wlan0':
-                if 'inet' not in line:
-                    flag = 0
-                    continue
-                # ip = line[line.find('inet')+5:line.find('Bcast')-2]
-                ip = line[line.find('inet')+10:line.find('Bcast')-2]
-            elif interface == 'rmnet_data0':
-                # ip = line[line.find('inet')+5:line.find('Mask')-2]
-                ip = line[line.find('inet')+10:line.find('Mask')-2]
-            else:
-                ip = line[line.find('inet')+5:line.find('netmask')-2]
-            network_interface_list.append((interface, ip))
-            flag = 0
+        if not do and ("enp5s0" in line or "wlp2s0" in line or "wlan0" in line or "rmnet_data0" in line):
+            do = 1
+            if "enp5s0" in line:    # ethernet for laptop
+                interface = "enp5s0"
+            elif "wlp2s0" in line:  # wi-fi for laptop
+                interface = "wlp2s0"
+            elif "wlan0" in line:   # wi-fi for samsung
+                interface = "wlan0"
+            elif "rmnet_data0" in line:  # 4G/5G for samsung
+                interface = "rmnet_data0"
+        if do and r"RUNNING" in line:
+            network_interface_list.append(interface)
+            do = 0
     return sorted(network_interface_list)
 
 def get_ss(device, port, mode, tsync=False):
@@ -189,9 +205,9 @@ def get_ss(device, port, mode, tsync=False):
 
     # fp = None
     if tsync:
-        fp = open(os.path.join(ss_path, "client_stats_{}_{}_{}_{}_tsync.csv".format(mode.upper(), device, port, n)), 'a+')
+        fp = open(os.path.join(ss_path, "client_ss_{}_{}_{}_{}_tsync.csv".format(mode.upper(), device, port, n)), 'a+')
     else:
-        fp = open(os.path.join(ss_path, "client_stats_{}_{}_{}_{}.csv".format(mode.upper(), device, port, n)), 'a+')
+        fp = open(os.path.join(ss_path, "client_ss_{}_{}_{}_{}.csv".format(mode.upper(), device, port, n)), 'a+')
     print(fp)
     while not thread_stop:
         # ss --help (Linux/Android)
@@ -209,6 +225,9 @@ def get_ss(device, port, mode, tsync=False):
     fp.close()
 
 # ---------------------------------- Transmission / Receiving ----------------------------------- #
+thread_stop = False
+# exit_program = False
+
 # Get time
 now = dt.datetime.today()
 n = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.second]]
@@ -217,147 +236,60 @@ n = '-'.join(n[:3]) + '_' + '-'.join(n[3:])
 
 _l = []          # command list
 ss_threads = []  # ss thread command list
-# if args.stream == "bl":  # bi-link
-#     # tcpdump
-#     pcap_bl = os.path.join(pcap_path, "client_pcap_BL_{}_{}_{}_{}.pcap".format(device, ports[0], ports[1], n))
-#     tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap_bl)
-#     # iperf
-#     log1 = os.path.join(log_path, "client_log_UL_{}_{}_{}.log".format(device, ports[0], n))
-#     log2 = os.path.join(log_path, "client_log_UL_{}_{}_{}.log".format(device, ports[1], n))
-#     if args.logfile:
-#         socket_proc1 = "{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {}".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time, log1)
-#         socket_proc2 = "{} -c {} -p {} -b {} -l {} {} -R -t {} -V --logfile {}".format(iperf, serverip, ports[1], bitrate, packet_size, is_udp, args.time, log2)
-#     else:
-#         socket_proc1 = "{} -c {} -p {} -b {} -l {} {} -t {} -V".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time)
-#         socket_proc2 = "{} -c {} -p {} -b {} -l {} {} -R -t {} -V".format(iperf, serverip, ports[1], bitrate, packet_size, is_udp, args.time)
-#     _l = [tcpproc, socket_proc1, socket_proc2]
-#     # ss
-#     ss_threads.append(threading.Thread(target = get_ss, args = (device, ports[0], 'ul')))
-#     ss_threads.append(threading.Thread(target = get_ss, args = (device, ports[1], 'dl')))
-# elif args.stream == "ul" or args.stream == "dl":  # uplink or downlink
-#     # tcpdump
-#     pcap = os.path.join(pcap_path, "client_pcap_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, ports[0], n))
-#     tcpproc = "tcpdump -i any net {} -w {} &".format(serverip, pcap)
-#     # iperf
-#     log = os.path.join(log_path, "client_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, ports[0], n))
-#     if args.logfile:
-#         socket_proc = "{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {}".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time, log)
-#     else:
-#         socket_proc = "{} -c {} -p {} -b {} -l {} {} -t {} -V".format(iperf, serverip, ports[0], bitrate, packet_size, is_udp, args.time)
-#     _l = [tcpproc, socket_proc]
-#     # ss
-#     ss_threads.append(threading.Thread(target = get_ss, args = (device, ports[0], args.stream)))
-# else:
-#     raise Exception("must specify from {ul, dl, bl}.")
 
-# interface_to_ip = {item[0] : item[1] for item in get_network_interface_list() if item[0].startswith(('qc', 'sm', 'xm', 'wlan0', 'rmnet_data0', 'wlp2s0', 'enp5s0'))}
-interface_to_ip = {item[0] : item[1] for item in get_network_interface_list()}
-# samsung: 4G/5G - rmnet_data0; wi-fi - wlan0; wi-fi > 4G/5G in priority
-# laptop (Ubuntu): wired - enp5s0; wi-fi - wlp2s0
-
-# interfaces = devices[:]
+network_interface_list = get_network_interface_list()
 interfaces = devices.copy()
 for i, item in enumerate(interfaces):
-    if item.startswith('sm') and 'wlan0' in interface_to_ip.keys():
+    if item.startswith('sm') and 'wlan0' in network_interface_list:
         if not args.tsync:
             print("Warning: Wi-Fi is on!!!!!")
-            print("Halting the process.")
             print("Turn off Wi-Fi to continue the experiment.")
-            sys.exit(1)
+            time.sleep(1)
+            # sys.exit(1)
         interfaces[i] = 'wlan0'
-    elif item.startswith('sm') and 'rmnet_data0' in interface_to_ip.keys():
+    elif item.startswith('sm') and 'rmnet_data0' in network_interface_list:
         if args.tsync:
             print("Warning: Wi-Fi is off!!!!!")
-            print("Halting the process.")
             print("Turn on Wi-Fi to continue time sync process.")
-            sys.exit(1)
+            time.sleep(1)
+            # sys.exit(1)
         interfaces[i] = 'rmnet_data0'
-    elif item.startswith('qc') and 'enp5s0' in interface_to_ip.keys() and args.tsync:
+    elif item.startswith('qc') and 'enp5s0' in network_interface_list and args.tsync:
         interfaces[i] = 'enp5s0'
-    elif item.startswith('qc') and 'wlp2s0' in interface_to_ip.keys() and args.tsync:
+    elif item.startswith('qc') and 'wlp2s0' in network_interface_list and args.tsync:
         interfaces[i] = 'wlp2s0'
-print(interface_to_ip)
-# if args.tsync:
-#     for i, item in enumerate(interfaces):
-#         if item.startswith('sm'):
-#             if 'wlan0' in interface_to_ip.keys():
-#                 interfaces[i] = 'wlan0'
-#             else:
-#                 interfaces[i] = 'rmnet_data0'
-#         elif item.startswith('qc'):
-#             if 'enp5s0' in interface_to_ip.keys():
-#                 interfaces[i] = 'enp5s0'
-#             else:
-#                 interfaces[i] = 'wlp2s0'
-print("Selected Interface:", interfaces)
 
+print("Devices:", devices)
+print("Selected Interface:", interfaces)
 print("Main Ports:", ports[::2])
 print("Auxiliary Ports:", ports[1::2])
 if True:
     ports = ports[::2]
 else:
     ports = ports[1::2]
+
 for device, port, intf in zip(devices, ports, interfaces):
-    bind_ip = '0.0.0.0'
-    if device.startswith(('qc', 'sm')):
-        # bind_ip = interface_to_ip[device]
-        bind_ip = interface_to_ip[intf]
-    # if args.bidir:
-    #     # tcpdump
-    #     pcap = os.path.join(pcap_path, "client_pcap_BL_{}_{}_{}.pcap".format(device, port, n))
-    #     _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
-    #     # iperf
-    #     log = os.path.join(log_path, "client_log_BL_{}_{}_{}.log".format(device, port, n))
-    #     if args.logfile:
-    #         _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} --bidir -B {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log, bind_ip))
-    #     else:
-    #         _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --bidir -B {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, bind_ip))
-    #     # ss
-    #     ss_threads.append(threading.Thread(target = get_ss, args = (device, port, 'bl')))
-    # else:
-    # tcpdump
+    ## tcpdump process
     if args.tsync:
         pcap = os.path.join(pcap_path, "client_pcap_{}_{}_{}_{}_tsync.pcap".format(args.stream.upper(), device, port, n))
     else:
         pcap = os.path.join(pcap_path, "client_pcap_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
     _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
-    # iperf
+    ## iperf process
     if args.tsync:
-        log = os.path.join(log_path, "client_log_{}_{}_{}_{}_tsync.log".format(args.stream.upper(), device, port, n))
+        log = os.path.join(ilog_path, "client_log_{}_{}_{}_{}_tsync.log".format(args.stream.upper(), device, port, n))
     else:
-        log = os.path.join(log_path, "client_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, port, n))
+        log = os.path.join(ilog_path, "client_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, port, n))
     if args.logfile:
-        if args.stream == 'bl':
-            if device == 'unam':
-                _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} --bidir".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log))
-            else:
-                _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} -B {} --bind-dev {} --bidir".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log, bind_ip, intf))
-        elif args.stream == 'dl':
-            if device == 'unam':
-                _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} -R".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log))
-            else:
-                _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} -B {} --bind-dev {} -R".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log, bind_ip, intf))
-        elif args.stream == 'ul':
-            if device == 'unam':
-                _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log))
-            else:
-                _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} -B {} --bind-dev {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log, bind_ip, intf))
+        if device == 'unam':
+            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log, is_reverse))
+        else:
+            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} --bind-dev {} {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log, intf, is_reverse))
     else:
-        if args.stream == 'bl':
-            if device == 'unam':
-                _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --bidir".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time))
-            else:
-                _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V -B {} --bind-dev {} --bidir".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, bind_ip, intf))
-        elif args.stream == 'dl':
-            if device == 'unam':
-                _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V -R".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time))
-            else:
-                _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V -B {} --bind-dev {} -R".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, bind_ip, intf))
-        elif args.stream == 'ul':
-            if device == 'unam':
-                _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time))
-            else:
-                _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V -B {} --bind-dev {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, bind_ip, intf))
+        if device == 'unam':
+            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, is_reverse))
+        else:
+            _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --bind-dev {} {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, intf, is_reverse))
     # ss
     ss_threads.append(threading.Thread(target = get_ss, args = (device, port, args.stream, args.tsync)))
 

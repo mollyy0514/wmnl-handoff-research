@@ -22,7 +22,7 @@ import portion as P
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-date = "2022-11-29"
+date = "2022-12-20"
 devices = sorted([
     # "sm00",
     # "sm01",
@@ -33,8 +33,8 @@ devices = sorted([
     "sm06",
     "sm07",
     "sm08",
-    "qc00",
-    "qc01",
+    # "qc00",
+    # "qc01",
     # "qc02",
     # "qc03",
 ])
@@ -43,6 +43,7 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
     "tsync": (1, None),
+    # "_tsync": (1, []),
     # "_Bandlock_Udp": (4, ["#01", "#02", "#03", "#04"]),
     # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),
     # "_Bandlock_Udp": (4, []),
@@ -269,7 +270,7 @@ if __name__ == "__main__":
                 print(date, expr, dev, trace)
                 print("------------------------------------------")
                 source_dir = os.path.join(database, date, expr, dev, trace, "middle")
-                target_dir = os.path.join(database, date, expr, dev, trace, "middle")
+                target_dir = os.path.join(database, date, expr, dev, trace, "data")
                 makedir(target_dir)
                 filenames = os.listdir(source_dir)
                 main()

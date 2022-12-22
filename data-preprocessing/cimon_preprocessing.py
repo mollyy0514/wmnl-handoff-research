@@ -54,7 +54,7 @@ args = parser.parse_args()
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-date = "2022-11-29"
+date = "2022-12-20"
 devices = sorted([
     # "sm00",
     # "sm01",
@@ -79,9 +79,9 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
     # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),
     # "_Bandlock_Udp": (4, []),
     # "_Bandlock_Udp": (6, []),
-    "_Bandlock_Udp_B1_B3":  (4, []),
-    "_Bandlock_Udp_B3_B28": (4, []),
-    "_Bandlock_Udp_B28_B1": (4, []),
+    "_Bandlock_Udp_B1_B3":  (6, []),
+    "_Bandlock_Udp_B3_B28": (2, []),
+    "_Bandlock_Udp_B28_B1": (2, []),
 }
 cimon_version = 'v2'
 # *****************************************************************************

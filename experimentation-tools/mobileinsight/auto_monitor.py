@@ -76,7 +76,7 @@ for device, info in zip(adb_handles, mobile_info):
     print(info[2], device.shell("su -c 'getprop sys.usb.config'"))
 print("-----------------------------------")
 
-### Check All Devices
+### Check All Devices (including mobiles and modems)
 devices = sorted(os.listdir("/sys/class/net/"))
 devices = [dev for dev in devices if dev.startswith('qc')]
 for i, info in enumerate(mobile_info):
@@ -94,7 +94,6 @@ for i, dev in enumerate(devices):
 for item in run_list:
     print(item.pid)
 
-# time.sleep(3)
 print("Start logging...")
     
 ### Kill Python3 sessions when capturing KeyboardInterrupt
