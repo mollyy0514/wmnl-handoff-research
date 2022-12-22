@@ -60,9 +60,10 @@ device_to_serial = {
 
 if __name__ == "__main__":
     # Set Path
-    dirpath = "./mi2log"
-    if not os.path.exists(dirpath):
-        os.mkdir(dirpath)
+    now = dt.datetime.today()
+    date = [str(x) for x in [now.year, now.month, now.day]]
+    date = '-'.join(date)
+    dirpath = "./log/{}/{}".format(date, "mi2log")  # mobileinsight log
 
     if args.device == "unam":
         if not args.serial_port:

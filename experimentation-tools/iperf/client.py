@@ -40,12 +40,12 @@ parser.add_argument("-S", "--stream", type=str,
                     help="streaming direction: uplink (ul), downlink (dl), bi-link (bl, 2 ports/device)", default="bl")
 parser.add_argument("-L", "--logfile", action="store_true",
                     help="save iperf output to logfile")
-parser.add_argument("-F", "--force", action="store_true",     # needs no value, True if set "-F" or "--force"
-                    help="public mode")                       # default "non-force" mode
 parser.add_argument("-T", "--tsync", action="store_true",     # needs no value, True if set "-S" or "--sync"
                     help="time sync mode")                    # default "experiment" mode
 parser.add_argument("-V", "--private", action="store_true",   # needs no value, True if set "-V" or "--private"
                     help="private mode")                      # default "public" mode
+parser.add_argument("-F", "--force", action="store_true",     # needs no value, True if set "-F" or "--force"
+                    help="public mode")                       # default "non-force" mode
 args = parser.parse_args()
 
 if not args.force:
@@ -227,6 +227,9 @@ def get_ss(device, port, mode, tsync=False):
 # ---------------------------------- Transmission / Receiving ----------------------------------- #
 thread_stop = False
 # exit_program = False
+
+# Avoid need to feed in password for superuser priviledge
+# os.system("echo wmnlab | sudo -S su")
 
 # Get time
 now = dt.datetime.today()

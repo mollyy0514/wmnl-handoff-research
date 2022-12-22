@@ -9,6 +9,7 @@ import os
 import sys
 import time
 import subprocess
+import datetime as dt
 
 serial_to_device = {
     "R5CRA1ET5KB":"sm00",
@@ -45,6 +46,29 @@ serial_to_device = {
 }
 
 device_to_serial = dict((v, k) for k, v in serial_to_device.items())
+
+def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
+    if os.path.isdir(dirpath):
+        if mode:
+            print("mkdir: cannot create directory '{}': directory has already existed.".format(dirpath))
+        return
+    ### recursively make directory
+    _temp = []
+    while not os.path.isdir(dirpath):
+        _temp.append(dirpath)
+        dirpath = os.path.dirname(dirpath)
+    while _temp:
+        dirpath = _temp.pop()
+        print("mkdir", dirpath)
+        os.mkdir(dirpath)
+
+now = dt.datetime.today()
+date = [str(x) for x in [now.year, now.month, now.day]]
+date = '-'.join(date)
+makedir("./log/{}".format(date))
+
+mi2log_path = "./log/{}/{}".format(date, "mi2log")  # mobileinsight log
+makedir(mi2log_path)
 
 os.system("echo wmnlab | sudo -S su")
 
