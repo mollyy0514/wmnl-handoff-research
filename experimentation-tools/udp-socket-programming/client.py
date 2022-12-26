@@ -24,17 +24,14 @@ parser = argparse.ArgumentParser()
 #                     help="data rate (bits per second)", default=200000)   
 # parser.add_argument("-t", "--time", type=int,
 #                     help="maximum experiment time", default=3600)
-
-parser.add_argument("-d", "--devices", type=str, nargs='+',  # input list of devices sep by 'space'
-                    help="list of devices", default=["unam"])
 parser.add_argument("-H", "--host", type=str,
-                    help="server ip address", default="140.112.20.183")
-                    # help="server ip address", default="140.112.17.209")
-                    # help="server ip address", default="210.65.88.213")
-# parser.add_argument("-p", "--ports", type=int, nargs='+',     # input list of port numbers sep by 'space'
-#                     help="ports to bind")
-# parser.add_argument("-u", "--udp", action="store_true",       # needs no value, True if set "-u"
-#                     help="use UDP rather than TCP")           # default TCP
+                    help="server ip address", default="140.112.20.183")   # Lab249 外網
+                    # help="server ip address", default="192.168.1.251")  # Lab249 內網
+                    # help="server ip address", default="210.65.88.213")  # CHT 外網
+parser.add_argument("-d", "--devices", type=str, nargs='+',   # input list of devices sep by 'space'
+                    help="list of devices", default=["unam"])
+parser.add_argument("-p", "--ports", type=str, nargs='+',     # input list of port numbers sep by 'space'
+                    help="ports to bind")
 parser.add_argument("-b", "--bitrate", type=str,
                     help="target bitrate in bits/sec (0 for unlimited)", default="1M")
 parser.add_argument("-l", "--length", type=str,
@@ -78,38 +75,43 @@ device_to_port = {
     "unam": (3280, 3281),
 }
 
-# if args.multiple_interfaces == 0:
-#     try:
-#         f = open("port.txt", "r")
-#         l = f.readline()
-#         PORT = int(l)
-#     except:
-#         PORT = input("First time running... please input the port number: ")
-#         f = open("port.txt", "w")
-#         f.write(PORT)
-#     PORTS = [PORT]
-# else:
-#     PORTS = [i for i in range(args.port_start, args.port_end+1)]
-# print("PORTS = ", PORTS)
+devices = []
+for dev in args.devices:
+    if '-' in dev:
+        pmodel = dev[:2]
+        start = int(dev[2:4])
+        stop = int(dev[5:7]) + 1
+        for i in range(start, stop):
+            _dev = "{}{:02d}".format(pmodel, i)
+            devices.append(_dev)
+        continue
+    devices.append(dev)
 
-devices = args.devices
+ports = []
+if not args.ports:
+    for device in devices:
+        ports.append((device_to_port[device][0]))  # default uplink port for each device
+        ports.append((device_to_port[device][1]))  # default downlink port for each device
+else:
+    for port in args.ports:
+        if '-' in port:
+            start = int(port[:port.find('-')])
+            stop = int(port[port.find('-') + 1:]) + 1
+            for i in range(start, stop):
+                ports.append(i)
+            continue
+        ports.append(int(port))
 
-# PORTS = [i for i in range(args.port_start, args.port_end+1)]
-PORTS = []
-for device in devices:
-    PORTS.append((device_to_port[device][0]))  # default uplink port for each device
+if True:
+    PORTS = ports[::2]
+else:
+    PORTS = ports[1::2]
 
-# UL_PORTS, DL_PORTS = [], []
-# for device in devices:
-#     UL_PORTS.append((device_to_port[device][0]))  # default uplink port for each device
-#     DL_PORTS.append((device_to_port[device][1]))  # default downlink port for each device
-
-# length_packet = args.length
-# bandwidth = args.bandwidth
+print(devices)
+print(PORTS)
 
 length_packet = int(args.length)
 
-# bandwidth = args.bandwidth
 if args.bitrate[-1] == 'k':
     bandwidth = int(args.bitrate[:-1]) * 1e3
 elif args.bitrate[-1] == 'M':
@@ -134,9 +136,32 @@ exit_main_process = False
 #===================other variables================================
 CONTROL_PORT = 3299
 
-pcap_path = "pcapdir"
-if not os.path.exists(pcap_path):
-    os.system("mkdir %s"%(pcap_path))
+def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
+    if os.path.isdir(dirpath):
+        if mode:
+            print("mkdir: cannot create directory '{}': directory has already existed.".format(dirpath))
+        return
+    ### recursively make directory
+    _temp = []
+    while not os.path.isdir(dirpath):
+        _temp.append(dirpath)
+        dirpath = os.path.dirname(dirpath)
+    while _temp:
+        dirpath = _temp.pop()
+        print("mkdir", dirpath)
+        os.mkdir(dirpath)
+
+now = dt.datetime.today()
+date = [str(x) for x in [now.year, now.month, now.day]]
+date = '-'.join(date)
+makedir("./log/{}".format(date))
+
+pcap_path = "./log/{}/{}".format(date, "client_pcap")  # wireshark capture
+makedir(pcap_path)
+ilog_path = "./log/{}/{}".format(date, "client_ilog")  # iperf log
+makedir(ilog_path)
+ss_path = "./log/{}/{}".format(date, "client_ss")      # socket statistics (Linux: ss)
+makedir(ss_path)
 #==================================================================
 
 def connection_setup():
@@ -282,19 +307,15 @@ while not exit_main_process:
     tcpproc_list = []
     try:
         now = dt.datetime.today()
-        n = '-'.join([str(x) for x in[ now.year, now.month, now.day, now.hour, now.minute, now.second]])
-        print(len(PORTS))
-        for PORT in PORTS:
-            tcpproc = subprocess.Popen(["tcpdump -i any port %s -w %s/%s_%s.pcap"%(PORT,pcap_path,PORT,n)], shell=True, preexec_fn=os.setpgrp)
+        # n = '-'.join([str(x) for x in[ now.year, now.month, now.day, now.hour, now.minute, now.second]])
+        n = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.second]]
+        n = [x.zfill(2) for x in n]  # zero-padding to two digit
+        n = '-'.join(n[:3]) + '_' + '-'.join(n[3:])
+        # print(len(PORTS))
+        for device, PORT in zip(devices, PORTS):
+            pcap = os.path.join(pcap_path, "client_pcap_BL_{}_{}_{}_sock.pcap".format(device, PORT, n))
+            tcpproc = subprocess.Popen(["tcpdump -i any port {} -w {}".format(PORT, pcap)], shell=True, preexec_fn=os.setpgrp)
             tcpproc_list.append(tcpproc)
-        # print(len(UL_PORTS))
-        # for PORT in UL_PORTS:
-        #     tcpproc = subprocess.Popen(["tcpdump -i any port %s -w %s/%s_%s.pcap"%(PORT,pcap_path,PORT,n)], shell=True, preexec_fn=os.setpgrp)
-        #     tcpproc_list.append(tcpproc)
-        # print(len(DL_PORTS))
-        # for PORT in DL_PORTS:
-        #     tcpproc = subprocess.Popen(["tcpdump -i any port %s -w %s/%s_%s.pcap"%(PORT,pcap_path,PORT,n)], shell=True, preexec_fn=os.setpgrp)
-        #     tcpproc_list.append(tcpproc)
         print("ready to setup connection...")
         s_tcp, s_udp_list = connection_setup()
         

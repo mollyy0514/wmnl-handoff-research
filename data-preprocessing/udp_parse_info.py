@@ -47,18 +47,18 @@ import portion as P
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-date = "2022-12-20"
+date = "2022-12-16"
 devices = sorted([
     # "sm00",
     # "sm01",
     # "sm02",
     # "sm03",
     # "sm04",
-    "sm05",
-    "sm06",
-    "sm07",
-    "sm08",
-    # "qc00",
+    # "sm05",
+    # "sm06",
+    # "sm07",
+    # "sm08",
+    "qc00",
     # "qc01",
     # "qc02",
     # "qc03",
@@ -68,13 +68,20 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
     # "tsync": (1, None),
+    # "tsync": (2, []),
+    # "_tsync": (1, ["#02",]),
+    "_tsync": (1, []),
     # "_Bandlock_Udp": (4, ["#01", "#02", "#03", "#04"]),
     # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),
     # "_Bandlock_Udp": (4, []),
     # "_Bandlock_Udp": (6, []),
-    "_Bandlock_Udp_B1_B3":  (6, []),
-    "_Bandlock_Udp_B3_B28": (2, []),
-    "_Bandlock_Udp_B28_B1": (2, []),
+    # "_Bandlock_Udp_B1_B3":  (6, []),
+    # "_Bandlock_Udp_B3_B28": (2, []),
+    # "_Bandlock_Udp_B28_B1": (2, []),
+    # "_Bandlock_Udp_B1_B3": (4, []),
+    # "_Bandlock_Udp_B3_B7": (4, []),
+    # "_Bandlock_Udp_B7_B8": (4, []),
+    # "_Bandlock_Udp_B8_B1": (4, []),
 }
 
 class Payload:
@@ -90,9 +97,9 @@ class ServerIP:
     # PUBLIC = "140.112.17.209"  # 3F
     # PRIVATE = "192.168.1.108"  # 3F
 
-DATA_RATE = 1000e3  # bits-per-second
-PKT_RATE = DATA_RATE / Payload.LENGTH / 8  # packets-per-second
-print("packet_rate (pps):", PKT_RATE, "\n")
+# DATA_RATE = 1000e3  # bits-per-second
+# PKT_RATE = DATA_RATE / Payload.LENGTH / 8  # packets-per-second
+# print("packet_rate (pps):", PKT_RATE, "\n")
 # *****************************************************************************
 
 # ****************************** Utils Functions ******************************
@@ -367,12 +374,12 @@ if __name__ == "__main__":
         if do:
             filepath, do = fgetter("uplink", "client")
             df = pd.read_csv(filepath, sep='@')
-        df_ultx = filter(df, "uplink", "client", "udp")
+        df_ultx = filter(df.copy(), "uplink", "client", "udp")
         df_ultx = parse_packet_info(df_ultx, os.path.join(target_dir, "udp_uplk_client_pkt_info.csv"))
         df_ultx = parse_brief_info(df_ultx, os.path.join(target_dir, "udp_uplk_client_pkt_brief.csv"))
         t1.toc()  # Time elapsed since t1.tic()
         
-        do = 1
+        # do = 1
         ## client_pcap_BL or client_pcap_DL
         t1 = TicToc()  # create instance of class
         t1.tic()       # Start timer
@@ -391,12 +398,12 @@ if __name__ == "__main__":
         if do:
             filepath, do = fgetter("uplink", "server")
             df = pd.read_csv(filepath, sep='@')
-        df_ulrx = filter(df, "uplink", "server", "udp")
+        df_ulrx = filter(df.copy(), "uplink", "server", "udp")
         df_ulrx = parse_packet_info(df_ulrx, os.path.join(target_dir, "udp_uplk_server_pkt_info.csv"))
         df_ulrx = parse_brief_info(df_ulrx, os.path.join(target_dir, "udp_uplk_server_pkt_brief.csv"))
         t1.toc()  # Time elapsed since t1.tic()
         
-        do = 1
+        # do = 1
         ## server_pcap_BL or server_pcap_DL
         t1 = TicToc()  # create instance of class
         t1.tic()       # Start timer
@@ -465,6 +472,9 @@ if __name__ == "__main__":
                 print("------------------------------------------")
                 source_dir = os.path.join(database, date, expr, dev, trace, "middle")
                 target_dir = os.path.join(database, date, expr, dev, trace, "middle")
+                if expr == "tsync":
+                    source_dir = os.path.join(database, date, expr, dev, trace)
+                    target_dir = os.path.join(database, date, expr, dev, trace)
                 makedir(target_dir)
                 filenames = os.listdir(source_dir)
                 main()

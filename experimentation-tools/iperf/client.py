@@ -54,8 +54,6 @@ if not args.force:
     if args.tsync:
         args.host = "192.168.1.251"
         args.udp = True
-        args.length = 250
-        args.bitrate = "1M"
         args.time = 60
 
 device_to_port = {
