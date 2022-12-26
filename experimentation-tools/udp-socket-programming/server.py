@@ -16,14 +16,14 @@ parser = argparse.ArgumentParser()
 #                     help="port to bind, range: [start, end]", default=3280)
 # parser.add_argument("-pe", "--port_end", type=int,
 #                     help="port to bind, range: [start, end]", default=3287)
-# parser.add_argument("-n", "--number_client", type=int,
-#                     help="number of client", default=2)
 # parser.add_argument("-l", "--length", type=int,
 #                     help="payload length", default=250)
 # parser.add_argument("-b", "--bandwidth", type=int,
 #                     help="data rate (bits per second)", default=200000)   
 # parser.add_argument("-t", "--time", type=int,
 #                     help="maximum experiment time", default=3600)
+parser.add_argument("-n", "--number_client", type=int,
+                    help="number of client", default=1)
 parser.add_argument("-d", "--devices", type=str, nargs='+',   # input list of devices sep by 'space'
                     help="list of devices", default=["unam"])
 parser.add_argument("-p", "--ports", type=str, nargs='+',     # input list of port numbers sep by 'space'
@@ -119,9 +119,9 @@ print("bitrate:", bandwidth)
 
 total_time = args.time
 
-# number_client = args.number_client
+number_client = args.number_client
 # number_client = len(args.devices)
-number_client = 1
+# number_client = 1
 
 expected_packet_per_sec = bandwidth / (length_packet << 3)
 sleeptime = 1.0 / expected_packet_per_sec

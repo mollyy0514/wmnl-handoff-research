@@ -207,8 +207,18 @@ def connection_setup():
         #     s_udp.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (interface_name+'\0').encode())
 
         interface_name = device  #'ss0'+str(PORT%10) #'usb' + str(index)
-        if "rmnet_data0" in get_network_interface_list():
+        network_interface_list = get_network_interface_list()
+        if "rmnet_data0" in network_interface_list:
             interface_name = "rmnet_data0"
+        if device == "unam":
+            if "enp5s0" in network_interface_list:
+                interface_name = "enp5s0"
+            elif "wlp2s0" in network_interface_list:
+                interface_name = "wlp2s0"
+            elif "rmnet_data0" in network_interface_list:
+                interface_name = "rmnet_data0"
+            elif "wlan0" in network_interface_list:
+                interface_name = "wlan0"
         print(interface_name)
         s_udp.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (interface_name+'\0').encode())
         # s_udp.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (device+'\0').encode())
