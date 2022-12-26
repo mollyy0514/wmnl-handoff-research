@@ -163,6 +163,31 @@ makedir(ilog_path)
 ss_path = "./log/{}/{}".format(date, "client_ss")      # socket statistics (Linux: ss)
 makedir(ss_path)
 #==================================================================
+def get_network_interface_list():
+    pipe = subprocess.Popen('ifconfig', stdout=subprocess.PIPE, shell=True)
+    text = pipe.communicate()[0].decode()
+    lines = text.split('\n')
+    network_interface_list = []
+    do = 0
+    for line in lines:
+        if "flags=" in line or "Link encap:" in line:
+            do = 1
+            # if "enp5s0" in line:    # ethernet for laptop
+            #     interface = "enp5s0"
+            # elif "wlp2s0" in line:  # wi-fi for laptop
+            #     interface = "wlp2s0"
+            # elif "wlan0" in line:   # wi-fi for samsung
+            #     interface = "wlan0"
+            # elif "rmnet_data0" in line:  # 4G/5G for samsung
+            #     interface = "rmnet_data0"
+            if "flags=" in line:
+                interface = line[:line.find(':')]
+            elif "Link encap:" in line:
+                interface = line[:line.find(' ')]
+        if do and r"RUNNING" in line:
+            network_interface_list.append(interface)
+            do = 0
+    return sorted(network_interface_list)
 
 def connection_setup():
     print("Initial setting up...")
@@ -182,6 +207,8 @@ def connection_setup():
         #     s_udp.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (interface_name+'\0').encode())
 
         interface_name = device  #'ss0'+str(PORT%10) #'usb' + str(index)
+        if "rmnet_data0" in get_network_interface_list():
+            interface_name = "rmnet_data0"
         print(interface_name)
         s_udp.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (interface_name+'\0').encode())
         # s_udp.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (device+'\0').encode())
