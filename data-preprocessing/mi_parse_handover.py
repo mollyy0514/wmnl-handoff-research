@@ -15,19 +15,19 @@ from pytictoc import TicToc
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-date = "2022-12-20"
+date = "2022-12-26"
 devices = sorted([
     # "sm00",
     # "sm01",
     # "sm02",
     # "sm03",
     # "sm04",
-    "sm05",
-    "sm06",
+    # "sm05",
+    # "sm06",
     "sm07",
     "sm08",
-    # "qc00",
-    # "qc01",
+    "qc00",
+    "qc01",
     # "qc02",
     # "qc03",
 ])
@@ -40,10 +40,11 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
     # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),
     # "_Bandlock_Udp": (4, []),
     # "_Bandlock_Udp": (6, []),
-    "_Bandlock_Udp_B1_B3":  (6, []),
-    "_Bandlock_Udp_B3_B28": (2, []),
-    "_Bandlock_Udp_B28_B1": (2, []),
+    # "_Bandlock_Udp_B1_B3":  (6, []),
+    # "_Bandlock_Udp_B3_B28": (2, []),
+    # "_Bandlock_Udp_B28_B1": (2, []),
     # "_Mobile_Bandlock_Test": (1, None),
+    "_Modem_Phone_Comparative_Exeriments": (6, []),
 }
 # *****************************************************************************
 
@@ -96,7 +97,10 @@ def parse_handover(fin, fout):
     df = pd.read_csv(fin)
     # df.loc[:, 'Timestamp'] = pd.to_datetime(df.loc[:, 'Timestamp']) + dt.timedelta(hours=8)
     df['Timestamp'] = pd.to_datetime(df['Timestamp']) + dt.timedelta(hours=8)
-    exp_time = (df['Timestamp'].iloc[-1] - df['Timestamp'].iloc[0]).total_seconds()
+    if len(df):
+        exp_time = (df['Timestamp'].iloc[-1] - df['Timestamp'].iloc[0]).total_seconds()
+    else:
+        exp_time = 0
 
     ### add new columns
     newCols = ['handoff_type', 'handoff_state', 'handoff_duration', 'nr_PCI', 'nr_Freq', 'eNB.ID', 'CID']

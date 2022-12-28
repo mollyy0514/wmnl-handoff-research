@@ -59,15 +59,16 @@ Exp_Name = {  # experiment_name:(number_of_experiment_rounds, list_of_experiment
     # "_Bandlock_Udp":(4, ["#01", "#02", "#03", "#04"]),
     # "_Bandlock_Udp":(6, []),
     # "_Bandlock_Udp":(4, []),
-    "_Bandlock_Tcp":(4, []),
+    # "_Bandlock_Tcp":(4, []),
     # "_Udp_Stationary_Bandlock":(1, []), 
     # "_Udp_Stationary_SameSetting":(1, []),
+    "_Modem_Phone_Comparative_Exeriments": (6, []),
 }
 devices = sorted([
     # "sm03",
     # "sm04",
-    "sm05", 
-    "sm06",
+    # "sm05", 
+    # "sm06",
     "sm07",
     "sm08",
 ])
