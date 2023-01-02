@@ -47,19 +47,19 @@ import portion as P
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-date = "2022-12-22"
+date = "2022-12-26"
 devices = sorted([
     # "sm00",
     # "sm01",
     # "sm02",
     # "sm03",
     # "sm04",
-    "sm05",
-    "sm06",
+    # "sm05",
+    # "sm06",
     "sm07",
     "sm08",
-    # "qc00",
-    # "qc01",
+    "qc00",
+    "qc01",
     # "qc02",
     # "qc03",
 ])
@@ -76,10 +76,11 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
     # "_Bandlock_Udp_B1_B3":  (6, []),
     # "_Bandlock_Udp_B3_B28": (2, []),
     # "_Bandlock_Udp_B28_B1": (2, []),
-    "_Bandlock_Udp_B1_B3": (4, []),
-    "_Bandlock_Udp_B3_B7": (4, []),
-    "_Bandlock_Udp_B7_B8": (4, []),
-    "_Bandlock_Udp_B8_B1": (4, []),
+    # "_Bandlock_Udp_B1_B3": (4, []),
+    # "_Bandlock_Udp_B3_B7": (4, []),
+    # "_Bandlock_Udp_B7_B8": (4, []),
+    # "_Bandlock_Udp_B8_B1": (4, []),
+    "_Modem_Phone_Comparative_Exeriments": (6, []),
 }
 
 class Payload:

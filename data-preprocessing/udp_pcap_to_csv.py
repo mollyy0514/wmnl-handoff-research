@@ -49,7 +49,7 @@ args = parser.parse_args()
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-date = "2022-12-26#1"
+date = "2022-12-28"
 devices = sorted([
     # "sm00",
     # "sm01",
