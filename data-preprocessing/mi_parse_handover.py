@@ -426,7 +426,7 @@ def parse_handover(fin, fout):
                 lte_failure = 1
                 lte_failure_start_index = i
         
-        if lte_failure and df.loc[i, "rrcConnectionReestablishment"]:
+        if lte_failure and df.loc[i, "rrcConnectionReestablishmentComplete"]:
             lte_failure = 0
             df.loc[lte_failure_start_index, 'handoff_type'] = 'radio_link_failure'
             df.loc[lte_failure_start_index, 'handoff_state'] = 'trigger'
