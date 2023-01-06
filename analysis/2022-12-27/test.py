@@ -1,142 +1,81 @@
-def mi_event_parsing(miinfofile):
-    def nr_pci_track():
-        if miinfofile.loc[i, "PCI"] == 65535: ## 65535 is for samgsung phone.
-            nr_pci = '-'
-        else:
-            nr_pci = miinfofile.loc[i, "PCI"]
-        return nr_pci
+### ** SUCC
+# fig, (ax1, ax2) = plt.subplots(nrows=2, ncols=1, sharex=True)
+# fig, ax = plt.subplots(nrows=2, ncols=1, sharex=True)
+fig, ax = plt.subplots(nrows=4, ncols=3, figsize=(11.5, 10))
+rel = ["before", "during", "after"]
+_never_occurs = set()
 
-    nr_pci = None ## Initial Unknown
-     
-    lte_4G_handover_list = []   #4G 狀態下LTE eNB 的 handover
-    
-    nr_setup_list = []          #gNB cell addition
-    nr_handover_list = []       #gNB cell changes (eNB stays the same)
-    nr_removal_list = []        #gNB cell removal
-        
-    lte_5G_handover_list = []   #(eNB1, gNB1) -> (eNB2, gNB1) #gNB stays the same
-    nr_lte_handover_list = []   #both NR cell and LTE cell have handover
-    
-    eNB_to_MN_list = []
-    MN_to_eNB_list = []
-    
-    scg_failure_list = []       #gNB handover failure
-    reestablish_list_type2 = [] #eNB handover failure
-    reestablish_list_type3 = []
-    
-    SCell_rel = []
-    SCell_add = []
-    SCell_add_rel = []
+fig.suptitle("UL Packet Loss Rate Per Event (x=1s): Successful HO")
 
-    nr_handover = 0
-    nr_handover_start_index = None
-    lte_handover = 0
-    lte_handover_start_index = None
-    nr_release = 0
-    nr_release_start_index = None
-    
-    lte_failure = 0
-    lte_failure_start_index = None
-    
-    handover_num = 0
-    
-    for i in range(len(miinfofile)):
-        if miinfofile.loc[i, "type_id"] == "5G_NR_RRC_OTA_Packet":
-            nr_pci = nr_pci_track()
-            continue
-            
-        if miinfofile.loc[i, "nr-rrc.t304"]:
-            if nr_handover == 0:    
-                nr_handover = 1
-                nr_handover_start_index = i
-                
-        if miinfofile.loc[i, "lte-rrc.t304"]:
-            if lte_handover == 0:
-                lte_handover = 1
-                lte_handover_start_index = i
-                
-        if miinfofile.loc[i, "nr-Config-r15: release (0)"]:
-            if nr_release == 0:
-                nr_release = 1
-                nr_release_start_index = i
-           
-        if (nr_handover or lte_handover or nr_release) and miinfofile.loc[i, "rrcConnectionReconfigurationComplete"]:
-            handover_num +=1
-        
-        
-        #handover 種類分類
-        #------------------------------------------------------------------------------
-        if lte_handover and not nr_handover and not nr_release and miinfofile.loc[i, "rrcConnectionReconfigurationComplete"]:  # just lte cell handover event
-            lte_handover = 0
-            lte_4G_handover_list.append([miinfofile.loc[lte_handover_start_index, "Timestamp"], miinfofile.loc[i, "Timestamp"]])
-            
+labels = handover_types_0
+handles = [None]*len(labels)
+for k in range(4):
+    for i, _rel in enumerate(rel):
+        ax[k, i].set_title(_rel.title())
+        ax[k, i].set_xlabel("loss rate (%)")
+        for j, type_name in enumerate(handover_types_0):
+            # data = lodicts[k]["loss_num"]["after_lte_handover"]
+            # event_name = "before_{}".format(type_name)
+            event_name = "{}_{}".format(_rel, type_name)
+            data1 = lodicts[k]["loss_num"][event_name]
+            data2 = lodicts[k]["pkt_num"][event_name]
+            data = [round(numer / (denom + 1e-9) * 100, 3) for numer, denom in zip(data1, data2)]
+            if len(data) == 0:
+                _never_occurs.add(type_name)
+                continue
+            # print(data)
+            count, bins_count = np.histogram(data, bins=5000)
+            # print(count, bins_count)
+            pdf = count / sum(count)
+            cdf = np.cumsum(pdf)
+            # ax[k, i].plot(bins_count[1:], cdf, label=event_name)
+            handles[j], = ax[k, i].plot(bins_count[1:], cdf)
+axbox = ax[1].get_position()
+# print(axbox)
+labels = [item for key, item in zip(handles, labels) if key != None]
+handles = [item for item in handles if item != None]
+fig.legend(
+    handles=handles, labels=labels,
+    loc='lower center', bbox_to_anchor=[0, axbox.y0-0.2,1,1], ncol=2)
+fig.show()
+print("Never Occurs:", list(_never_occurs))
 
-        if lte_handover and not nr_handover and nr_release and miinfofile.loc[i, "rrcConnectionReconfigurationComplete"]:    # LTE Ho and nr release 
-            lte_handover = 0
-            nr_release = 0
-            MN_to_eNB_list.append([miinfofile.loc[lte_handover_start_index, "Timestamp"], miinfofile.loc[i, "Timestamp"]])
-        
-        if nr_handover and not lte_handover and miinfofile.loc[i, "rrcConnectionReconfigurationComplete"]:  # just nr cell handover event
-            nr_handover = 0
-            if miinfofile.loc[nr_handover_start_index, "dualConnectivityPHR: setup (1)"]:     #This if-else statement classifies whether it is nr addition or nr handover
-                nr_setup_list.append([miinfofile.loc[nr_handover_start_index, "Timestamp"], miinfofile.loc[i, "Timestamp"]])       
-            else:
-                nr_handover_list.append([miinfofile.loc[nr_handover_start_index, "Timestamp"], miinfofile.loc[i, "Timestamp"]])
-            #additional judgement:
-            #----------------------------
-            #if miinfofile.loc[nr_handover_start_index, "dualConnectivityPHR: setup (1)"] and nr_pci != None:
-            #    print("Warning: dualConnectivityPHR setup may not mean nr cell addition", mi_file, i)
-            #if miinfofile.loc[nr_handover_start_index, "dualConnectivityPHR: setup (1)"]==0 and not (nr_pci != None and nr_pci != miinfofile.loc[nr_handover_start_index, "nr_pci"]): 
-            #    print("Warning: nr-rrc.t304 without dualConnectivityPHR setup may not mean nr cell handover", mi_file, i, nr_handover_start_index, miinfofile.loc[nr_handover_start_index, "nr_pci"], nr_pci)
-                
-        if lte_handover and nr_handover and miinfofile.loc[i, "rrcConnectionReconfigurationComplete"]:      # both nr cell and lte cell handover event
-            lte_handover = 0
-            nr_handover = 0
-            if nr_pci == miinfofile.loc[lte_handover_start_index, "nr_physCellId"]: 
-                lte_5G_handover_list.append([miinfofile.loc[lte_handover_start_index, "Timestamp"], miinfofile.loc[i, "Timestamp"]])
-            else:
-                ##############
-                if miinfofile.loc[nr_handover_start_index, "dualConnectivityPHR: setup (1)"]:     #This if-else statement classifies whether it is nr addition or nr handover
-                    eNB_to_MN_list.append([miinfofile.loc[nr_handover_start_index, "Timestamp"], miinfofile.loc[i, "Timestamp"]])       
-                else:
-                    nr_lte_handover_list.append([miinfofile.loc[lte_handover_start_index, "Timestamp"], miinfofile.loc[i, "Timestamp"]])
-            
-        if not lte_handover and  nr_release and miinfofile.loc[i, "rrcConnectionReconfigurationComplete"]:
-            nr_release=0
-            nr_removal_list.append([miinfofile.loc[nr_release_start_index, "Timestamp"], miinfofile.loc[i, "Timestamp"]])
-            
-        if miinfofile.loc[i, "scgFailureInformationNR-r15"]:
-            scg_failure_list.append([miinfofile.loc[i, "Timestamp"], miinfofile.loc[i, "Timestamp"]]) 
-            
-        if miinfofile.loc[i, "rrcConnectionReestablishmentRequest"]:
-            if lte_failure == 0:
-                lte_failure = 1
-                lte_failure_start_index = i
-        if lte_failure and miinfofile.loc[i, "rrcConnectionReestablishmentComplete"]:
-            lte_failure = 0
-            reestablish_list_type2.append([miinfofile.loc[lte_failure_start_index, "Timestamp"], miinfofile.loc[lte_failure_start_index, "Timestamp"]])
-        if lte_failure and miinfofile.loc[i, "rrcConnectionReestablishmentReject"]:
-            lte_failure = 0
-            reestablish_list_type3.append([miinfofile.loc[lte_failure_start_index, "Timestamp"], miinfofile.loc[lte_failure_start_index, "Timestamp"]])
-        
-        if (miinfofile.loc[i, "sCellToReleaseList-r10"] != '0' and miinfofile.loc[i, "sCellToReleaseList-r10"] != 0):
-            SCell_rel.append([miinfofile.loc[i, "Timestamp"]])
-                              # May change        
-        # if miinfofile.loc[i, "SCellToAddMod-r10"] and miinfofile.loc[i, "SCellIndex-r10.1"] != 'nr or cqi report':
-        #     SCell_add.append([miinfofile.loc[i, "Timestamp"]])
-                                                                                                                                           # May change
-        if (miinfofile.loc[i, "sCellToReleaseList-r10"] != '0'and miinfofile.loc[i, "sCellToReleaseList-r10"] != 0) and miinfofile.loc[i, "SCellToAddMod-r10"] and miinfofile.loc[i, "SCellIndex-r10.1"] != 'nr or cqi report':
-            SCell_add_rel.append([miinfofile.loc[i, "Timestamp"], miinfofile.loc[i, "Timestamp"]])
+### ** FAIL
+fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(11.5, 8))
+rel = ["before", "after"]
+_never_occurs = set()
 
+fig.suptitle("UL Packet Loss Rate Per Event (x=3s): Failed HO")
 
-    return [lte_4G_handover_list, nr_setup_list, nr_handover_list, nr_removal_list, lte_5G_handover_list, nr_lte_handover_list, eNB_to_MN_list, MN_to_eNB_list, scg_failure_list, 
-    reestablish_list_type2, reestablish_list_type3, SCell_rel, SCell_add, SCell_add_rel], handover_num
-
-def collect_ho_event(mi_rrc_df):
-    l, _ = mi_event_parsing(mi_rrc_df)
-    for i in range(len(l)):
-        l[i] = [j[0] for j in l[i]]
-    d = {'lte': l[0], 'nr_setup': l[1], 'gNB_ho': l[2], 'nr_rel': l[3], "MN_changed": l[4],"MN_SN_changed": l[5],
-     "eNB to MN changed": l[6], "MN to eNB changed": l[7], "gNB fail": l[8], "type2 fail": l[9], "type3 fail": l[10], 
-     'SCell_rel': l[11], 'SCell_add': l[12], 'SCell_add_rel': l[13]}
-    return d
+labels = handover_fail_types
+handles = [None]*len(labels)
+for k in range(4):
+    for i, _rel in enumerate(rel):
+        ax[k, i].set_title(_rel.title())
+        ax[k, i].set_xlabel("loss rate (%)")
+        for j, type_name in enumerate(handover_fail_types):
+            # data = lodicts[k]["loss_num"]["after_lte_handover"]
+            # event_name = "before_{}".format(type_name)
+            event_name = "{}_{}".format(_rel, type_name)
+            data1 = lodicts[k]["loss_num"][event_name]
+            data2 = lodicts[k]["pkt_num"][event_name]
+            data = [round(numer / (denom + 1e-9) * 100, 3) for numer, denom in zip(data1, data2)]
+            if len(data) == 0:
+                _never_occurs.add(type_name)
+                continue
+            # print(data)
+            count, bins_count = np.histogram(data, bins=5000)
+            # print(count, bins_count)
+            pdf = count / sum(count)
+            cdf = np.cumsum(pdf)
+            # ax[k, i].plot(bins_count[1:], cdf, label=event_name)
+            handles[j], = ax[k, i].plot(bins_count[1:], cdf)
+axbox = ax[1].get_position()
+# print(axbox)
+labels = [item for key, item in zip(handles, labels) if key != None]
+handles = [item for item in handles if item != None]
+fig.legend(
+    handles=handles, labels=labels,
+    loc='lower center', bbox_to_anchor=[0, axbox.y0-0.2,1,1], ncol=2)
+fig.show()
+print("Never Occurs:", list(_never_occurs))
