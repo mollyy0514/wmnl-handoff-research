@@ -371,11 +371,12 @@ def get_loss(rxdf, txdf, fout1, fout2, mode):
     # txdf['Timestamp'] = pd.to_datetime(txdf['Timestamp'])
     # txdf['payload.time'] = pd.to_datetime(txdf['payload.time'])
 
-    _eseq = 1  # next expected sequence number
     timestamp_list = list(map(list, zip(rxdf['sequence.number'].astype(int).array, rxdf['Timestamp_epoch'].astype(float).array)))
     timestamp_store = None
     loss_timestamp_list = []
     count = 0  # to count the total number of packet losses
+    # _eseq = 1  # next expected sequence number
+    _eseq = timestamp_list[0][0] # next expected sequence number
     for i in tqdm(range(len(rxdf))):
         timestamp = timestamp_list[i]
         if timestamp[0] == _eseq:
@@ -390,11 +391,13 @@ def get_loss(rxdf, txdf, fout1, fout2, mode):
             ### rxdf.loc[i, 'sequence.number'] 為此時此刻收到的封包 seq
             ### rxdf.loc[i, 'sequence.number']-pointer+2 == 遺漏的封包數+2 (頭+尾)，因此要去頭去尾才是實際遺漏的封包
             n = timestamp[0] - _eseq + 2
-            if timestamp_store == None:
-                ### if the first-N packets lost, we cannot predict the loss timestamp, so we only record their sequemce number.
-                loss_linspace = np.linspace([0, timestamp[1] - (n-1) / PKT_RATE], timestamp, n)
-            else:
-                loss_linspace = np.linspace(timestamp_store, timestamp, n)
+            # if timestamp_store == None:
+            #     ### if the first-N packets lost, we cannot predict the loss timestamp, so we only record their sequemce number.
+            #     loss_linspace = np.linspace([0, timestamp[1] - (n-1) / PKT_RATE], timestamp, n)
+            # else:
+            #     loss_linspace = np.linspace(timestamp_store, timestamp, n)
+            
+            loss_linspace = np.linspace(timestamp_store, timestamp, n)
             
             loss_linspace = loss_linspace[1:-1]  # 去頭去尾
             for item in loss_linspace:

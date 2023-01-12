@@ -1,0 +1,1669 @@
+/home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3
+|___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05
+|     4
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05/#01
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05/#02
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05/#03
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05/#04
+|___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06
+|     4
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06/#01
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06/#02
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06/#03
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06/#04
+|___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07
+|     4
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07/#01
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07/#02
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07/#03
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07/#04
+|___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08
+|     4
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08/#01
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08/#02
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08/#03
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08/#04
+
+/home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7
+|___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05
+|     4
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05/#01
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05/#02
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05/#03
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05/#04
+|___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06
+|     4
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06/#01
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06/#02
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06/#03
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06/#04
+|___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07
+|     4
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07/#01
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07/#02
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07/#03
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07/#04
+|___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08
+|     4
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08/#01
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08/#02
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08/#03
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08/#04
+
+/home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8
+|___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05
+|     4
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05/#01
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05/#02
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05/#03
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05/#04
+|___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06
+|     4
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06/#01
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06/#02
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06/#03
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06/#04
+|___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07
+|     4
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07/#01
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07/#02
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07/#03
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07/#04
+|___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08
+|     4
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08/#01
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08/#02
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08/#03
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08/#04
+
+/home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1
+|___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05
+|     4
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05/#01
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05/#02
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05/#03
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05/#04
+|___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06
+|     4
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06/#01
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06/#02
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06/#03
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06/#04
+|___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07
+|     4
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07/#01
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07/#02
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07/#03
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07/#04
+|___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08
+|     4
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08/#01
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08/#02
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08/#03
+|    |___ /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08/#04
+
+['#01', '#02', '#03', '#04']
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B1_B3 sm05 #01
+------------------------------------------
+2022-12-22 15:04:38.467055 2022-12-22 15:11:01.313392 382.846337
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05/#01/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05/#01/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 37
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 37
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05/#01/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 37
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 37
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B1_B3 sm05 #02
+------------------------------------------
+2022-12-22 15:12:49.214412 2022-12-22 15:19:04.837627 375.623215
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05/#02/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05/#02/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 41
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 41
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05/#02/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 41
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 41
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B1_B3 sm05 #03
+------------------------------------------
+2022-12-22 15:19:57.624370 2022-12-22 15:25:42.354579 344.730209
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05/#03/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05/#03/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 47
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 47
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05/#03/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 47
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 47
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B1_B3 sm05 #04
+------------------------------------------
+2022-12-22 15:27:03.877232 2022-12-22 15:34:01.082258 417.205026
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05/#04/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05/#04/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+73 2022-12-22 15:33:25.103851 'lte2endc_MN_change' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+74 2022-12-22 15:33:27.585405 'radio_link_failure' overlaps with the previous 'lte2endc_MN_change' for 1.0 seconds.
+1 0 47
+overlaps ratio: 2.13(%)
+1 seconds
+---------------------------------------------------------
+0 0 47
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm05/#04/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+73 2022-12-22 15:33:25.103851 'lte2endc_MN_change' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+74 2022-12-22 15:33:27.585405 'radio_link_failure' overlaps with the previous 'lte2endc_MN_change' for 1.0 seconds.
+1 0 47
+overlaps ratio: 2.13(%)
+1 seconds
+---------------------------------------------------------
+0 0 47
+overlaps ratio: 0.0(%)
+['#01', '#02', '#03', '#04']
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B1_B3 sm06 #01
+------------------------------------------
+2022-12-22 15:04:43.061531 2022-12-22 15:11:03.051956 379.990425
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06/#01/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06/#01/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06/#01/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B1_B3 sm06 #02
+------------------------------------------
+2022-12-22 15:12:50.842455 2022-12-22 15:19:06.808998 375.966543
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06/#02/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06/#02/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 14
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 14
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06/#02/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 14
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 14
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B1_B3 sm06 #03
+------------------------------------------
+2022-12-22 15:20:02.388853 2022-12-22 15:25:43.989051 341.600198
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06/#03/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06/#03/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 11
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 11
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06/#03/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 11
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 11
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B1_B3 sm06 #04
+------------------------------------------
+2022-12-22 15:27:05.243035 2022-12-22 15:34:03.027417 417.784382
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06/#04/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06/#04/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 15
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 15
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm06/#04/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 15
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 15
+overlaps ratio: 0.0(%)
+['#01', '#02', '#03', '#04']
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B1_B3 sm07 #01
+------------------------------------------
+2022-12-22 15:04:45.308851 2022-12-22 15:11:05.285937 379.977086
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07/#01/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07/#01/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 38
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 38
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07/#01/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 38
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 38
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B1_B3 sm07 #02
+------------------------------------------
+2022-12-22 15:12:52.681508 2022-12-22 15:19:09.418028 376.73652
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07/#02/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07/#02/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 43
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 43
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07/#02/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 43
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 43
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B1_B3 sm07 #03
+------------------------------------------
+2022-12-22 15:20:04.542585 2022-12-22 15:25:45.888025 341.34544
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07/#03/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07/#03/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 37
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 37
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07/#03/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 37
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 37
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B1_B3 sm07 #04
+------------------------------------------
+2022-12-22 15:27:07.408534 2022-12-22 15:34:04.980614 417.57208
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07/#04/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07/#04/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 27
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 27
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm07/#04/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 27
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 27
+overlaps ratio: 0.0(%)
+['#01', '#02', '#03', '#04']
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B1_B3 sm08 #01
+------------------------------------------
+2262-04-11 23:47:16.854775807 1677-09-21 00:12:43.145224193 0
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08/#01/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08/#01/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 0
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 0
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08/#01/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 0
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 0
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B1_B3 sm08 #02
+------------------------------------------
+2022-12-22 15:12:54.197037 2022-12-22 15:19:11.714351 377.517314
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08/#02/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08/#02/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 54
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 54
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08/#02/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 54
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 54
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B1_B3 sm08 #03
+------------------------------------------
+2022-12-22 15:20:09.218198 2022-12-22 15:25:54.639420 345.421222
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08/#03/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08/#03/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 36
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 36
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08/#03/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 36
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 36
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B1_B3 sm08 #04
+------------------------------------------
+2022-12-22 15:27:09.541039 2022-12-22 15:34:07.361160 417.820121
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08/#04/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08/#04/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 19
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 19
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B1_B3/sm08/#04/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 19
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 19
+overlaps ratio: 0.0(%)
+['#01', '#02', '#03', '#04']
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B3_B7 sm05 #01
+------------------------------------------
+2022-12-22 15:38:55.331660 2022-12-22 15:46:22.019090 446.68743
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05/#01/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05/#01/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 45
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 45
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05/#01/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 45
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 45
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B3_B7 sm05 #02
+------------------------------------------
+2022-12-22 15:47:49.695050 2022-12-22 15:54:02.036459 372.341409
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05/#02/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05/#02/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+56 2022-12-22 15:51:14.395857 'endc_MN_change' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+57 2022-12-22 15:51:17.320435 'radio_link_failure' overlaps with the previous 'endc_MN_change' for 1.0 seconds.
+1 0 54
+overlaps ratio: 1.85(%)
+1 seconds
+---------------------------------------------------------
+0 0 54
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05/#02/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+56 2022-12-22 15:51:14.395857 'endc_MN_change' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+57 2022-12-22 15:51:17.320435 'radio_link_failure' overlaps with the previous 'endc_MN_change' for 1.0 seconds.
+1 0 54
+overlaps ratio: 1.85(%)
+1 seconds
+---------------------------------------------------------
+0 0 54
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B3_B7 sm05 #03
+------------------------------------------
+2022-12-22 15:55:02.020371 2022-12-22 16:00:49.873752 347.853381
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05/#03/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05/#03/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05/#03/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B3_B7 sm05 #04
+------------------------------------------
+2022-12-22 16:04:51.026784 2022-12-22 16:11:39.537443 408.510659
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05/#04/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05/#04/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm05/#04/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+['#01', '#02', '#03', '#04']
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B3_B7 sm06 #01
+------------------------------------------
+2022-12-22 15:38:57.400762 2022-12-22 15:46:24.951407 447.550645
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06/#01/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06/#01/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+3 2022-12-22 15:41:49.243811 'endc_SN_change' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+4 2022-12-22 15:41:51.316506 'radio_link_failure' overlaps with the previous 'endc_SN_change' for 1.0 seconds.
+38 2022-12-22 15:44:21.845231 'endc_MN_change' overlaps with the following 'scg_failure' for 1.0 seconds.
+39 2022-12-22 15:44:24.117109 'scg_failure' overlaps with the previous 'endc_MN_change' for 1.0 seconds.
+2 0 30
+overlaps ratio: 6.67(%)
+1 seconds
+---------------------------------------------------------
+0 0 30
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06/#01/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+3 2022-12-22 15:41:49.243811 'endc_SN_change' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+4 2022-12-22 15:41:51.316506 'radio_link_failure' overlaps with the previous 'endc_SN_change' for 1.0 seconds.
+38 2022-12-22 15:44:21.845231 'endc_MN_change' overlaps with the following 'scg_failure' for 1.0 seconds.
+39 2022-12-22 15:44:24.117109 'scg_failure' overlaps with the previous 'endc_MN_change' for 1.0 seconds.
+2 0 30
+overlaps ratio: 6.67(%)
+1 seconds
+---------------------------------------------------------
+0 0 30
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B3_B7 sm06 #02
+------------------------------------------
+2022-12-22 15:47:51.639215 2022-12-22 15:54:04.881202 373.241987
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06/#02/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06/#02/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 16
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 16
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06/#02/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 16
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 16
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B3_B7 sm06 #03
+------------------------------------------
+2022-12-22 15:55:06.778772 2022-12-22 16:00:52.493476 345.714704
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06/#03/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06/#03/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 16
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 16
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06/#03/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 16
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 16
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B3_B7 sm06 #04
+------------------------------------------
+2022-12-22 16:04:53.197079 2022-12-22 16:11:43.159410 409.962331
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06/#04/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06/#04/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 15
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 15
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm06/#04/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 15
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 15
+overlaps ratio: 0.0(%)
+['#01', '#02', '#03', '#04']
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B3_B7 sm07 #01
+------------------------------------------
+2022-12-22 15:38:59.734904 2022-12-22 15:46:28.701325 448.966421
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07/#01/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07/#01/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+28 2022-12-22 15:42:18.125630 'lte_handover' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+29 2022-12-22 15:42:20.777573 'radio_link_failure' overlaps with the previous 'lte_handover' for 1.0 seconds.
+1 0 28
+overlaps ratio: 3.57(%)
+1 seconds
+---------------------------------------------------------
+0 0 28
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07/#01/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+28 2022-12-22 15:42:18.125630 'lte_handover' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+29 2022-12-22 15:42:20.777573 'radio_link_failure' overlaps with the previous 'lte_handover' for 1.0 seconds.
+1 0 28
+overlaps ratio: 3.57(%)
+1 seconds
+---------------------------------------------------------
+0 0 28
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B3_B7 sm07 #02
+------------------------------------------
+2022-12-22 15:47:53.572390 2022-12-22 15:54:07.553119 373.980729
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07/#02/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07/#02/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07/#02/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B3_B7 sm07 #03
+------------------------------------------
+2022-12-22 15:55:09.455886 2022-12-22 16:00:54.555925 345.100039
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07/#03/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07/#03/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 23
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 23
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07/#03/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 23
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 23
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B3_B7 sm07 #04
+------------------------------------------
+2022-12-22 16:04:55.503025 2022-12-22 16:11:44.863013 409.359988
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07/#04/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07/#04/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm07/#04/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+['#01', '#02', '#03', '#04']
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B3_B7 sm08 #01
+------------------------------------------
+2022-12-22 15:39:06.969218 2022-12-22 15:46:30.656826 443.687608
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08/#01/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08/#01/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08/#01/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B3_B7 sm08 #02
+------------------------------------------
+2022-12-22 15:47:57.516233 2022-12-22 15:54:09.008323 371.49209
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08/#02/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08/#02/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+28 2022-12-22 15:53:24.997115 'lte_handover' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+29 2022-12-22 15:53:27.406647 'radio_link_failure' overlaps with the previous 'lte_handover' for 1.0 seconds.
+1 0 19
+overlaps ratio: 5.26(%)
+1 seconds
+---------------------------------------------------------
+0 0 19
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08/#02/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+28 2022-12-22 15:53:24.997115 'lte_handover' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+29 2022-12-22 15:53:27.406647 'radio_link_failure' overlaps with the previous 'lte_handover' for 1.0 seconds.
+1 0 19
+overlaps ratio: 5.26(%)
+1 seconds
+---------------------------------------------------------
+0 0 19
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B3_B7 sm08 #03
+------------------------------------------
+2022-12-22 15:55:12.303975 2022-12-22 16:00:56.639981 344.336006
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08/#03/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08/#03/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 15
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 15
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08/#03/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 15
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 15
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B3_B7 sm08 #04
+------------------------------------------
+2022-12-22 16:04:57.950550 2022-12-22 16:11:46.707756 408.757206
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08/#04/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08/#04/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B3_B7/sm08/#04/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+['#01', '#02', '#03', '#04']
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B7_B8 sm05 #01
+------------------------------------------
+2022-12-22 16:20:31.352830 2022-12-22 16:25:12.932205 281.579375
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05/#01/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05/#01/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+1 2022-12-22 16:20:57.225520 'endc_SN_change' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+2 2022-12-22 16:20:59.401915 'radio_link_failure' overlaps with the previous 'endc_SN_change' for 1.0 seconds.
+1 0 37
+overlaps ratio: 2.7(%)
+1 seconds
+---------------------------------------------------------
+0 0 37
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05/#01/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+1 2022-12-22 16:20:57.225520 'endc_SN_change' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+2 2022-12-22 16:20:59.401915 'radio_link_failure' overlaps with the previous 'endc_SN_change' for 1.0 seconds.
+1 0 37
+overlaps ratio: 2.7(%)
+1 seconds
+---------------------------------------------------------
+0 0 37
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B7_B8 sm05 #02
+------------------------------------------
+2022-12-22 16:26:27.593795 2022-12-22 16:31:16.553529 288.959734
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05/#02/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05/#02/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+22 2022-12-22 16:27:39.421318 'lte2endc_MN_change' overlaps with the following 'scg_failure' for 1.0 seconds.
+23 2022-12-22 16:27:41.503262 'scg_failure' overlaps with the previous 'lte2endc_MN_change' for 1.0 seconds.
+1 0 25
+overlaps ratio: 4.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 25
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05/#02/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+22 2022-12-22 16:27:39.421318 'lte2endc_MN_change' overlaps with the following 'scg_failure' for 1.0 seconds.
+23 2022-12-22 16:27:41.503262 'scg_failure' overlaps with the previous 'lte2endc_MN_change' for 1.0 seconds.
+1 0 25
+overlaps ratio: 4.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 25
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B7_B8 sm05 #03
+------------------------------------------
+2022-12-22 16:32:34.278008 2022-12-22 16:39:48.554081 434.276073
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05/#03/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05/#03/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 11
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 11
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05/#03/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 11
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 11
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B7_B8 sm05 #04
+------------------------------------------
+2022-12-22 16:46:51.619021 2022-12-22 16:53:00.197441 368.57842
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05/#04/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05/#04/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+21 2022-12-22 16:49:14.180313 'endc_MN_change' overlaps with the following 'radio_link_failure' for 0.327 seconds.
+22 2022-12-22 16:49:17.853402 'radio_link_failure' overlaps with the previous 'endc_MN_change' for 0.327 seconds.
+1 0 28
+overlaps ratio: 3.57(%)
+1 seconds
+---------------------------------------------------------
+0 0 28
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm05/#04/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+21 2022-12-22 16:49:14.180313 'endc_MN_change' overlaps with the following 'radio_link_failure' for 0.327 seconds.
+22 2022-12-22 16:49:17.853402 'radio_link_failure' overlaps with the previous 'endc_MN_change' for 0.327 seconds.
+1 0 28
+overlaps ratio: 3.57(%)
+1 seconds
+---------------------------------------------------------
+0 0 28
+overlaps ratio: 0.0(%)
+['#01', '#02', '#03', '#04']
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B7_B8 sm06 #01
+------------------------------------------
+2022-12-22 16:20:29.487699 2022-12-22 16:25:14.993195 285.505496
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06/#01/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06/#01/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+12 2022-12-22 16:21:25.279010 'lte_handover' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+13 2022-12-22 16:21:27.302835 'radio_link_failure' overlaps with the previous 'lte_handover' for 1.0 seconds.
+1 0 20
+overlaps ratio: 5.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06/#01/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+12 2022-12-22 16:21:25.279010 'lte_handover' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+13 2022-12-22 16:21:27.302835 'radio_link_failure' overlaps with the previous 'lte_handover' for 1.0 seconds.
+1 0 20
+overlaps ratio: 5.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 20
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B7_B8 sm06 #02
+------------------------------------------
+2022-12-22 16:26:29.510898 2022-12-22 16:31:18.508060 288.997162
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06/#02/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06/#02/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06/#02/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B7_B8 sm06 #03
+------------------------------------------
+2022-12-22 16:32:36.773428 2022-12-22 16:39:50.902433 434.129005
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06/#03/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06/#03/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 24
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 24
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06/#03/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 24
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 24
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B7_B8 sm06 #04
+------------------------------------------
+2022-12-22 16:46:53.473349 2022-12-22 16:53:04.912009 371.43866
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06/#04/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06/#04/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+34 2022-12-22 16:52:21.670770 'lte_handover' overlaps with the following 'radio_link_failure' for 0.627 seconds.
+35 2022-12-22 16:52:25.043360 'radio_link_failure' overlaps with the previous 'lte_handover' for 0.627 seconds.
+1 0 26
+overlaps ratio: 3.85(%)
+1 seconds
+---------------------------------------------------------
+0 0 26
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm06/#04/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+34 2022-12-22 16:52:21.670770 'lte_handover' overlaps with the following 'radio_link_failure' for 0.627 seconds.
+35 2022-12-22 16:52:25.043360 'radio_link_failure' overlaps with the previous 'lte_handover' for 0.627 seconds.
+1 0 26
+overlaps ratio: 3.85(%)
+1 seconds
+---------------------------------------------------------
+0 0 26
+overlaps ratio: 0.0(%)
+['#01', '#02', '#03', '#04']
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B7_B8 sm07 #01
+------------------------------------------
+2022-12-22 16:20:27.277213 2022-12-22 16:25:17.610733 290.33352
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07/#01/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07/#01/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+4 2022-12-22 16:21:25.233021 'radio_link_failure' overlaps with the following 'radio_link_failure' for 2.08 seconds.
+5 2022-12-22 16:21:27.313017 'radio_link_failure' overlaps with the previous 'radio_link_failure' for 2.08 seconds.
+1 0 19
+overlaps ratio: 5.26(%)
+1 seconds
+---------------------------------------------------------
+0 0 19
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07/#01/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+4 2022-12-22 16:21:25.233021 'radio_link_failure' overlaps with the following 'radio_link_failure' for 2.08 seconds.
+5 2022-12-22 16:21:27.313017 'radio_link_failure' overlaps with the previous 'radio_link_failure' for 2.08 seconds.
+1 0 19
+overlaps ratio: 5.26(%)
+1 seconds
+---------------------------------------------------------
+0 0 19
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B7_B8 sm07 #02
+------------------------------------------
+2022-12-22 16:26:31.730673 2022-12-22 16:31:20.912655 289.181982
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07/#02/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07/#02/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 19
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 19
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07/#02/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 19
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 19
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B7_B8 sm07 #03
+------------------------------------------
+2022-12-22 16:32:40.089187 2022-12-22 16:39:53.113987 433.0248
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07/#03/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07/#03/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 19
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 19
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07/#03/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 19
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 19
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B7_B8 sm07 #04
+------------------------------------------
+2022-12-22 16:46:55.091834 2022-12-22 16:53:07.407845 372.316011
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07/#04/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07/#04/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 22
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 22
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm07/#04/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 22
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 22
+overlaps ratio: 0.0(%)
+['#01', '#02', '#03', '#04']
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B7_B8 sm08 #01
+------------------------------------------
+2022-12-22 16:20:24.793378 2022-12-22 16:25:19.008389 294.215011
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08/#01/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08/#01/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 16
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 16
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08/#01/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 16
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 16
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B7_B8 sm08 #02
+------------------------------------------
+2022-12-22 16:26:33.362398 2022-12-22 16:31:22.209856 288.847458
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08/#02/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08/#02/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08/#02/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B7_B8 sm08 #03
+------------------------------------------
+2022-12-22 16:32:42.468613 2022-12-22 16:39:55.063705 432.595092
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08/#03/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08/#03/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 22
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 22
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08/#03/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 22
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 22
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B7_B8 sm08 #04
+------------------------------------------
+2022-12-22 16:46:56.691383 2022-12-22 16:53:10.439293 373.74791
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08/#04/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08/#04/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+33 2022-12-22 16:52:21.365250 'lte_handover' overlaps with the following 'radio_link_failure' for 0.383 seconds.
+34 2022-12-22 16:52:24.982172 'radio_link_failure' overlaps with the previous 'lte_handover' for 0.383 seconds.
+34 2022-12-22 16:52:24.982172 'radio_link_failure' overlaps with the following 'lte_handover' for 1.0 seconds.
+35 2022-12-22 16:52:27.540536 'lte_handover' overlaps with the previous 'radio_link_failure' for 1.0 seconds.
+2 0 22
+overlaps ratio: 9.09(%)
+1 seconds
+---------------------------------------------------------
+0 0 22
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B7_B8/sm08/#04/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+33 2022-12-22 16:52:21.365250 'lte_handover' overlaps with the following 'radio_link_failure' for 0.383 seconds.
+34 2022-12-22 16:52:24.982172 'radio_link_failure' overlaps with the previous 'lte_handover' for 0.383 seconds.
+34 2022-12-22 16:52:24.982172 'radio_link_failure' overlaps with the following 'lte_handover' for 1.0 seconds.
+35 2022-12-22 16:52:27.540536 'lte_handover' overlaps with the previous 'radio_link_failure' for 1.0 seconds.
+2 0 22
+overlaps ratio: 9.09(%)
+1 seconds
+---------------------------------------------------------
+0 0 22
+overlaps ratio: 0.0(%)
+['#01', '#02', '#03', '#04']
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B8_B1 sm05 #01
+------------------------------------------
+2022-12-22 16:55:35.388554 2022-12-22 17:00:36.456224 301.06767
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05/#01/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05/#01/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+15 2022-12-22 16:56:21.273891 'endc_SN_change' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+16 2022-12-22 16:56:24.010263 'radio_link_failure' overlaps with the previous 'endc_SN_change' for 1.0 seconds.
+1 0 39
+overlaps ratio: 2.56(%)
+1 seconds
+---------------------------------------------------------
+0 0 39
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05/#01/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+15 2022-12-22 16:56:21.273891 'endc_SN_change' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+16 2022-12-22 16:56:24.010263 'radio_link_failure' overlaps with the previous 'endc_SN_change' for 1.0 seconds.
+1 0 39
+overlaps ratio: 2.56(%)
+1 seconds
+---------------------------------------------------------
+0 0 39
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B8_B1 sm05 #02
+------------------------------------------
+2022-12-22 17:02:00.163996 2022-12-22 17:08:29.327578 389.163582
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05/#02/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05/#02/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 21
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 21
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05/#02/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 21
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 21
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B8_B1 sm05 #03
+------------------------------------------
+2022-12-22 17:09:17.990477 2022-12-22 17:14:18.417600 300.427123
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05/#03/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05/#03/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+9 2022-12-22 17:10:29.434561 'radio_link_failure' overlaps with the following 'radio_link_failure' for 2.019 seconds.
+10 2022-12-22 17:10:31.453783 'radio_link_failure' overlaps with the previous 'radio_link_failure' for 2.019 seconds.
+1 0 18
+overlaps ratio: 5.56(%)
+1 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05/#03/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+9 2022-12-22 17:10:29.434561 'radio_link_failure' overlaps with the following 'radio_link_failure' for 2.019 seconds.
+10 2022-12-22 17:10:31.453783 'radio_link_failure' overlaps with the previous 'radio_link_failure' for 2.019 seconds.
+1 0 18
+overlaps ratio: 5.56(%)
+1 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B8_B1 sm05 #04
+------------------------------------------
+2022-12-22 17:15:18.894419 2022-12-22 17:20:40.853434 321.959015
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05/#04/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05/#04/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 11
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 11
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm05/#04/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 11
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 11
+overlaps ratio: 0.0(%)
+['#01', '#02', '#03', '#04']
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B8_B1 sm06 #01
+------------------------------------------
+2022-12-22 16:55:37.033715 2022-12-22 17:00:38.850623 301.816908
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06/#01/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06/#01/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+27 2022-12-22 16:59:39.605863 'lte_handover' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+28 2022-12-22 16:59:41.701321 'radio_link_failure' overlaps with the previous 'lte_handover' for 1.0 seconds.
+1 0 18
+overlaps ratio: 5.56(%)
+1 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06/#01/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+27 2022-12-22 16:59:39.605863 'lte_handover' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+28 2022-12-22 16:59:41.701321 'radio_link_failure' overlaps with the previous 'lte_handover' for 1.0 seconds.
+1 0 18
+overlaps ratio: 5.56(%)
+1 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B8_B1 sm06 #02
+------------------------------------------
+2022-12-22 17:02:02.278232 2022-12-22 17:08:31.470686 389.192454
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06/#02/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06/#02/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+35 2022-12-22 17:07:49.913397 'lte_handover' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+36 2022-12-22 17:07:52.087125 'radio_link_failure' overlaps with the previous 'lte_handover' for 1.0 seconds.
+36 2022-12-22 17:07:52.087125 'radio_link_failure' overlaps with the following 'lte_handover' for 0.916 seconds.
+37 2022-12-22 17:07:55.170867 'lte_handover' overlaps with the previous 'radio_link_failure' for 0.916 seconds.
+2 0 24
+overlaps ratio: 8.33(%)
+1 seconds
+---------------------------------------------------------
+0 0 24
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06/#02/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+35 2022-12-22 17:07:49.913397 'lte_handover' overlaps with the following 'radio_link_failure' for 1.0 seconds.
+36 2022-12-22 17:07:52.087125 'radio_link_failure' overlaps with the previous 'lte_handover' for 1.0 seconds.
+36 2022-12-22 17:07:52.087125 'radio_link_failure' overlaps with the following 'lte_handover' for 0.916 seconds.
+37 2022-12-22 17:07:55.170867 'lte_handover' overlaps with the previous 'radio_link_failure' for 0.916 seconds.
+2 0 24
+overlaps ratio: 8.33(%)
+1 seconds
+---------------------------------------------------------
+0 0 24
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B8_B1 sm06 #03
+------------------------------------------
+2022-12-22 17:09:24.601575 2022-12-22 17:14:20.685892 296.084317
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06/#03/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06/#03/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 23
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 23
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06/#03/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 23
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 23
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B8_B1 sm06 #04
+------------------------------------------
+2022-12-22 17:15:21.398827 2022-12-22 17:20:43.236740 321.837913
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06/#04/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06/#04/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 25
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 25
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm06/#04/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 25
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 25
+overlaps ratio: 0.0(%)
+['#01', '#02', '#03', '#04']
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B8_B1 sm07 #01
+------------------------------------------
+2022-12-22 16:55:38.641753 2022-12-22 17:00:40.748423 302.10667
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07/#01/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07/#01/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 11
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 11
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07/#01/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 11
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 11
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B8_B1 sm07 #02
+------------------------------------------
+2022-12-22 17:02:04.994337 2022-12-22 17:08:33.010230 388.015893
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07/#02/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07/#02/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07/#02/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 18
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B8_B1 sm07 #03
+------------------------------------------
+2022-12-22 17:09:27.199341 2022-12-22 17:14:22.716629 295.517288
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07/#03/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07/#03/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 12
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 12
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07/#03/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 12
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 12
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B8_B1 sm07 #04
+------------------------------------------
+2022-12-22 17:15:23.924046 2022-12-22 17:20:45.125102 321.201056
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07/#04/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07/#04/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 13
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 13
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm07/#04/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 13
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 13
+overlaps ratio: 0.0(%)
+['#01', '#02', '#03', '#04']
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B8_B1 sm08 #01
+------------------------------------------
+2022-12-22 16:55:40.734054 2022-12-22 17:00:44.862692 304.128638
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08/#01/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08/#01/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 10
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 10
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08/#01/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 10
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 10
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B8_B1 sm08 #02
+------------------------------------------
+2022-12-22 17:02:07.398698 2022-12-22 17:08:34.963354 387.564656
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08/#02/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08/#02/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 16
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 16
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08/#02/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 16
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 16
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B8_B1 sm08 #03
+------------------------------------------
+2022-12-22 17:09:29.800197 2022-12-22 17:14:24.806355 295.006158
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08/#03/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08/#03/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 13
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 13
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08/#03/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 13
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 13
+overlaps ratio: 0.0(%)
+------------------------------------------
+2022-12-22 _Bandlock_Udp_B8_B1 sm08 #04
+------------------------------------------
+2022-12-22 17:15:26.958336 2022-12-22 17:20:49.936251 322.977915
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08/#04/statistics/classify-cluster
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08/#04/statistics/classify-cluster/uplk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 14
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 14
+overlaps ratio: 0.0(%)
+mkdir /home/wmnlab/D/database/2022-12-22/_Bandlock_Udp_B8_B1/sm08/#04/statistics/classify-cluster/dnlk-loss
+1 3 seconds
+---------------------------------------------------------
+0 0 14
+overlaps ratio: 0.0(%)
+1 seconds
+---------------------------------------------------------
+0 0 14
+overlaps ratio: 0.0(%)
+Elapsed time is 682.261435 seconds.
