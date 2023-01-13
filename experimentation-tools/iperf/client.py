@@ -56,8 +56,8 @@ if not args.force:
         args.udp = True
         args.bitrate = "4k"
         args.time = 43200
-        # args.bitrate = "1M"
-        # args.time = 60
+        args.bitrate = "1M"
+        args.time = 60
 
 device_to_port = {
     "xm00": (3230, 3231),
