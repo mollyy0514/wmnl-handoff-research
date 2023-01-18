@@ -116,6 +116,7 @@ def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
 
 now = dt.datetime.today()
 date = [str(x) for x in [now.year, now.month, now.day]]
+date = [x.zfill(2) for x in date]
 date = '-'.join(date)
 makedir("./log/{}".format(date))
 
