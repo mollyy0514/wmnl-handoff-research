@@ -149,33 +149,33 @@ else:
     iperf = "iperf3"
 
 # ----------------------------------------- Save Path ------------------------------------------- #
-# def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
-#     if os.path.isdir(dirpath):
-#         if mode:
-#             print("mkdir: cannot create directory '{}': directory has already existed.".format(dirpath))
-#         return
-#     ### recursively make directory
-#     _temp = []
-#     while not os.path.isdir(dirpath):
-#         _temp.append(dirpath)
-#         dirpath = os.path.dirname(dirpath)
-#     while _temp:
-#         dirpath = _temp.pop()
-#         print("mkdir", dirpath)
-#         os.mkdir(dirpath)
+def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
+    if os.path.isdir(dirpath):
+        if mode:
+            print("mkdir: cannot create directory '{}': directory has already existed.".format(dirpath))
+        return
+    ### recursively make directory
+    _temp = []
+    while not os.path.isdir(dirpath):
+        _temp.append(dirpath)
+        dirpath = os.path.dirname(dirpath)
+    while _temp:
+        dirpath = _temp.pop()
+        print("mkdir", dirpath)
+        os.mkdir(dirpath)
 
-# now = dt.datetime.today()
-# date = [str(x) for x in [now.year, now.month, now.day]]
-# date = [x.zfill(2) for x in date]
-# date = '-'.join(date)
-# makedir("./log/{}".format(date))
+now = dt.datetime.today()
+date = [str(x) for x in [now.year, now.month, now.day]]
+date = [x.zfill(2) for x in date]
+date = '-'.join(date)
+makedir("./log/{}".format(date))
 
-# pcap_path = "./log/{}/{}".format(date, "client_pcap")  # wireshark capture
-# makedir(pcap_path)
-# ilog_path = "./log/{}/{}".format(date, "client_ilog")  # iperf log
-# makedir(ilog_path)
-# ss_path = "./log/{}/{}".format(date, "client_ss")      # socket statistics (Linux: ss)
-# makedir(ss_path)
+pcap_path = "./log/{}/{}".format(date, "client_pcap")  # wireshark capture
+makedir(pcap_path)
+ilog_path = "./log/{}/{}".format(date, "client_ilog")  # iperf log
+makedir(ilog_path)
+ss_path = "./log/{}/{}".format(date, "client_ss")      # socket statistics (Linux: ss)
+makedir(ss_path)
 
 # ----------------------------------- Define Utils Function ------------------------------------- #
 def get_network_interface_list():
@@ -285,17 +285,17 @@ else:
     ports = ports[1::2]
 
 for device, port, intf in zip(devices, ports, interfaces):
-    ## tcpdump process
-    # if args.tsync:
-    #     pcap = os.path.join(pcap_path, "client_pcap_{}_{}_{}_{}_tsync.pcap".format(args.stream.upper(), device, port, n))
-    # else:
-    #     pcap = os.path.join(pcap_path, "client_pcap_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
-    # _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
-    # ## iperf process
-    # if args.tsync:
-    #     log = os.path.join(ilog_path, "client_log_{}_{}_{}_{}_tsync.log".format(args.stream.upper(), device, port, n))
-    # else:
-    #     log = os.path.join(ilog_path, "client_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, port, n))
+    # tcpdump process
+    if args.tsync:
+        pcap = os.path.join(pcap_path, "client_pcap_{}_{}_{}_{}_tsync.pcap".format(args.stream.upper(), device, port, n))
+    else:
+        pcap = os.path.join(pcap_path, "client_pcap_{}_{}_{}_{}.pcap".format(args.stream.upper(), device, port, n))
+    _l.append("tcpdump -i any port {} -w {} &".format(port, pcap))
+    ## iperf process
+    if args.tsync:
+        log = os.path.join(ilog_path, "client_log_{}_{}_{}_{}_tsync.log".format(args.stream.upper(), device, port, n))
+    else:
+        log = os.path.join(ilog_path, "client_log_{}_{}_{}_{}.log".format(args.stream.upper(), device, port, n))
     if args.logfile:
         if device == 'unam':
             _l.append("{} -c {} -p {} -b {} -l {} {} -t {} -V --logfile {} {}".format(iperf, serverip, port, bitrate, packet_size, is_udp, args.time, log, is_reverse))
