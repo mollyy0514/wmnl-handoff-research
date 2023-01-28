@@ -49,7 +49,7 @@ args = parser.parse_args()
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-date = "2022-12-28"
+date = "2023-01-12"
 devices = sorted([
     # "sm00",
     # "sm01",
@@ -58,10 +58,10 @@ devices = sorted([
     # "sm04",
     "sm05",
     "sm06",
-    "sm07",
-    "sm08",
-    # "qc00",
-    # "qc01",
+    # "sm07",
+    # "sm08",
+    "qc00",
+    "qc01",
     # "qc02",
     # "qc03",
 ])
@@ -83,6 +83,7 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
     # "_Bandlock_Udp_B7_B8": (4, []),
     # "_Bandlock_Udp_B8_B1": (4, []),
     # "_Modem_Phone_Comparative_Exeriments": (6, []),
+    "tsync": (2, None),
     "_tsync": (1, []),
 }
 # *****************************************************************************
@@ -114,7 +115,7 @@ def pcap_to_csv(fin, fout):
             -E header=y -E separator=@ > {}".format(fin, fout)
         subprocess.Popen(s, shell=True)
         time.sleep(1)  # Not enough for 30min-500pps-pcap 
-        time.sleep(10)
+        time.sleep(3)
     except:
         ### Record error message without halting the program
         return (fin, fout, traceback.format_exc())
@@ -221,9 +222,10 @@ if __name__ == "__main__":
                 source_dir = os.path.join(database, date, expr, dev)
                 target_dir = os.path.join(database, date, expr, dev)
                 makedir(target_dir)
-                filenames = os.listdir(source_dir)
-                main()
-                continue
+                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+                # filenames = os.listdir(source_dir)
+                # main()
+                # continue
             elif len(traces) == 0:
                 traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
             
@@ -234,6 +236,9 @@ if __name__ == "__main__":
                 print("------------------------------------------")
                 source_dir = os.path.join(database, date, expr, dev, trace, "raw")
                 target_dir = os.path.join(database, date, expr, dev, trace, "middle")
+                if expr == "tsync":
+                    source_dir = os.path.join(database, date, expr, dev, trace)
+                    target_dir = os.path.join(database, date, expr, dev, trace)
                 makedir(target_dir)
                 filenames = os.listdir(source_dir)
                 main()

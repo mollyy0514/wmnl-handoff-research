@@ -25,19 +25,19 @@ args = parser.parse_args()
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-date = "2022-12-26"
+date = "2022-12-22"
 devices = sorted([
     # "sm00",
     # "sm01",
     # "sm02",
     # "sm03",
     # "sm04",
-    # "sm05",
-    # "sm06",
+    "sm05",
+    "sm06",
     "sm07",
     "sm08",
-    "qc00",
-    "qc01",
+    # "qc00",
+    # "qc01",
     # "qc02",
     # "qc03",
 ])
@@ -54,11 +54,11 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
     # "_Bandlock_Udp_B3_B28": (2, []),
     # "_Bandlock_Udp_B28_B1": (2, []),
     # "_Mobile_Bandlock_Test": (1, None),
-    # "_Bandlock_Udp_B1_B3": (4, []),
-    # "_Bandlock_Udp_B3_B7": (4, []),
-    # "_Bandlock_Udp_B7_B8": (4, []),
-    # "_Bandlock_Udp_B8_B1": (4, []),
-    "_Modem_Phone_Comparative_Exeriments": (6, []),
+    "_Bandlock_Udp_B1_B3": (4, []),
+    "_Bandlock_Udp_B3_B7": (4, []),
+    "_Bandlock_Udp_B7_B8": (4, []),
+    "_Bandlock_Udp_B8_B1": (4, []),
+    # "_Modem_Phone_Comparative_Exeriments": (6, []),
 }
 # *****************************************************************************
 
@@ -716,7 +716,8 @@ def xml_to_csv_ml1(fin, fout):
     # print("ml1 >>>>>")
     # Writing the column names...
     # -------------------------------------------------
-    f2.write(",".join(["time", "type_id",
+    # f2.write(",".join(["time", "type_id",
+    f2.write(",".join(["Timestamp", "type_id",
         "PCI",
         "RSRP(dBm)",
         "RSRQ(dB)",
@@ -779,6 +780,40 @@ def xml_to_csv_ml1(fin, fout):
             
     f2.close()
     f.close()
+    
+    fp_input = open(fout, 'r')
+    lines = fp_input.readlines()  # neglect '\n' when reading the file
+    
+    ### First round traversal to get the max length of columns
+    max_row_size = 0
+    for line in lines:
+        row_size = len(line.split(','))
+        if row_size > max_row_size:
+            max_row_size = row_size
+    
+    ### Second round traversal to fill in the content to a new file
+    fp_output = open(fout, 'w')
+    # print(fout)
+
+    line_0 = lines[0]
+    column_names = line_0[:-1].split(',')
+    row_size = len(column_names)
+    add_num = (max_row_size - row_size) // 3
+    for i in range(add_num):
+        column_names = [*column_names, 'PCI{}'.format(i+2), 'LTE_RSRP{}'.format(i+2), 'LTE_RSRQ{}'.format(i+2)]
+    fp_output.write(','.join(column_names) + '\n')
+        
+    for line in lines[1:]:
+        row_size = len(line.split(','))
+        append_line = line[:-1]
+        for i in range(max_row_size - row_size):
+            append_line = append_line + ',-'  # '-'
+            append_line = append_line + ','   # np.nan
+        append_line = append_line + '\n'
+        fp_output.write(append_line)
+    fp_input.close()
+    fp_output.close()
+    return
 
 def xml_to_csv_nr_ml1(fin, fout):
     f = open(fin, encoding="utf-8")
@@ -786,14 +821,18 @@ def xml_to_csv_nr_ml1(fin, fout):
     # print("nr_ml1 >>>>>")
     # Writing the column names...
     # -------------------------------------------------
-    f2.write(",".join(["time", "type_id",
+    # f2.write(",".join(["time", "type_id",
+    f2.write(",".join(["Timestamp", "type_id",
         "Raster ARFCN",
         "Num Cells",
         "Serving Cell Index",
         "Serving Cell PCI",
-        "PCI1",
-        "RSRP1",
-        "RSRP2",
+        # "PCI1",
+        # "RSRP1",
+        # "RSRP2",
+        "PCI0",
+        "RSRP0",
+        "RSRQ0",
 
         ])+'\n')
 
@@ -834,6 +873,53 @@ def xml_to_csv_nr_ml1(fin, fout):
             
     f2.close()
     f.close()
+    
+    fp_input = open(fout, 'r')
+    lines = fp_input.readlines()  # neglect '\n' when reading the file
+    
+    ### First round traversal to get the max length of columns
+    max_row_size = 0
+    for line in lines:
+        row_size = len(line.split(','))
+        if row_size > max_row_size:
+            max_row_size = row_size
+    
+    ### Check if the column names exist
+    # need_header = True
+    # line_0 = lines[0]
+    # if line_0[:9] == 'Timestamp':
+    #     need_header = False
+    
+    ### Second round traversal to fill in the content to a new file
+    fp_output = open(fout, 'w')
+    # print(fout)
+
+    line_0 = lines[0]
+    column_names = line_0[:-1].split(',')
+    row_size = len(column_names)
+    add_num = (max_row_size - row_size) // 3
+    for i in range(add_num):
+        column_names = [*column_names, 'PCI{}'.format(i+1), 'RSRP{}'.format(i+1), 'RSRQ{}'.format(i+1)]
+    fp_output.write(','.join(column_names) + '\n')
+
+    # if need_header:
+    #     for i in range(max_row_size - row_size):
+    #         column_names = column_names + ',-'  # '-'
+    #         # column_names = column_names + ','   # np.nan
+    #     column_names = column_names + '\n'
+    #     fp_output.write(column_names)
+        
+    for line in lines[1:]:
+        row_size = len(line.split(','))
+        append_line = line[:-1]
+        for i in range(max_row_size - row_size):
+            append_line = append_line + ',-'  # '-'
+            # append_line = append_line + ','   # np.nan
+        append_line = append_line + '\n'
+        fp_output.write(append_line)
+    fp_input.close()
+    fp_output.close()
+    return
 # *****************************************************************************
 
 # ****************************** Utils Functions ******************************
@@ -878,8 +964,8 @@ if __name__ == "__main__":
             fout1 = os.path.join(target_dir, "{}_rrc.csv".format(filename[:-4]))
             fout2 = os.path.join(target_dir, "{}_ml1.csv".format(filename[:-4]))
             fout3 = os.path.join(target_dir, "{}_nr_ml1.csv".format(filename[:-4]))
-            print(">>>>> convert from '{}' into '{}'...".format(fin, fout1))
-            xml_to_csv_rrc(fin, fout1)
+            # print(">>>>> convert from '{}' into '{}'...".format(fin, fout1))
+            # xml_to_csv_rrc(fin, fout1)
             # savemove(os.path.join(source_dir, "{}_rrc.csv".format(filename[:-4])), target_dir, "{}_rrc.csv".format(filename[:-4]))
             print(">>>>> convert from '{}' into '{}'...".format(fin, fout2))
             xml_to_csv_ml1(fin, fout2)
