@@ -55,8 +55,8 @@ if not args.force:
     if args.tsync:
         args.host = "192.168.1.251"
         args.udp = True
-        args.bitrate = "4k"
-        args.time = 43200
+        # args.bitrate = "4k"
+        # args.time = 43200
         args.bitrate = "1M"
         args.time = 60
 
@@ -101,12 +101,12 @@ is_udp = "-u" if args.udp else ""
 bitrate = args.bitrate     # unit: bps
 packet_size = args.length  # unit: bytes
 
-if args.stream == "ul":
-    is_reverse = ""
-elif args.stream == "dl":
+if args.stream == "dl":
     is_reverse = "-R"
 elif args.stream == "bl":
     is_reverse = "--bidir"
+else:  # args.stream == "ul"
+    is_reverse = ""
 
 # check whether the device has iperf3m
 if os.path.exists("/bin/iperf3m") or os.path.exists("/sbin/iperf3m"):
@@ -150,6 +150,7 @@ def get_network_interface_list():
     lines = text.split('\n')
     network_interface_list = []
     do = 0
+    interface = "unknown"
     for line in lines:
         if "flags=" in line or "Link encap:" in line:
             do = 1

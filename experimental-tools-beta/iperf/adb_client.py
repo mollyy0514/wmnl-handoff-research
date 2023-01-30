@@ -46,10 +46,16 @@ print("----------------------------------------------")
 
 # TODO
 def run_iperf(dev, device):
-    print(dev, device.shell(f"""su -c '
-                                cd /sdcard/wmnl-handoff-research/experimental-tools-beta/iperf\n
-                                python3 client.py -d {dev} -u'
-                                """))
+    if len(sys.argv) < 2:
+        print(dev, device.shell(f"""su -c '
+                                    cd /sdcard/wmnl-handoff-research/experimental-tools-beta/iperf\n
+                                    python3 client.py -d {dev} -u'
+                                    """))
+    elif sys.argv[1] == "--tsync" or sys.argv[1] == "-T":
+        print(dev, device.shell(f"""su -c '
+                                    cd /sdcard/wmnl-handoff-research/experimental-tools-beta/iperf\n
+                                    python3 client.py -d {dev} -T'
+                                    """))
 
 threads = []
 for i, (device, info) in enumerate(zip(adb_handles, mobile_info)):
