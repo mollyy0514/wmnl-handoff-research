@@ -60,9 +60,9 @@ exit_program = False
 length_packet = 400
 bandwidth = 5000*1024 # units kbps
 total_time = 3600
-pcap_path = "/home/wmnlab/D/pcap_data"
-pcap_path = "./pcap_data"
-ss_dir = "./ss"
+# pcap_path = "/home/wmnlab/D/pcap_data"
+# pcap_path = "./pcap_data"
+# ss_dir = "./ss"
 cong = 'cubic'.encode()
 ###########################################
 
@@ -70,6 +70,33 @@ cong = 'cubic'.encode()
 expected_packet_per_sec = bandwidth / (length_packet << 3)
 sleeptime = 1.0 / expected_packet_per_sec
 prev_sleeptime = sleeptime
+
+
+def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
+    if os.path.isdir(dirpath):
+        if mode:
+            print("mkdir: cannot create directory '{}': directory has already existed.".format(dirpath))
+        return
+    ### recursively make directory
+    _temp = []
+    while not os.path.isdir(dirpath):
+        _temp.append(dirpath)
+        dirpath = os.path.dirname(dirpath)
+    while _temp:
+        dirpath = _temp.pop()
+        print("mkdir", dirpath)
+        os.mkdir(dirpath)
+
+now = dt.datetime.today()
+date = [str(x) for x in [now.year, now.month, now.day]]
+date = [x.zfill(2) for x in date]
+date = '-'.join(date)
+makedir("./log/{}".format(date))
+
+pcap_path = "./log/{}/{}".format(date, "server_pcap")  # wireshark capture
+makedir(pcap_path)
+ss_path = "./log/{}/{}".format(date, "server_ss")      # socket statistics (Linux: ss)
+makedir(ss_path)
 
 
 def connection(host, port, result):
@@ -86,13 +113,18 @@ def connection(host, port, result):
 def get_ss(port, type):
     global thread_stop
     now = dt.datetime.today()
-    n = '-'.join([str(x) for x in[ now.year, now.month, now.day, now.hour, now.minute, now.second]])
+    # n = '-'.join([str(x) for x in[ now.year, now.month, now.day, now.hour, now.minute, now.second]])
+    n = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.second]]
+    n = [x.zfill(2) for x in n]  # zero-padding to two digit
+    n = '-'.join(n[:3]) + '_' + '-'.join(n[3:])
     f = ""
 
     if type == 't':
-        f = open(os.path.join(ss_dir, "ss_server_DL_" + str(port) + '_' + n)+'.csv', 'a+')
+        # f = open(os.path.join(ss_path, f"server_ss_DL_{device}_{port}_{n}.csv"), 'a+')
+        f = open(os.path.join(ss_path, f"server_ss_DL_{port}_{n}.csv"), 'a+')
     elif type == 'r':
-        f = open(os.path.join(ss_dir, "ss_server_UL_" + str(port) + '_' + n)+'.csv', 'a+')
+        # f = open(os.path.join(ss_path, f"server_ss_UL_{device}_{port}_{n}.csv"), 'a+')
+        f = open(os.path.join(ss_path, f"server_ss_UL_{port}_{n}.csv"), 'a+')
     print(f)
     while not thread_stop:
         proc = subprocess.Popen(["ss -ai src :%d"%(port)], stdout=subprocess.PIPE, shell=True)
@@ -181,22 +213,17 @@ def receive(conn, port):
     print("STOP receiving")
 
 
-
-if not os.path.exists(pcap_path):
-    os.system("mkdir %s"%(pcap_path))
-
-if not os.path.exists(ss_dir):
-    os.system("mkdir %s"%(ss_dir))
-
-
 while not exit_program:
 
     now = dt.datetime.today()
-    n = [str(x) for x in[ now.year, now.month, now.day, now.hour, now.minute, now.second]]
-    for i in range(len(n)-3, len(n)):
-        if len(n[i]) < 2:
-            n[i] = '0' + n[i]
-    n = '-'.join(n)
+    # n = [str(x) for x in[ now.year, now.month, now.day, now.hour, now.minute, now.second]]
+    # for i in range(len(n)-3, len(n)):
+    #     if len(n[i]) < 2:
+    #         n[i] = '0' + n[i]
+    # n = '-'.join(n)
+    n = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.second]]
+    n = [x.zfill(2) for x in n]  # zero-padding to two digit
+    n = '-'.join(n[:3]) + '_' + '-'.join(n[3:])
     UL_pcapfiles = []
     DL_pcapfiles = []
     tcpdump_UL_proc = []
@@ -205,9 +232,13 @@ while not exit_program:
 
 
     for p in UL_ports:
-        UL_pcapfiles.append("%s/server_UL_%s_%s.pcap"%(pcap_path, p, n))
+        # pcap = os.path.join(pcap_path, f"server_pcap_UL_{device}_{p}_{n}_sock.pcap")
+        pcap = os.path.join(pcap_path, f"server_pcap_UL_{p}_{n}_sock.pcap")
+        UL_pcapfiles.append(pcap)
     for p in DL_ports:
-        DL_pcapfiles.append("%s/server_DL_%s_%s.pcap"%(pcap_path, p, n))
+        # pcap = os.path.join(pcap_path, f"server_pcap_DL_{device}_{p}_{n}_sock.pcap")
+        pcap = os.path.join(pcap_path, f"server_pcap_DL_{p}_{n}_sock.pcap")
+        DL_pcapfiles.append(pcap)
 
     for p, pcapfile in zip(UL_ports, UL_pcapfiles):
         tcpdump_UL_proc.append(subprocess.Popen(["tcpdump -i any port %s -w %s &"%(p,  pcapfile)], shell=True, preexec_fn=os.setsid))
