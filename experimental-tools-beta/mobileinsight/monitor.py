@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # Filename: monitor-example.py
 
 # Command usage:
@@ -9,6 +9,7 @@ import os
 import sys
 import datetime as dt
 import argparse
+from device_to_serial import device_to_serial, serial_to_device
 
 # Import MobileInsight modules
 from mobile_insight.monitor import OnlineMonitor
@@ -23,46 +24,30 @@ parser.add_argument("-b", "--baud", type=int,
                     help="baudrate", default=9600)
 args = parser.parse_args()
 
-device_to_serial = {
-    "sm00":"R5CRA1ET5KB",
-    "sm01":"R5CRA1D2MRJ",
-    "sm02":"R5CRA1GCHFV",
-    "sm03":"R5CRA1JYYQJ",
-    "sm04":"R5CRA1EV0XH",
-    "sm05":"R5CRA1GBLAZ",
-    "sm06":"R5CRA1ESYWM",
-    "sm07":"R5CRA1ET22M",
-    "sm08":"R5CRA2EGJ5X",
-    "xm00":"73e11a9f",
-    "xm01":"491d5141",
-    "xm02":"790fc81d",
-    "xm03":"e2df293a",
-    "xm04":"28636990",
-    "xm05":"f8fe6582",
-    "xm06":"d74749ee",
-    "xm07":"10599c8d",
-    "xm08":"57f67f91",
-    "xm09":"232145e8",
-    "xm10":"70e87dd6",
-    "xm11":"df7aeaf8",
-    "xm12":"e8c1eff5",
-    "xm13":"ec32dc1e",
-    "xm14":"2aad1ac6",
-    "xm15":"64545f94",
-    "xm16":"613a273a",
-    "xm17":"fe3df56f",
-    "qc00":"76857c8" ,
-    "qc01":"bc4587d" ,
-    "qc02":"5881b62f",
-    "qc03":"32b2bdb2",
-}
+def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
+    if os.path.isdir(dirpath):
+        if mode:
+            print("mkdir: cannot create directory '{}': directory has already existed.".format(dirpath))
+        return
+    ### recursively make directory
+    _temp = []
+    while not os.path.isdir(dirpath):
+        _temp.append(dirpath)
+        dirpath = os.path.dirname(dirpath)
+    while _temp:
+        dirpath = _temp.pop()
+        print("mkdir", dirpath)
+        os.mkdir(dirpath)
 
 
 if __name__ == "__main__":
     # Set Path
     now = dt.datetime.today()
     date = [str(x) for x in [now.year, now.month, now.day]]
+    date = [x.zfill(2) for x in date]
     date = '-'.join(date)
+    makedir("./log/{}".format(date))
+    
     dirpath = "./log/{}/{}".format(date, "mi2log")  # mobileinsight log
 
     if args.device == "unam":

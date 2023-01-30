@@ -10,42 +10,9 @@ import sys
 import time
 import subprocess
 import datetime as dt
+from device_to_serial import device_to_serial, serial_to_device
 
-serial_to_device = {
-    "R5CRA1ET5KB":"sm00",
-    "R5CRA1D2MRJ":"sm01",
-    "R5CRA1GCHFV":"sm02",
-    "R5CRA1JYYQJ":"sm03",
-    "R5CRA1EV0XH":"sm04",
-    "R5CRA1GBLAZ":"sm05",
-    "R5CRA1ESYWM":"sm06",
-    "R5CRA1ET22M":"sm07",
-    "R5CRA2EGJ5X":"sm08",
-    "73e11a9f":"xm00",
-    "491d5141":"xm01",
-    "790fc81d":"xm02",
-    "e2df293a":"xm03",
-    "28636990":"xm04",
-    "f8fe6582":"xm05",
-    "d74749ee":"xm06",
-    "10599c8d":"xm07",
-    "57f67f91":"xm08",
-    "232145e8":"xm09",
-    "70e87dd6":"xm10",
-    "df7aeaf8":"xm11",
-    "e8c1eff5":"xm12",
-    "ec32dc1e":"xm13",
-    "2aad1ac6":"xm14",
-    "64545f94":"xm15",
-    "613a273a":"xm16",
-    "fe3df56f":"xm17",
-    "76857c8" :"qc00",
-    "bc4587d" :"qc01",
-    "5881b62f":"qc02",
-    "32b2bdb2":"qc03",
-}
-
-device_to_serial = dict((v, k) for k, v in serial_to_device.items())
+# device_to_serial = dict((v, k) for k, v in serial_to_device.items())
 
 def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
     if os.path.isdir(dirpath):
@@ -101,6 +68,8 @@ for device, info in zip(adb_handles, mobile_info):
     print(info[2], device.shell("su -c 'getprop sys.usb.config'"))
 print("----------------------------------------------")
 
+
+# TODO
 ### Check All Devices (including mobiles and modems)
 devices = sorted(os.listdir("/sys/class/net/"))
 devices = [dev for dev in devices if dev.startswith('qc')]
@@ -148,4 +117,3 @@ while True:
         break
     except Exception as e:
         print("error", e)
-

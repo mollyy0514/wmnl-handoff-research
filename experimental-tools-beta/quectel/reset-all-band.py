@@ -21,7 +21,3 @@ for dev in devices:
     print("sudo ./band-setting.sh -i {} -l {} -e {}".format(dev, LTE_BAND, NSA_BAND))
     os.system("sudo ./band-setting.sh -i {} -l {} -e {}".format(dev, LTE_BAND, NSA_BAND))
     time.sleep(1)
-
-# for dev in devices:
-#     os.system("sudo ./band-setting.sh -i {}".format(dev))
-#     time.sleep(1)
