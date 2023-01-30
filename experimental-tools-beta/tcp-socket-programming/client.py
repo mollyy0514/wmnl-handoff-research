@@ -29,6 +29,8 @@ import subprocess
 import re
 import numpy as np
 import signal
+from device_to_port import device_to_port, port_to_device
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--port", type=int,

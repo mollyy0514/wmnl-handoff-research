@@ -25,6 +25,8 @@ import subprocess
 import re
 import signal
 import numpy as np
+from device_to_port import device_to_port, port_to_device
+
 
 parser = argparse.ArgumentParser()
 
