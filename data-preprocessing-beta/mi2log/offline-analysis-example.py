@@ -36,10 +36,9 @@ if __name__ == "__main__":
         for filename in filenames:
             if not filename.endswith(".mi2log"):
                 continue
+            filepath = os.path.join(dirpath, filename)
+            print("path:", filepath)
             try:
-                filepath = os.path.join(dirpath, filename)
-                print("path:", filepath)
-
                 # Initialize a monitor
                 src = OfflineReplayer()
                 # src.set_input_path("./logs/")
