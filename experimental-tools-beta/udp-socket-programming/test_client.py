@@ -7,6 +7,7 @@ PORT = 3230
 server_addr = (HOST, PORT)
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, 'qc00\0'.encode())
 
 while True:
     outdata = input('please input message: ')
