@@ -134,6 +134,7 @@ def get_network_interface_list():
     lines = text.split('\n')
     network_interface_list = []
     do = 0
+    interface = "unknown"
     for line in lines:
         if "flags=" in line or "Link encap:" in line:
             do = 1
