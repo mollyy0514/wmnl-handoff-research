@@ -58,6 +58,7 @@ def get_network_interface_list():
     lines = text.split('\n')
     network_interface_list = []
     flag = 0
+    interface = "unknown"
     for line in lines:
         if not flag and r"RUNNING" in line and 'lo' not in line:
             interface = line[:line.find(':')]
