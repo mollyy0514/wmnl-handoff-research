@@ -22,4 +22,5 @@ for dev in devices:
 
 for dev in devices:
     os.system("sudo ip r add default dev {}".format(dev))
+    # os.system("sudo ip r del default dev {}".format(dev))
     break

@@ -9,16 +9,26 @@ sudo apt-get install gpsd-clients gpsd
 # Plugin GPS receiver
 dmesg | tail -n 5
 
+# Edit File: "/etc/modprobe.d/blacklist.conf"
+## sudo vim /etc/modprobe.d/blacklist.conf
+"""
+# blacklist pl2303
+"""
+## sudo reboot (optional)
+## However, gps module needs pl2303!
+
 # Check DM port
 ls /dev/serial/by-id
-''' usb-Prolific_Technology_Inc._USB-Serial_Controller_CHCTb115818-if00-port0 '''
+''' usb-Prolific_Technology_Inc._USB-Serial_Controller_BSEIb115818-if00-port0 '''  # Server
+''' usb-Prolific_Technology_Inc._USB-Serial_Controller_CHCTb115818-if00-port0 '''  # Client
 
 # Edit file "/dtc/default/gpsd"
 sudo vim /etc/default/gpsd
 '''
 # Devices gpsd should collect to at boot time.
 # They need to be read/writeable, either by user gpsd or the group dialout.
-DEVICES="usb-Prolific_Technology_Inc._USB-Serial_Controller_CHCTb115818-if00-port0"
+# DEVICES="/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_BSEIb115818-if00-port0"  # Server
+# DEVICES="/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_CHCTb115818-if00-port0"  # Client
 USBAUTO="true"
 
 # Other options you want to pass to gpsd
