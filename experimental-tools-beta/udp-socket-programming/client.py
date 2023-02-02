@@ -34,7 +34,7 @@ parser.add_argument("-d", "--devices", type=str, nargs='+',   # input list of de
 parser.add_argument("-p", "--ports", type=str, nargs='+',     # input list of port numbers sep by 'space'
                     help="ports to bind")
 parser.add_argument("-b", "--bitrate", type=str,
-                    help="target bitrate in bits/sec (0 for unlimited)", default="1M")
+                    help="target bitrate in bits/sec (0 for unlimited)", default="2k")
 parser.add_argument("-l", "--length", type=str,
                     help="length of buffer to read or write in bytes (packet size)", default="250")
 parser.add_argument("-t", "--time", type=int,

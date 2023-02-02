@@ -30,7 +30,7 @@ parser.add_argument("-d", "--devices", type=str, nargs='+',   # input list of de
 parser.add_argument("-p", "--ports", type=str, nargs='+',     # input list of port numbers sep by 'space'
                     help="ports to bind")
 parser.add_argument("-b", "--bitrate", type=str,
-                    help="target bitrate in bits/sec (0 for unlimited)", default="1M")
+                    help="target bitrate in bits/sec (0 for unlimited)", default="2k")
 parser.add_argument("-l", "--length", type=str,
                     help="length of buffer to read or write in bytes (packet size)", default="250")
 parser.add_argument("-t", "--time", type=int,
@@ -301,11 +301,13 @@ while not exit_main_process:
                 t = threading.Thread(target = transmission, args = (s_udp_list, ))
                 # t = threading.Thread(target = transmission, args = (s_udp_dl_list, ))
                 t.start()
+                print("*************hello1****************")
                 for s_udp in s_udp_list:
                 # for s_udp in s_udp_ul_list:
                     t1 = threading.Thread(target = receive, args = (s_udp,))
                     t1.start()
                     receiving_threads.append(t1)
+        print("******************hello2****************")
         
     except KeyboardInterrupt as inst:
         print("keyboard interrupt: ")
@@ -323,6 +325,7 @@ while not exit_main_process:
 
     try:
         while t.is_alive():
+            print("*****************hello3*****************")
             control_message = input("Enter STOP to stop: ")
             if control_message == "STOP":
                 thread_stop = True
