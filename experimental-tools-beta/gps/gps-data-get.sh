@@ -20,7 +20,7 @@ FILE_PATH="$path/`(date +%Y-%m-%d_%H-%M-%S)`_GPS_info"
 : > $FILE_PATH
 
 echo "Start logging..."
-echo "Press Ctrl-C to stop!"
+echo "Press Ctrl-C or Ctrl-Z to stop"
 while true
 do
 	(gpspipe -uu -w) >> $FILE_PATH
