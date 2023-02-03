@@ -71,7 +71,10 @@ def unified_date_format(date):
 # date = [x.zfill(2) for x in date]
 
 if len(sys.argv) < 2:
-    date = dates.pop()
+    if dates:
+        date = dates.pop()
+    else:
+        sys.exit()
     print(f"sudo rm -rf {os.path.join(dirpath, date)}")
     os.system(f"sudo rm -rf {os.path.join(dirpath, date)}")
 elif len(sys.argv) == 2:
