@@ -7,6 +7,11 @@ if [ ! -d $path ]
 	then
 		mkdir $path
 fi
+path="$path/gps"
+if [ ! -d $path ]
+	then
+		mkdir $path
+fi
 path="$path/`(date +%Y-%m-%d)`"
 if [ ! -d $path ]
 	then
