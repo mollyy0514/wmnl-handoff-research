@@ -9,10 +9,12 @@ from dateutil.parser import parse
 
 
 dirpath = "./log"
-os.system("echo wmnlab | sudo -S su")
-
 # dates = sorted(os.listdir(dirpath), reverse=True)
 dates = sorted(os.listdir(dirpath))
+if not dates:
+    sys.exit()
+
+os.system("echo wmnlab | sudo -S su")
 
 def is_date(string, fuzzy=False):
     """
@@ -71,10 +73,7 @@ def unified_date_format(date):
 # date = [x.zfill(2) for x in date]
 
 if len(sys.argv) < 2:
-    if dates:
-        date = dates.pop()
-    else:
-        sys.exit()
+    date = dates.pop()
     print(f"sudo rm -rf {os.path.join(dirpath, date)}")
     os.system(f"sudo rm -rf {os.path.join(dirpath, date)}")
 elif len(sys.argv) == 2:
