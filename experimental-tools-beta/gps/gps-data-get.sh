@@ -2,11 +2,16 @@
 
 # This script is to capture the location info from the GPS dongle
 
-path="log/`(date +%Y-%m-%d)`"
-    if [ ! -d $path ]
-        then
-            mkdir $path
-    fi
+path="log"
+if [ ! -d $path ]
+	then
+		mkdir $path
+fi
+path="$path/`(date +%Y-%m-%d)`"
+if [ ! -d $path ]
+	then
+		mkdir $path
+fi
 
 # interval=1
 # FILE_PATH="sample"
