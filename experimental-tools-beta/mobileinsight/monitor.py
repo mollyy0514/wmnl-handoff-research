@@ -62,6 +62,8 @@ if __name__ == "__main__":
         elif args.device.startswith('qc'):
             args.serial_port = os.path.join("/dev/serial/by-id", "usb-Quectel_RM500Q-GL_{}-if00-port0".format(device_to_serial[args.device]))
 
+    # os.system(f"sudo systemctl restart serial-getty@{args.serial_port}.service")
+    
     # Initialize a 3G/4G monitor
     src = OnlineMonitor()
     src.set_serial_port(args.serial_port)  # the serial port to collect the traces
