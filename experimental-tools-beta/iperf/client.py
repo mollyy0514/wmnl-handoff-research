@@ -240,6 +240,8 @@ for i, item in enumerate(interfaces):
         interfaces[i] = 'enp5s0'
     elif item.startswith('qc') and 'wlp2s0' in network_interface_list and args.tsync:
         interfaces[i] = 'wlp2s0'
+    elif item.startswith('qc') and 'wlp0s20f3' in network_interface_list and args.tsync:
+        interfaces[i] = 'wlp0s20f3'
 
 print("Devices:", devices)
 print("Selected Interface:", interfaces)
