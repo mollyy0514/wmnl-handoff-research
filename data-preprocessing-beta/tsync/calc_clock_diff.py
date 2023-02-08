@@ -22,28 +22,35 @@ import portion as P
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-date = "2023-01-12"
+# date = "2023-01-12"
+dates = [
+         "2023-02-04", 
+         "2023-02-04#1",
+         "2023-02-04#2",
+         ]
 devices = sorted([
     # "sm00",
     # "sm01",
     # "sm02",
     # "sm03",
     # "sm04",
-    "sm05",
-    "sm06",
+    # "sm05",
+    # "sm06",
     # "sm07",
     # "sm08",
-    "qc00",
+    # "qc00",
     "qc01",
-    # "qc02",
-    # "qc03",
+    "qc02",
+    "qc03",
 ])
 exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_round)
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    # "tsync": (1, None),
     "tsync": (2, []),
+    # "tsync": (1, ["1"]),
+    # "tsync": (1, None),
+    # "tsync": (2, []),
     # "_tsync": (2, []),
     # "_Bandlock_Udp": (4, ["#01", "#02", "#03", "#04"]),
     # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),
@@ -57,6 +64,18 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
 # *****************************************************************************
 
 # **************************** Auxiliary Functions ****************************
+def to_utc8(ts):
+    """
+    Convert an epoch time into a readable format.
+    Switch from utc-0 into utc-8.
+    
+    Args:
+        ts (float): timestamp composed of datetimedec + microsecond (e.g., 1644051509.989306)
+    Returns:
+        (datetime.datetime): a readable timestamp (utc-8)
+    """
+    return (dt.datetime.utcfromtimestamp(ts) + dt.timedelta(hours=8))
+
 def truncate(txdf, rxdf):
     """
     Truncate the rows of lost packets.
@@ -66,17 +85,18 @@ def truncate(txdf, rxdf):
     _tx_arr = []
     i, j = 0, 0
     N = len(rx_arr)
-    # print(tx_arr[i][0])
-    # print(rx_arr[j][0])
+    # print(tx_arr[i][0], rx_arr[j][0])
     for i in range(len(tx_arr)):
-        while tx_arr[i][0] > rx_arr[j][0]:
+        if j == N:
+            break
+        # print(tx_arr[i][0], rx_arr[j][0])
+        while j != N and tx_arr[i][0] > rx_arr[j][0]:
             j += 1
         # if tx_arr[i][0] < rx_arr[j][0]:
         #     pass  # i += 1 by for-loop
-        if tx_arr[i][0] == rx_arr[j][0]:
+        if j != N and tx_arr[i][0] == rx_arr[j][0]:
             _tx_arr.append(tx_arr[i])
-            if j < N-1:
-                j += 1
+            j += 1
     ### Since the transmission is stopped by client,
     ### the ending sequence of Downlink-Tx/Uplink-Rx (Server-Side) is larger than Downlink-Rx/Uplink-Tx (Client-Side).
     M = min(len(_tx_arr), len(rx_arr))
@@ -170,13 +190,16 @@ def calc_delta(txdl_df, rxdl_df, txul_df, rxul_df):
     # epoch_delta = [round(max(epoch_deltas) + 1.15 * _stdev, 6), round(min(epoch_deltas) - 1.15 * _stdev, 6)]
     # timedelta = [pd.Timedelta(seconds=secs).round('us') for secs in epoch_delta]
     
-    print(timedelta)
-    print(epoch_delta)
+    timestamps = list(map(list, zip(*txdl_arr)))
+    timestamp = to_utc8(round(median(timestamps[2]), 6))
+    
+    print(timestamp)
+    print(f"{epoch_delta} seconds")
 
     ### Use mean, median, or mode: https://www.scribbr.com/statistics/central-tendency/
     ### Pandas.Timedelta: https://pandas.pydata.org/docs/reference/api/pandas.Timedelta.html
     ### Pandas.Timedelta.round: https://pandas.pydata.org/docs/reference/api/pandas.Timedelta.round.html
-    return timedelta, epoch_delta
+    return timedelta, epoch_delta, timestamp
 # *****************************************************************************
 
 # ****************************** Utils Functions ******************************
@@ -211,76 +234,79 @@ if __name__ == "__main__":
         rxdl_df['payload.time'] = pd.to_datetime(rxdl_df['payload.time'])
         txul_df['payload.time'] = pd.to_datetime(txul_df['payload.time'])
         rxul_df['payload.time'] = pd.to_datetime(rxul_df['payload.time'])
-        timedelta, epoch_delta = calc_delta(txdl_df, rxdl_df, txul_df, rxul_df)
+        _, epoch_delta, timestamp = calc_delta(txdl_df, rxdl_df, txul_df, rxul_df)
         # print(timedelta, epoch_delta)
         filename = "delta.txt"
         if trace in ['1', '2', '3']:
             filename = "delta{}.txt".format(trace)
         with open(os.path.join(target_dir, filename), 'w') as f:
-            f.write(str(epoch_delta))
+            f.write(str(timestamp)+'\n')
+            f.write(str(epoch_delta)+'\n')
         print()
     
     # ******************************* Check Files *********************************
-    for expr, (times, traces) in exps.items():
-        print(os.path.join(database, date, expr))
-        for dev in devices:
-            if not os.path.isdir(os.path.join(database, date, expr, dev)):
-                print("|___ {} does not exist.".format(os.path.join(database, date, expr, dev)))
-                continue
-            
-            print("|___", os.path.join(database, date, expr, dev))
-            if traces == None:
-                # print(os.path.join(database, date, expr, dev))
-                continue
-            elif len(traces) == 0:
-                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
-            
-            print("|    ", times)
-            traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
-            if len(traces) != times:
-                print("***************************************************************************************")
-                print("Warning: the number of traces does not match the specified number of experiment times.")
-                print("***************************************************************************************")
-            for trace in traces:
-                print("|    |___", os.path.join(database, date, expr, dev, trace))
-        print()
+    for date in dates:
+        for expr, (times, traces) in exps.items():
+            print(os.path.join(database, date, expr))
+            for dev in devices:
+                if not os.path.isdir(os.path.join(database, date, expr, dev)):
+                    print("|___ {} does not exist.".format(os.path.join(database, date, expr, dev)))
+                    continue
+                
+                print("|___", os.path.join(database, date, expr, dev))
+                if traces == None:
+                    # print(os.path.join(database, date, expr, dev))
+                    continue
+                elif len(traces) == 0:
+                    traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+                
+                print("|    ", times)
+                traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
+                if len(traces) != times:
+                    print("***************************************************************************************")
+                    print("Warning: the number of traces does not match the specified number of experiment times.")
+                    print("***************************************************************************************")
+                for trace in traces:
+                    print("|    |___", os.path.join(database, date, expr, dev, trace))
+            print()
     # *****************************************************************************
 
     # ******************************** Processing *********************************
     t = TicToc()  # create instance of class
     t.tic()       # Start timer
     err_handles = []
-    for expr, (times, traces) in exps.items():
-        for dev in devices:
-            if not os.path.isdir(os.path.join(database, date, expr, dev)):
-                print("{} does not exist.\n".format(os.path.join(database, date, expr, dev)))
-                continue
+    for date in dates:
+        for expr, (times, traces) in exps.items():
+            for dev in devices:
+                if not os.path.isdir(os.path.join(database, date, expr, dev)):
+                    print("{} does not exist.\n".format(os.path.join(database, date, expr, dev)))
+                    continue
 
-            if traces == None:
-                print("------------------------------------------")
-                print(date, expr, dev)
-                print("------------------------------------------")
-                source_dir = os.path.join(database, date, expr, dev)
-                target_dir = os.path.join(database, date, expr, dev)
-                makedir(target_dir)
-                filenames = os.listdir(source_dir)
-                main()
-                continue
-            elif len(traces) == 0:
-                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
-            
-            traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
-            for trace in traces:
-                print("------------------------------------------")
-                print(date, expr, dev, trace)
-                print("------------------------------------------")
-                source_dir = os.path.join(database, date, expr, dev, trace, "middle")
-                target_dir = os.path.join(database, date, expr, dev, trace, "data")
-                if expr == "tsync":
-                    source_dir = os.path.join(database, date, expr, dev, trace)
+                if traces == None:
+                    print("------------------------------------------")
+                    print(date, expr, dev)
+                    print("------------------------------------------")
+                    source_dir = os.path.join(database, date, expr, dev)
                     target_dir = os.path.join(database, date, expr, dev)
-                makedir(target_dir)
-                filenames = os.listdir(source_dir)
-                main()
+                    makedir(target_dir)
+                    filenames = os.listdir(source_dir)
+                    main()
+                    continue
+                elif len(traces) == 0:
+                    traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+                
+                traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
+                for trace in traces:
+                    print("------------------------------------------")
+                    print(date, expr, dev, trace)
+                    print("------------------------------------------")
+                    source_dir = os.path.join(database, date, expr, dev, trace, "middle")
+                    target_dir = os.path.join(database, date, expr, dev, trace, "data")
+                    if expr == "tsync":
+                        source_dir = os.path.join(database, date, expr, dev, trace)
+                        target_dir = os.path.join(database, date, expr, dev)
+                    makedir(target_dir)
+                    filenames = os.listdir(source_dir)
+                    main()
     t.toc()  # Time elapsed since t.tic()
     # *****************************************************************************

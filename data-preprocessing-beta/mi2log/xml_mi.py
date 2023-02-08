@@ -12,6 +12,7 @@ import argparse
 from pytictoc import TicToc
 from itertools import chain
 import shutil
+import re
 
 # --------------------- Arguments ---------------------
 parser = argparse.ArgumentParser()
@@ -26,25 +27,32 @@ args = parser.parse_args()
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
 date = "2022-12-22"
+dates = [
+        #  "2023-02-04", 
+        #  "2023-02-04#1",
+         "2023-02-04#2",
+         ]
 devices = sorted([
     # "sm00",
     # "sm01",
     # "sm02",
     # "sm03",
     # "sm04",
-    "sm05",
-    "sm06",
-    "sm07",
-    "sm08",
+    # "sm05",
+    # "sm06",
+    # "sm07",
+    # "sm08",
     # "qc00",
-    # "qc01",
-    # "qc02",
-    # "qc03",
+    "qc01",
+    "qc02",
+    "qc03",
 ])
 exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_round)
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
+    "_Bandlock_Udp_B3_B7_B8_RM500Q": (2, []),
+    "_Bandlock_Udp_all_RM500Q": (2, []),
     # "tsync": (1, None),
     # "_Bandlock_Udp": (4, ["#01", "#02", "#03", "#04"]),
     # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),
@@ -54,10 +62,10 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
     # "_Bandlock_Udp_B3_B28": (2, []),
     # "_Bandlock_Udp_B28_B1": (2, []),
     # "_Mobile_Bandlock_Test": (1, None),
-    "_Bandlock_Udp_B1_B3": (4, []),
-    "_Bandlock_Udp_B3_B7": (4, []),
-    "_Bandlock_Udp_B7_B8": (4, []),
-    "_Bandlock_Udp_B8_B1": (4, []),
+    # "_Bandlock_Udp_B1_B3": (4, []),
+    # "_Bandlock_Udp_B3_B7": (4, []),
+    # "_Bandlock_Udp_B7_B8": (4, []),
+    # "_Bandlock_Udp_B8_B1": (4, []),
     # "_Modem_Phone_Comparative_Exeriments": (6, []),
 }
 # *****************************************************************************
@@ -104,88 +112,6 @@ def get_meas_report_pairs(f, sep="&"): ## (MeasId & measObjectId & reportConfigI
     l = f.readline()
     reportConfigId = get_text(l, "reportConfigId")
     return '('+measId+sep+measObjectId+sep+reportConfigId+')'
-
-# def get_event_paras(f, eventId, l):
-
-#     def lte_get_hys_and_ttt():
-#         l = passlines(4, f)
-#         hysteresis = get_text(l, "hysteresis")
-#         hysteresis = hysteresis.split(" ")[0]
-#         l = passlines(2, f)
-#         timeToTrigger = get_text(l, "timeToTrigger")
-#         timeToTrigger = timeToTrigger.split(" ")[0]
-#         return  hysteresis, timeToTrigger 
-    
-#     def nr_get_hys_and_ttt():
-#         l = passlines(3, f)
-#         hysteresis = get_text(l, "hysteresis")
-#         hysteresis = hysteresis.split(" ")[0]
-#         l = passlines(2, f)
-#         timeToTrigger = get_text(l, "timeToTrigger")
-#         timeToTrigger = timeToTrigger.split(" ")[0]
-#         return  hysteresis, timeToTrigger 
-
-#     paras = {}
-#     if eventId == "eventA1 (0)" or eventId == "eventA2 (1)": ## A1 or A2
-#         if "\"lte-rrc.eventId\"" in l:
-#             l = passlines(4, f)
-#             threshold =  get_text(l, "threshold-RSRP")
-#             threshold = threshold.split(" ")[0]
-#             hysteresis, timeToTrigger = lte_get_hys_and_ttt()
-#             paras['thr'], paras['hys'], paras['ttt'] = threshold, hysteresis, timeToTrigger
-#         elif "\"nr-rrc.eventId\"" in l:
-#             l = passlines(4, f)
-#             threshold =  get_text(l, "rsrp")
-#             threshold = '[' + threshold.split(" ")[0] + ', ' + threshold.split(" ")[4] + ')'
-#             hysteresis, timeToTrigger = nr_get_hys_and_ttt()
-#             paras['thr'], paras['hys'], paras['ttt'] = threshold, hysteresis, timeToTrigger
-#     elif eventId == "eventA3 (2)": ## A3
-#         if "\"lte-rrc.eventId\"" in l:
-#             l = passlines(2, f)
-#             offset =  get_text(l, "a3-Offset")
-#             offset = offset.split(" ")[0]
-#             hysteresis, timeToTrigger = lte_get_hys_and_ttt()
-#             paras['off'], paras['hys'], paras['ttt'] = offset, hysteresis, timeToTrigger
-#         elif "\"nr-rrc.eventId\"" in l:
-#             l = passlines(4, f)
-#             offset = get_text(l, "rsrp")
-#             hysteresis, timeToTrigger = nr_get_hys_and_ttt()
-#             paras['off'], paras['hys'], paras['ttt'] = offset, hysteresis, timeToTrigger
-#     elif eventId == "eventA5 (4)": ## A5
-#         if "\"lte-rrc.eventId\"" in l:
-#             l = passlines(4, f)
-#             threshold1 =  get_text(l, "threshold-RSRP")
-#             threshold1 = threshold1.split(" ")[0]
-#             l = passlines(4, f)
-#             threshold2 =  get_text(l, "threshold-RSRP")
-#             threshold2 = threshold2.split(" ")[0]
-#             hysteresis, timeToTrigger = lte_get_hys_and_ttt()
-#             paras['thr1'], paras['thr2'], paras['hys'], paras['ttt'] = threshold1, threshold2, hysteresis, timeToTrigger
-#         elif "\"nr-rrc.eventId\"" in l:
-#             pass
-#     elif eventId == "eventA6-r10 (5)": ## A6
-#         if "\"lte-rrc.eventId\"" in l:
-#             l = passlines(2, f)
-#             offset =  get_text(l, "a6-Offset-r10")
-#             offset = offset.split(" ")[0]
-#             hysteresis, timeToTrigger = lte_get_hys_and_ttt()
-#             paras['off'], paras['hys'], paras['ttt'] = offset, hysteresis, timeToTrigger
-#         elif "\"nr-rrc.eventId\"" in l:
-#             pass
-#     elif eventId == "eventB1-NR-r15 (5)": ## interRAT B1
-#         if "\"lte-rrc.eventId\"" in l:
-#             l = passlines(4, f)
-#             offset =  get_text(l, "nr-RSRP-r15")
-#             offset = '[' + offset.split(" ")[0] + ', ' + offset.split(" ")[4] + ')'
-#             l = f.readline()
-#             hysteresis, timeToTrigger = lte_get_hys_and_ttt()
-#             paras['thr'], paras['hys'], paras['ttt'] = offset, hysteresis, timeToTrigger
-#         elif "\"nr-rrc.eventId\"" in l:
-#             pass
-#     else:
-#         pass
-    
-#     return str(paras).replace(',', '&')
 
 def get_event_paras(f, eventId, l):
 
@@ -284,11 +210,12 @@ def xml_to_csv_rrc(fin, fout):
     # print("rrc >>>>>")
     # Writing the column names... If you want to add something, don't forget the comma at the end!!
     # -------------------------------------------------
+    # f2.write(",".join(["time", "type_id",
     f2.write(",".join(["Timestamp", "type_id",
         "PCI",
         "UL_DL",
         "Freq",
-
+        # Serving cell info
         "DL frequency",
         "UL frequency",
         "DL bandwidth",
@@ -298,39 +225,47 @@ def xml_to_csv_rrc(fin, fout):
         "Band ID",
         "MCC",
         "MNC",
-        "MNC digit",
-
+        
         ## Measure report related
-        "measurementReport",
+        "lte-measurementReport",
+        "nr-measurementReport",
         "measId",
         "MeasResultEUTRA",
-        "physCellId",               ## LTE measured target PCI for MeasResultEUTRA 
+        "physCellId", ## LTE measured target PCI for MeasResultEUTRA 
         "MeasResultServFreqNR-r15", ## When lte and nr both HO, this will be emerged with MeasResultEUTRA.
         "pci-r15",
         "MeasResultNR",
-        "physCellId",               ## NR measured target PCI for MeasResultNR
+        "physCellId", ## NR measured target PCI for MeasResultNR
         "measResultServingCell",
         "physCellId",
         "MeasResultCellNR-r15",
-        "pci-r15",                  ## NR measured target PCI for MeasResultCellNR-r15
+        "pci-r15",    ## NR measured target PCI for MeasResultCellNR-r15
         ###########################
 
         ## Configuration dissemination Related
-        "MeasObjectToAddMod",
+        "lte-MeasObjectToAddMod",
+        "nr-MeasObjectToAddMod",
         "measObjectId", 
-        "measObject",               ## measObjectEUTRA (0) OR measObjectNR-r15 (5)
-        "carrierFreq",              ## For E-UTRA
-        "carrierFreq-r15",          ## For E-UTRA
-        "ssbFrequency",             ## For measObjectNR
+        "measObject", ## measObjectEUTRA (0) OR measObjectNR-r15 (5)
+        "carrierFreq", ## For EUTRA
+        "carrierFreq-r15", ## For measObjectNR-r15
+        "ssbFrequency", ## For measObjectNR
+
+        "lte-ReportConfigToAddMod",
+        "lte-reportConfigId",
+        "triggerType", ## triggerType for 4G
+        "lte-eventId",
+        "lte-parameter",
+
+        "nr-ReportConfigToAddMod",
+        "nr-reportConfigId",
+        "reportType", ## reportType for 5G  
+        "nr-eventId",
+        "nr-parameter",
         
-        "ReportConfigToAddMod",
-        "reportConfigId",
-        "triggerType",              ## reportType for 5G OTA 
-        "eventId",
-        "parameter",                ## Most difficult part...
-        
-        "measIdToRemoveList",
-        "MeasIdToAddMod",           ## (MeasId & measObjectId & reportConfigId)
+        "lte-measIdToRemoveList",
+        "lte-MeasIdToAddMod",## (MeasId & measObjectId & reportConfigId)
+        "nr-MeasIdToAddMod",
         ###########################
 
         ## Basic reconfiguration
@@ -342,23 +277,27 @@ def xml_to_csv_rrc(fin, fout):
 
         ## LTE RLF related
         "rrcConnectionReestablishmentRequest",
-        "physCellId",               ## Target PCI for rrcConnectionReestablishmentRequest.
-        "reestablishmentCause",     ## ReestablishmentCause for rrcConnectionReestablishmentRequest.
+        "physCellId", ## Target PCI for rrcConnectionReestablishmentRequest.
+        "reestablishmentCause", ## ReestablishmentCause for rrcConnectionReestablishmentRequest.
         "rrcConnectionReestablishment",
         "rrcConnectionReestablishmentComplete",
         "rrcConnectionReestablishmentReject",
         ###########################
 
         ## Initial setup related
+        "rrcConnectionRequest",
         "rrcConnectionSetup",
         "rrcConnectionSetupComplete",
         "securityModeCommand",
-        "SecurityModeComplete",
+        "securityModeComplete",
         ###########################
 
+        ## Cell reselection related
         "rrcConnectionRelease",
-        
-        ## NSA mode SN setup and release 
+        "systemInformationBlockType1",
+        ###########################
+
+        ##  NSA mode SN setup and release 
         "nr-Config-r15: release (0)",
         "nr-Config-r15: setup (1)",
         "dualConnectivityPHR: release (0)",
@@ -367,14 +306,15 @@ def xml_to_csv_rrc(fin, fout):
 
         ## NSA mode SN RLF related
         "scgFailureInformationNR-r15",
-        "failureType-r15",          ## Failure cause of scgfailure .
+        "failureType-r15", ##Failure cause of scgfailure .
         ###########################
 
         ## LTE and NR ho related
-        "lte_targetPhysCellId",     ## Handover target.
+        "lte_targetPhysCellId", ## Handover target.
+        "dl-CarrierFreq",
         "lte-rrc.t304",
 
-        "nr_physCellId",            ## NR measured target PCI
+        "nr_physCellId", ## NR measured target PCI
         "nr-rrc.t304",
         ###########################
         
@@ -382,7 +322,7 @@ def xml_to_csv_rrc(fin, fout):
         ## SCell add and release 
         "sCellToReleaseList-r10",
         "SCellIndex-r10",
-        "sCellToAddMod-r10",
+        "SCellToAddMod-r10",
         "SCellIndex-r10",
         "physCellId-r10",
         "dl-CarrierFreq-r10",
@@ -390,12 +330,15 @@ def xml_to_csv_rrc(fin, fout):
 
         ])+'\n')
 
-    # For each dm_log_packet, we will check that whether strings in type_list are shown in it.
-    # If yes, type_code will record what types in type_list are shown in the packet.
-    # -------------------------------------------------
+    #For each dm_log_packet, we will check that whether strings in type_list are shown in it.
+    #If yes, type_code will record what types in type_list are shown in the packet.
+    #-------------------------------------------------
     type_list = [
+
         ## MeasurementReport Related 
-        "\"measurementReport\"",
+        "\"lte-rrc.measurementReport_element\"",
+        "\"nr-rrc.measurementReport_element\"",
+
         "measId",
         "\"MeasResultEUTRA\"",
         "physCellId",
@@ -408,23 +351,31 @@ def xml_to_csv_rrc(fin, fout):
         "\"MeasResultCellNR-r15\"",
         "pci-r15",
         ###########################
-
+        
         ## Configuration dissemination Related
-        "\"MeasObjectToAddMod\"",
+        "\"lte-rrc.MeasObjectToAddMod_element\"",
+        "\"nr-rrc.MeasObjectToAddMod_element\"",
         "measObjectId", 
         "measObject", 
         "carrierFreq", 
         "carrierFreq-r15",
         "ssbFrequency",
 
-        "\"ReportConfigToAddMod\"",
-        "reportConfigId",
-        "triggerType",
-        "eventId",
-        "parameter",
+        "\"lte-rrc.ReportConfigToAddMod_element\"",
+        "lte-reportConfigId",
+        "triggerType", ## triggerType for 4G
+        "lte-eventId",
+        "lte-parameter",
 
-        "measIdToRemoveList",
-        "\"MeasIdToAddMod\"",
+        "\"nr-rrc.ReportConfigToAddMod_element\"",
+        "nr-reportConfigId",    
+        "reportType", ## reportType for 5G
+        "nr-eventId",
+        "nr-parameter",
+
+        "\"lte-rrc.measIdToRemoveList\"",
+        "\"lte-rrc.MeasIdToAddMod_element\"",
+        "\"nr-rrc.MeasIdToAddMod_element\"",
         ###########################
 
 
@@ -439,19 +390,23 @@ def xml_to_csv_rrc(fin, fout):
         "\"rrcConnectionReestablishmentRequest\"",
         "physCellId", 
         "reestablishmentCause",
-        "rrcConnectionReestablishment",
+        "\"rrcConnectionReestablishment\"",
         "\"rrcConnectionReestablishmentComplete\"",
         "\"rrcConnectionReestablishmentReject\"",
         ###########################
 
         ## Initial Setup related
+        "\"lte-rrc.rrcConnectionRequest_element\"",
         "\"rrcConnectionSetup\"",
         "\"rrcConnectionSetupComplete\"",
         "\"securityModeCommand\"",
-        "\"SecurityModeComplete\"",
+        "\"securityModeComplete\"",
         ###########################
 
+        ## Cell reselection related
         "\"rrcConnectionRelease\"",
+        "\"systemInformationBlockType1\"",
+        ###########################
 
         ## NSA mode SN setup and release 
         "\"nr-Config-r15: release (0)\"",
@@ -466,8 +421,10 @@ def xml_to_csv_rrc(fin, fout):
         ###########################
 
         ## LTE and NR ho related
-        "\"lte-rrc.targetPhysCellId\"",     
+        "\"lte-rrc.targetPhysCellId\"",
+        "dl-CarrierFreq",
         "\"lte-rrc.t304\"",
+
         "\"nr-rrc.physCellId\"",
         "\"nr-rrc.t304\"",
         ###########################
@@ -498,19 +455,9 @@ def xml_to_csv_rrc(fin, fout):
                 PCI = "-"
                 Freq = '-'
 
-            if type_id != 'LTE_RRC_OTA_Packet' and type_id != '5G_NR_RRC_OTA_Packet' and type_id != "LTE_RRC_Serv_Cell_Info": ## 只處理RRC
-                while l and r"</dm_log_packet>" not in l:
-                    l = f.readline()
-                l = f.readline()
-                continue
-            # if r"</dm_log_packet>" in l: # 過濾不能parse只有一行的message
-            #     l = f.readline()
-            #     continue
-            #     f2.write(",".join([timestamp, type_id, PCI, "-"] + type_code)+'\n')
-            # print(222)
+            
 
-            elif type_id == "LTE_RRC_Serv_Cell_Info":
-                # print("LTE_RRC_Serv_Cell_Info")
+            if type_id == "LTE_RRC_Serv_Cell_Info": # 處理serv cell info
                 PCI = soup.find(key="Cell ID").get_text()
                 DL_f = soup.find(key="Downlink frequency").get_text()
                 UL_f = soup.find(key="Uplink frequency").get_text()
@@ -520,12 +467,18 @@ def xml_to_csv_rrc(fin, fout):
                 TAC = soup.find(key="TAC").get_text()
                 Band_ID = soup.find(key="Band Indicator").get_text()
                 MCC = soup.find(key="MCC").get_text()
-                MNC_d = soup.find(key="MNC Digit").get_text()
-                MNC = soup.find(key="MNC").get_text()
-                # f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ["", "", "", "", "", "", "", "", "", ""] + type_code)+'\n')
-                f2.write(",".join([timestamp, type_id, PCI, "", "", DL_f, UL_f, DL_BW, UL_BW, Cell_identity, TAC, Band_ID, MCC, MNC, MNC_d] )+'\n')
-                # print("LTE_RRC_Serv_Cell_Info end!!")
+                # MNC_d = soup.find(key="MNC Digit").get_text()
+                MNC = soup.find(key="MNC").get_text()                
+                # f2.write(",".join([timestamp, type_id, PCI,'','', DL_f, UL_f, Cell_identity, TAC, Band_ID, MCC, MNC] )+'\n')
+                f2.write(",".join([timestamp, type_id, PCI,'','', DL_f, UL_f, DL_BW, UL_BW, Cell_identity, TAC, Band_ID, MCC, MNC] )+'\n')
                 l = f.readline()
+                continue
+                
+            elif type_id != 'LTE_RRC_OTA_Packet' and type_id != '5G_NR_RRC_OTA_Packet': ## 過濾其他只處理RRC
+                while l and r"</dm_log_packet>" not in l:
+                    l = f.readline()
+                l = f.readline()
+                continue
 
             else:
                 UL_DL = '-'
@@ -543,18 +496,20 @@ def xml_to_csv_rrc(fin, fout):
                             next -= 1
                             continue
     
-                        if type in l and type == "\"measurementReport\"":
+                        if type in l and type ==  "\"lte-rrc.measurementReport_element\"":
                             type_code[c] = "1"
-                            c += 1
-                            if "\"lte-rrc.measurementReport_element\"" in l:
-                                l = passlines(10, f)
+                            c+=2
+                            l = passlines(10, f)
+                            type_code[c] = get_text(l, "measId")
+                            next = 2
+                        elif type in l and type ==  "\"nr-rrc.measurementReport_element\"" :
+                            type_code[c] = "1"
+                            c+=1
+                            l = passlines(9, f)
+                            try :
                                 type_code[c] = get_text(l, "measId")
-                            elif "\"nr-rrc.measurementReport_element\"" in l:
-                                l = passlines(9, f)
-                                try :
-                                    type_code[c] = get_text(l, "measId")
-                                except:
-                                    type_code[c] = "none"
+                            except:
+                                type_code[c] = "none"
                             next = 1
                         elif type in l and type == "\"MeasResultEUTRA\"":
                             type_code[c] = "1"
@@ -586,12 +541,21 @@ def xml_to_csv_rrc(fin, fout):
                             l = passlines(3, f)
                             multi_output_write(type_code, c, "pci-r15", l)
                             next = 1
-                        elif type in l and type == "\"MeasObjectToAddMod\"":
-                            type_code[c] = "1"
-                            c += 1
-                            l = f.readline()
-                            multi_output_write(type_code, c, "measObjectId", l)
-                            c += 1 
+                        elif type in l and (type == "\"lte-rrc.MeasObjectToAddMod_element\"" or type == "\"nr-rrc.MeasObjectToAddMod_element\""):
+                            
+                            if type == "\"lte-rrc.MeasObjectToAddMod_element\"":
+                                type_code[c] = "1"
+                                c += 2
+                                l = f.readline()
+                                multi_output_write(type_code, c, "measObjectId", l)
+                                c += 1 
+                            elif type == "\"nr-rrc.MeasObjectToAddMod_element\"":
+                                type_code[c] = "1"
+                                c += 1
+                                l = f.readline()
+                                multi_output_write(type_code, c, "measObjectId", l)
+                                c += 1 
+
                             while l:
                                 l = f.readline()
                                 if "\"lte-rrc.measObject\"" in l:
@@ -616,15 +580,14 @@ def xml_to_csv_rrc(fin, fout):
                                         multi_output_write(type_code, c, "ssbFrequency", l)
                                     next = 5
                                     break
-                        elif type in l and type == "\"ReportConfigToAddMod\"":
+                        
+                        elif type in l and type == "\"lte-rrc.ReportConfigToAddMod_element\"": 
                             type_code[c] = "1"
                             c += 1
                             l = f.readline()
                             multi_output_write(type_code, c, "reportConfigId", l)
-
                             c += 1
                             triggerType, l = find_next_str_and_write(type_code, f, ["triggerType", "reportType"], c)
-
                             c += 1
                             if triggerType == "event (0)":
                                 eventId, l = find_next_str_and_write(type_code,f,["eventId"],c)
@@ -637,22 +600,31 @@ def xml_to_csv_rrc(fin, fout):
                                 c += 1
                                 paras = r'{}'
                                 multi_output_write(type_code, c, paras)
-                            elif triggerType == "eventTriggered (1)":
+                            next = 4
+
+                        elif type in l and type == "\"nr-rrc.ReportConfigToAddMod_element\"":
+                            type_code[c] = "1"
+                            c += 1
+                            l = f.readline()
+                            multi_output_write(type_code, c, "reportConfigId", l)
+                            c += 1
+                            triggerType, l = find_next_str_and_write(type_code, f, ["triggerType", "reportType"], c)
+                            c += 1
+                            if triggerType == "eventTriggered (1)":
                                 eventId, l = find_next_str_and_write(type_code,f,["eventId"],c)
                                 c += 1
                                 paras = get_event_paras(f, eventId, l)
                                 multi_output_write(type_code, c, paras)
-
                             next = 4
-                        elif type in l and type == 'measIdToRemoveList':
-                            if "lte-rrc.measIdToRemoveList" in l:
-                                n = ''.join(filter(str.isdigit, get_text(l, "measIdToRemoveList")))
-                                n = int(n)
-                                l = passlines(2, f)
-                                for i in range(n):
-                                    multi_output_write(type_code, c, get_text(l, "MeasId"))
-                                    l = passlines(3, f)
-                        elif type in l and type == "\"MeasIdToAddMod\"":
+
+                        elif type in l and type == "\"lte-rrc.measIdToRemoveList\"":
+                            n = ''.join(filter(str.isdigit, get_text(l, "measIdToRemoveList")))
+                            n = int(n)
+                            l = passlines(2, f)
+                            for i in range(n):
+                                multi_output_write(type_code, c, get_text(l, "MeasId"))
+                                l = passlines(3, f)
+                        elif type in l and (type == "\"lte-rrc.MeasIdToAddMod_element\"" or type == "\"nr-rrc.MeasIdToAddMod_element\""):
                             multi_output_write(type_code, c, get_meas_report_pairs(f))
                         elif type in l and type == "\"rrcConnectionReestablishmentRequest\"":
                             type_code[c] = "1"
@@ -670,43 +642,64 @@ def xml_to_csv_rrc(fin, fout):
                             type_code[c] = get_text(l, "failureType-r15")
                             next = 1
                         elif type in l and type == "\"lte-rrc.targetPhysCellId\"":
-                            type_code[c] = get_text(l, "targetPhysCellId")                                         
+                            type_code[c] = get_text(l, "targetPhysCellId")
+                            c += 1
+                            l = passlines(2, f)
+                            if "\"lte-rrc.t304\"" in l:
+                                type_code[c] = 'intrafreq'
+                                c += 1
+                                type_code[c] = "1"
+                                next = 2
+                            else:
+                                l = passlines(1, f)
+                                type_code[c] = get_text(l, "dl-CarrierFreq")
+                                next = 1
                         elif type in l and type == "\"nr-rrc.physCellId\"":
                             type_code[c] = get_text(l, "physCellId")
                         elif type in l and type == "\"sCellToReleaseList-r10:":
-                            type_code[c] = "1"
+                            type_code[c] = get_text(l, "sCellToReleaseList-r10")
                             c += 1
-                            l = passlines(2, f)
-                            type_code[c] = get_text(l, "SCellIndex-r10")
+                            num = int(re.sub( "[^0-9]", '', get_text(l, "sCellToReleaseList-r10")))
+                            for i in range(num):
+                                if i == 0:
+                                    l = passlines(2, f)
+                                else:
+                                    l = passlines(3,    f)
+                                multi_output_write(type_code, c, "SCellIndex-r10", l)
+                            # type_code[c] = get_text(l, "SCellIndex-r10")
                             next = 1
                         elif type in l and type == "\"SCellToAddMod-r10\"":
                             type_code[c] = "1"
                             c += 1
                             l = passlines(5, f)
-                            type_code[c] = get_text(l, "sCellIndex-r10")
-                            try:
-                                c += 1
-                                l = passlines(2, f)
-                                type_code[c] = get_text(l, "physCellId-r10")
+                            multi_output_write(type_code, c, "sCellIndex-r10", l)
+                            # type_code[c] = get_text(l, "sCellIndex-r10")
+                            c += 1
+                            l = passlines(2, f)
+                            if "physCellId-r10" in l:
+                                multi_output_write(type_code, c, "physCellId-r10", l)
+                                # type_code[c] = get_text(l, "physCellId-r10")
                                 c += 1
                                 l = passlines(1, f)
-                                type_code[c] = get_text(l, "dl-CarrierFreq-r10")
-                            except:
-                                c += 2
+                                multi_output_write(type_code, c, "dl-CarrierFreq-r10", l)
+                                # type_code[c] = get_text(l, "dl-CarrierFreq-r10")
+                            else:
+                                type_code[c] = 'nr or cqi report'
+                                c += 1
                             next = 3
-                        elif type in l and type not in ["physCellId", "measObjectId", "measObject", "reportConfigId", "measId",]:
+                        elif type in l and type not in ["physCellId", "measObjectId", "measObject", "reportConfigId", "measId","carrierFreq"]:
                             type_code[c] = "1"
                             
                         c += 1
                     
                     l = f.readline()
                 l = f.readline()
-                f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ["", "", "", "", "", "", "", "", "", ""] + type_code)+'\n')
-                # f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + type_code)+'\n')
+                # f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ['']*7 + type_code)+'\n')
+                f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ['']*9 + type_code)+'\n')
         else:
-            print(l,"Error!")
+            print(l,"Error! Invalid data content.")
             break 
-            
+    
     f2.close()
     f.close()
 
@@ -716,19 +709,16 @@ def xml_to_csv_ml1(fin, fout):
     # print("ml1 >>>>>")
     # Writing the column names...
     # -------------------------------------------------
-    # f2.write(",".join(["time", "type_id",
-    f2.write(",".join(["Timestamp", "type_id",
+    # columns = ["time", "type_id",
+    columns = ["Timestamp", "type_id",
         "PCI",
         "RSRP(dBm)",
         "RSRQ(dB)",
         "Serving Cell Index",
         "EARFCN",
         "Number of Neighbor Cells",
-        "Number of Detected Cells",
-        "PCI1",
-        "LTE_RSRP1",
-        "LTE_RSRQ1"
-        ])+'\n')
+        "Number of Detected Cells"]
+    f2.write(",".join(columns)+'\n')
 
     l = f.readline()
 
@@ -739,6 +729,7 @@ def xml_to_csv_ml1(fin, fout):
         
     ]
 
+    max_length = 0
     while l:
         if r"<dm_log_packet>" in l:
             # type_code = ["0"] * len(type_list)
@@ -764,56 +755,43 @@ def xml_to_csv_ml1(fin, fout):
                     PCIs = PCIs[:-int(n_det_c)]
                 A = [[PCIs[i], rsrps[i+1], rsrqs[i+1]] for i in range(len(PCIs))] ## Information of neighbor cell
                 A = list(chain.from_iterable(A))
+                x = len([timestamp, type_id, PCI, rsrps[0], rsrqs[0], serving_cell, earfcn, n_nei_c, n_det_c] + A)
+                max_length = x if x > max_length else max_length
                 f2.write(",".join([timestamp, type_id, PCI, rsrps[0], rsrqs[0], serving_cell, earfcn, n_nei_c, n_det_c] + A)+'\n')
-            elif type_id == 'LTE_PHY_Connected_Mode_Neighbor_Measurement': # or type_id == 'LTE_PHY_Serv_Cell_Measurement': ## 無法parse暫時忽略
-                f2.write(",".join([timestamp, type_id, PCI, '-', '-', '-', '-', '-', '-']  )+'\n')
-                pass
+
+
             else: # 只處理ml1資料過濾其他type
                 while l and r"</dm_log_packet>" not in l:
                     l = f.readline()
 
             l = f.readline()
-
+            
+            
         else:
             print(l,"Error!")
+            delete = True
             break 
             
     f2.close()
     f.close()
-    
-    fp_input = open(fout, 'r')
-    lines = fp_input.readlines()  # neglect '\n' when reading the file
-    
-    ### First round traversal to get the max length of columns
-    max_row_size = 0
-    for line in lines:
-        row_size = len(line.split(','))
-        if row_size > max_row_size:
-            max_row_size = row_size
-    
-    ### Second round traversal to fill in the content to a new file
-    fp_output = open(fout, 'w')
-    # print(fout)
 
-    line_0 = lines[0]
-    column_names = line_0[:-1].split(',')
-    row_size = len(column_names)
-    add_num = (max_row_size - row_size) // 3
-    for i in range(add_num):
-        column_names = [*column_names, 'PCI{}'.format(i+2), 'LTE_RSRP{}'.format(i+2), 'LTE_RSRQ{}'.format(i+2)]
-    fp_output.write(','.join(column_names) + '\n')
-        
-    for line in lines[1:]:
-        row_size = len(line.split(','))
-        append_line = line[:-1]
-        for i in range(max_row_size - row_size):
-            append_line = append_line + ',-'  # '-'
-            append_line = append_line + ','   # np.nan
-        append_line = append_line + '\n'
-        fp_output.write(append_line)
-    fp_input.close()
-    fp_output.close()
-    return
+    # csv Header process
+    with open(fout, 'r') as csvinput:
+        new_f = fout[:-4]+"_new.csv"
+        l = csvinput.readline()
+        x = len(l.split(','))
+        X = []
+        for i in range(int((max_length-x)/3)):
+            X += [f"PCI{i+1}",f"RSRP{i+1}",f"RSRQ{i+1}"]
+        X = columns+X
+        with open(new_f, 'w') as csvoutput:
+            csvoutput.write(",".join(X)+'\n')
+            l = csvinput.readline()
+            while l:
+                csvoutput.write(l)
+                l = csvinput.readline()
+    os.system(f"rm {fout}") # Remove
+    os.system(f"mv {new_f} {fout}") # Rename
 
 def xml_to_csv_nr_ml1(fin, fout):
     f = open(fin, encoding="utf-8")
@@ -821,23 +799,18 @@ def xml_to_csv_nr_ml1(fin, fout):
     # print("nr_ml1 >>>>>")
     # Writing the column names...
     # -------------------------------------------------
-    # f2.write(",".join(["time", "type_id",
-    f2.write(",".join(["Timestamp", "type_id",
+    # columns = ["time", "type_id",
+    columns = ["Timestamp", "type_id",
         "Raster ARFCN",
         "Num Cells",
         "Serving Cell Index",
         "Serving Cell PCI",
-        # "PCI1",
-        # "RSRP1",
-        # "RSRP2",
-        "PCI0",
-        "RSRP0",
-        "RSRQ0",
-
-        ])+'\n')
+        ]
+    f2.write(",".join(columns)+'\n')
 
     l = f.readline()
 
+    max_length = 0
     while l:
         if r"<dm_log_packet>" in l:
             soup = BeautifulSoup(l, 'html.parser')
@@ -859,6 +832,8 @@ def xml_to_csv_nr_ml1(fin, fout):
                     A.append(rsrps[i])
                     A.append(rsrqs[i])
 
+                x = len([timestamp, type_id, arfcn, num_cells, serving_cell_idex, serving_cell_pci] + A)
+                max_length = x if x > max_length else max_length
                 f2.write(",".join([timestamp, type_id, arfcn, num_cells, serving_cell_idex, serving_cell_pci] + A)+'\n')
             
             else: # 只處理nr_ml1資料過濾其他type
@@ -869,57 +844,29 @@ def xml_to_csv_nr_ml1(fin, fout):
             
         else:
             print(l,"Error!")
+            delete = True
             break 
             
     f2.close()
     f.close()
-    
-    fp_input = open(fout, 'r')
-    lines = fp_input.readlines()  # neglect '\n' when reading the file
-    
-    ### First round traversal to get the max length of columns
-    max_row_size = 0
-    for line in lines:
-        row_size = len(line.split(','))
-        if row_size > max_row_size:
-            max_row_size = row_size
-    
-    ### Check if the column names exist
-    # need_header = True
-    # line_0 = lines[0]
-    # if line_0[:9] == 'Timestamp':
-    #     need_header = False
-    
-    ### Second round traversal to fill in the content to a new file
-    fp_output = open(fout, 'w')
-    # print(fout)
 
-    line_0 = lines[0]
-    column_names = line_0[:-1].split(',')
-    row_size = len(column_names)
-    add_num = (max_row_size - row_size) // 3
-    for i in range(add_num):
-        column_names = [*column_names, 'PCI{}'.format(i+1), 'RSRP{}'.format(i+1), 'RSRQ{}'.format(i+1)]
-    fp_output.write(','.join(column_names) + '\n')
-
-    # if need_header:
-    #     for i in range(max_row_size - row_size):
-    #         column_names = column_names + ',-'  # '-'
-    #         # column_names = column_names + ','   # np.nan
-    #     column_names = column_names + '\n'
-    #     fp_output.write(column_names)
-        
-    for line in lines[1:]:
-        row_size = len(line.split(','))
-        append_line = line[:-1]
-        for i in range(max_row_size - row_size):
-            append_line = append_line + ',-'  # '-'
-            # append_line = append_line + ','   # np.nan
-        append_line = append_line + '\n'
-        fp_output.write(append_line)
-    fp_input.close()
-    fp_output.close()
-    return
+    # csv Header process
+    with open(fout, 'r') as csvinput:
+        new_f = fout[:-4]+"_new.csv"
+        l = csvinput.readline()
+        x = len(l.split(','))
+        X = []
+        for i in range(int((max_length-x)/3)):
+            X += [f"PCI{i}",f"RSRP{i}",f"RSRQ{i}"]
+        X = columns+X
+        with open(new_f, 'w') as csvoutput:
+            csvoutput.write(",".join(X)+'\n')
+            l = csvinput.readline()
+            while l:
+                csvoutput.write(l)
+                l = csvinput.readline()
+    os.system(f"rm {fout}") # Remove
+    os.system(f"mv {new_f} {fout}") # Rename
 # *****************************************************************************
 
 # ****************************** Utils Functions ******************************
@@ -964,8 +911,8 @@ if __name__ == "__main__":
             fout1 = os.path.join(target_dir, "{}_rrc.csv".format(filename[:-4]))
             fout2 = os.path.join(target_dir, "{}_ml1.csv".format(filename[:-4]))
             fout3 = os.path.join(target_dir, "{}_nr_ml1.csv".format(filename[:-4]))
-            # print(">>>>> convert from '{}' into '{}'...".format(fin, fout1))
-            # xml_to_csv_rrc(fin, fout1)
+            print(">>>>> convert from '{}' into '{}'...".format(fin, fout1))
+            xml_to_csv_rrc(fin, fout1)
             # savemove(os.path.join(source_dir, "{}_rrc.csv".format(filename[:-4])), target_dir, "{}_rrc.csv".format(filename[:-4]))
             print(">>>>> convert from '{}' into '{}'...".format(fin, fout2))
             xml_to_csv_ml1(fin, fout2)
@@ -976,64 +923,66 @@ if __name__ == "__main__":
         print()
 
     # ******************************* Check Files *********************************
-    for expr, (times, traces) in exps.items():
-        print(os.path.join(database, date, expr))
-        for dev in devices:
-            if not os.path.isdir(os.path.join(database, date, expr, dev)):
-                print("|___ {} does not exist.".format(os.path.join(database, date, expr, dev)))
-                continue
-            
-            print("|___", os.path.join(database, date, expr, dev))
-            if traces == None:
-                # print(os.path.join(database, date, expr, dev))
-                continue
-            elif len(traces) == 0:
-                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
-            
-            print("|    ", times)
-            traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
-            if len(traces) != times:
-                print("***************************************************************************************")
-                print("Warning: the number of traces does not match the specified number of experiment times.")
-                print("***************************************************************************************")
-            for trace in traces:
-                print("|    |___", os.path.join(database, date, expr, dev, trace))
-        print()
+    for date in dates:
+        for expr, (times, traces) in exps.items():
+            print(os.path.join(database, date, expr))
+            for dev in devices:
+                if not os.path.isdir(os.path.join(database, date, expr, dev)):
+                    print("|___ {} does not exist.".format(os.path.join(database, date, expr, dev)))
+                    continue
+                
+                print("|___", os.path.join(database, date, expr, dev))
+                if traces == None:
+                    # print(os.path.join(database, date, expr, dev))
+                    continue
+                elif len(traces) == 0:
+                    traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+                
+                print("|    ", times)
+                traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
+                if len(traces) != times:
+                    print("***************************************************************************************")
+                    print("Warning: the number of traces does not match the specified number of experiment times.")
+                    print("***************************************************************************************")
+                for trace in traces:
+                    print("|    |___", os.path.join(database, date, expr, dev, trace))
+            print()
     # *****************************************************************************
 
     # ******************************** Processing *********************************
     t = TicToc()  # create instance of class
     t.tic()       # Start timer
     err_handles = []
-    for expr, (times, traces) in exps.items():
-        for dev in devices:
-            if not os.path.isdir(os.path.join(database, date, expr, dev)):
-                print("{} does not exist.\n".format(os.path.join(database, date, expr, dev)))
-                continue
+    for date in dates:
+        for expr, (times, traces) in exps.items():
+            for dev in devices:
+                if not os.path.isdir(os.path.join(database, date, expr, dev)):
+                    print("{} does not exist.\n".format(os.path.join(database, date, expr, dev)))
+                    continue
 
-            if traces == None:
-                print("------------------------------------------")
-                print(date, expr, dev)
-                print("------------------------------------------")
-                source_dir = os.path.join(database, date, expr, dev)
-                target_dir = os.path.join(database, date, expr, dev)
-                makedir(target_dir)
-                filenames = os.listdir(source_dir)
-                main()
-                continue
-            elif len(traces) == 0:
-                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
-            
-            traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
-            for trace in traces:
-                print("------------------------------------------")
-                print(date, expr, dev, trace)
-                print("------------------------------------------")
-                source_dir = os.path.join(database, date, expr, dev, trace, "middle")
-                target_dir = os.path.join(database, date, expr, dev, trace, "data")
-                makedir(target_dir)
-                filenames = os.listdir(source_dir)
-                main()
+                if traces == None:
+                    print("------------------------------------------")
+                    print(date, expr, dev)
+                    print("------------------------------------------")
+                    source_dir = os.path.join(database, date, expr, dev)
+                    target_dir = os.path.join(database, date, expr, dev)
+                    makedir(target_dir)
+                    filenames = os.listdir(source_dir)
+                    main()
+                    continue
+                elif len(traces) == 0:
+                    traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+                
+                traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
+                for trace in traces:
+                    print("------------------------------------------")
+                    print(date, expr, dev, trace)
+                    print("------------------------------------------")
+                    source_dir = os.path.join(database, date, expr, dev, trace, "middle")
+                    target_dir = os.path.join(database, date, expr, dev, trace, "data")
+                    makedir(target_dir)
+                    filenames = os.listdir(source_dir)
+                    main()
     t.toc()  # Time elapsed since t.tic()
     # *****************************************************************************
 
