@@ -176,6 +176,8 @@ def connection_setup():
         network_interface_list = get_network_interface_list()
         if "rmnet_data0" in network_interface_list:
             interface_name = "rmnet_data0"
+        if "rmnet_data2" in network_interface_list:
+            interface_name = "rmnet_data2"
         if device == "unam":
             if "enp5s0" in network_interface_list:
                 interface_name = "enp5s0"
