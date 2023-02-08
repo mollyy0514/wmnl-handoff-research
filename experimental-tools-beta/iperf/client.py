@@ -235,6 +235,7 @@ for i, item in enumerate(interfaces):
             # print("Turn on WiFi to continue time sync process.")
             time.sleep(1)
             # sys.exit(1)
+        interfaces[i] = 'rmnet_data0'
     elif item.startswith('xm') and 'rmnet_data2' in network_interface_list:
         if args.tsync:
             print("Warning: WiFi is off!!!!!")
@@ -242,7 +243,7 @@ for i, item in enumerate(interfaces):
             # print("Turn on WiFi to continue time sync process.")
             time.sleep(1)
             # sys.exit(1)
-        interfaces[i] = 'rmnet_data0'
+        interfaces[i] = 'rmnet_data2'
     elif item.startswith('qc') and 'enp5s0' in network_interface_list and args.tsync:
         interfaces[i] = 'enp5s0'
     elif item.startswith('qc') and 'wlp2s0' in network_interface_list and args.tsync:
