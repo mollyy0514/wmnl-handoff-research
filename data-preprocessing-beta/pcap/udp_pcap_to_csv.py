@@ -51,9 +51,11 @@ args = parser.parse_args()
 database = "/home/wmnlab/D/database/"
 # date = "2023-01-12"
 dates = [
-         "2023-02-04", 
-         "2023-02-04#1",
-         "2023-02-04#2",
+         "2022-09-29",
+        #  "2022-11-15-test",
+        #  "2023-02-04", 
+        #  "2023-02-04#1",
+        #  "2023-02-04#2",
          ]
 devices = sorted([
     # "sm00",
@@ -61,22 +63,24 @@ devices = sorted([
     # "sm02",
     # "sm03",
     # "sm04",
-    # "sm05",
-    # "sm06",
+    "sm05",
+    "sm06",
     # "sm07",
     # "sm08",
     # "qc00",
-    "qc01",
-    "qc02",
-    "qc03",
+    # "qc01",
+    # "qc02",
+    # "qc03",
 ])
 exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_round)
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    "tsync": (2, []),
-    "_Bandlock_Udp_B3_B7_B8_RM500Q": (2, []),
-    "_Bandlock_Udp_all_RM500Q": (2, []),
+    "_Bandlock_Udp": (6, []),
+    # "_Test1": (1, []),
+    # "tsync": (2, []),
+    # "_Bandlock_Udp_B3_B7_B8_RM500Q": (2, []),
+    # "_Bandlock_Udp_all_RM500Q": (2, []),
     # "tsync": (1, None),
     # "_tsync": (2, []),
     # "_Bandlock_Udp": (4, ["#01", "#02", "#03", "#04"]),
