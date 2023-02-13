@@ -339,12 +339,15 @@ def get_latency_jitter(df, mode):
     ### calculate latency
     # print(df['latency'])
     # print(df['latency'][df['lost'] == False])
-    df['latency'] = (df['arrival.time'] - df['Timestamp']).dt.total_seconds().round(6)
+    df.loc[:, df['lost'] == True]['latency'] = np.inf
+    df.loc[:, df['lost'] == False]['latency'] = (df.loc[:, df['lost'] == False]['arrival.time'] - df.loc[:, df['lost'] == False]['Timestamp']).dt.total_seconds().round(6)
+    # df['latency'] = (df['arrival.time'] - df['Timestamp']).dt.total_seconds().round(6)
     # display(df)
     
     ### no other way!!!
     bm = (5 + random.randint(-2000, 2000)*1e-3) * 1e-3
-    latndf = df['latency'][df['lost'] == False]
+    # latndf = df['latency'][df['lost'] == False]
+    latndf = df.loc[:, df['lost'] == False]['latency']
     minlatn = min(latndf)
     epoch_comp = bm - minlatn
     comp = pd.to_timedelta(epoch_comp, "sec")
@@ -358,7 +361,8 @@ def get_latency_jitter(df, mode):
         df['Timestamp'] = df['Timestamp'] - comp
         df['transmit.time_epoch'] = df['transmit.time_epoch'] - epoch_comp
         df['transmit.time'] = df['transmit.time'] - comp
-    df['latency'] = (df['arrival.time'] - df['Timestamp']).dt.total_seconds().round(6)
+    # df['latency'] = (df['arrival.time'] - df['Timestamp']).dt.total_seconds().round(6)
+    df.loc[:, df['lost'] == False]['latency'] = (df.loc[:, df['lost'] == False]['arrival.time'] - df.loc[:, df['lost'] == False]['Timestamp']).dt.total_seconds().round(6)
     
     return df
 
