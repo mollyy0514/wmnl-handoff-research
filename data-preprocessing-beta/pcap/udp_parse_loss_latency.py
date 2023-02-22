@@ -341,6 +341,7 @@ def get_latency_jitter(df, mode):
     # print(df['latency'][df['lost'] == False])
     # df.loc[:, df['lost'] == True]['latency'] = np.inf
     # df.loc[:, df['lost'] == False]['latency'] = (df.loc[:, df['lost'] == False]['arrival.time'] - df.loc[:, df['lost'] == False]['Timestamp']).dt.total_seconds().round(6)
+    df['latency'] = float('inf')
     df.loc[df['lost'] == False, 'latency'] = (df.loc[df['lost'] == False, 'arrival.time'] - df.loc[df['lost'] == False, 'Timestamp']).dt.total_seconds().round(6)
     # df['latency'] = (df['arrival.time'] - df['Timestamp']).dt.total_seconds().round(6)
     # display(df)
@@ -363,14 +364,15 @@ def get_latency_jitter(df, mode):
         df['transmit.time_epoch'] = df['transmit.time_epoch'] - epoch_comp
         df['transmit.time'] = df['transmit.time'] - comp
     # df['latency'] = (df['arrival.time'] - df['Timestamp']).dt.total_seconds().round(6)
-    df.loc[:, df['lost'] == False]['latency'] = (df.loc[:, df['lost'] == False]['arrival.time'] - df.loc[:, df['lost'] == False]['Timestamp']).dt.total_seconds().round(6)
+    # df.loc[:, df['lost'] == False]['latency'] = (df.loc[:, df['lost'] == False]['arrival.time'] - df.loc[:, df['lost'] == False]['Timestamp']).dt.total_seconds().round(6)
+    df.loc[df['lost'] == False, 'latency'] = (df.loc[df['lost'] == False, 'arrival.time'] - df.loc[df['lost'] == False, 'Timestamp']).dt.total_seconds().round(6)
     
     return df
 
 def get_statistics(df, fout1, fout2, fout3):
     # output packet record csv
-    # df['excl'] = df['latency'] > 100e-3
-    df.loc[df['lost'] == False, 'excl'] = df.loc[df['lost'] == False, 'latency'] > 100e-3
+    df['excl'] = df['latency'] > 100e-3
+    # df.loc[df['lost'] == False, 'excl'] = df.loc[df['lost'] == False, 'latency'] > 100e-3
     df = df[["sequence.number", "Timestamp", "Timestamp_epoch", "lost", "excl", "latency", "transmit.time", "transmit.time_epoch", "arrival.time", "arrival.time_epoch"]]
     print("output >>>", fout1)
     df.to_csv(fout1, index=False)

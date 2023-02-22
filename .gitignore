@@ -6,6 +6,7 @@
 *.o
 *.mi2log
 *.png
+*.pkl
 .ipynb_checkpoints
 .DS_Store
 __pycache__
