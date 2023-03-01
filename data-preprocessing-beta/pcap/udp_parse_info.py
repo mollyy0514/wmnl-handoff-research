@@ -50,9 +50,9 @@ import swifter
 database = "/home/wmnlab/D/database/"
 # date = "2023-01-12"
 dates = [
-         "2023-02-04", 
-         "2023-02-04#1",
-         "2023-02-04#2",
+        #  "2023-02-04", 
+        #  "2023-02-04#1",
+         "2023-02-27",
          ]
 devices = sorted([
     # "sm00",
@@ -64,18 +64,19 @@ devices = sorted([
     # "sm06",
     # "sm07",
     # "sm08",
-    # "qc00",
+    "qc00",
     "qc01",
-    "qc02",
-    "qc03",
+    # "qc02",
+    # "qc03",
 ])
 exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_round)
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    "tsync": (2, []),
-    "_Bandlock_Udp_B3_B7_B8_RM500Q": (2, []),
-    "_Bandlock_Udp_all_RM500Q": (2, []),
+    "_Bandswitch": (1, []),
+    # "tsync": (2, []),
+    # "_Bandlock_Udp_B3_B7_B8_RM500Q": (2, []),
+    # "_Bandlock_Udp_all_RM500Q": (2, []),
     # "_tsync": (1, ["#02",]),
     # "_tsync": (1, []),
     # "_Bandlock_Udp": (4, ["#01", "#02", "#03", "#04"]),

@@ -23,9 +23,9 @@ import random
 database = "/home/wmnlab/D/database/"
 # date = "2022-12-26"
 dates = [
-         "2023-02-04",
-         "2023-02-04#1",
-         "2023-02-04#2",
+        #  "2023-02-04",
+        #  "2023-02-04#1",
+         "2023-02-27",
          ]
 devices = sorted([
     # "sm00",
@@ -37,17 +37,18 @@ devices = sorted([
     # "sm06",
     # "sm07",
     # "sm08",
-    # "qc00",
+    "qc00",
     "qc01",
-    "qc02",
-    "qc03",
+    # "qc02",
+    # "qc03",
 ])
 exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_round)
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    "_Bandlock_Udp_B3_B7_B8_RM500Q": (2, []),
-    "_Bandlock_Udp_all_RM500Q": (2, []),
+    "_Bandswitch": (1, []),
+    # "_Bandlock_Udp_B3_B7_B8_RM500Q": (2, []),
+    # "_Bandlock_Udp_all_RM500Q": (2, []),
     # "tsync": (1, None),
     # "_Bandlock_Udp": (4, ["#01", "#02", "#03", "#04"]),
     # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),
@@ -347,25 +348,25 @@ def get_latency_jitter(df, mode):
     # display(df)
     
     ### no other way!!!
-    bm = (5 + random.randint(-2000, 2000)*1e-3) * 1e-3
-    # latndf = df['latency'][df['lost'] == False]
-    latndf = df.loc[df['lost'] == False, 'latency']
-    minlatn = min(latndf)
-    epoch_comp = bm - minlatn
-    comp = pd.to_timedelta(epoch_comp, "sec")
-    # print(epoch_comp)
-    # print(comp)
-    if mode == "dl":
-        df['arrival.time_epoch'] = df['arrival.time_epoch'] + epoch_comp
-        df['arrival.time'] = df['arrival.time'] + comp
-    elif mode == "ul":
-        df['Timestamp_epoch'] = df['Timestamp_epoch'] - epoch_comp
-        df['Timestamp'] = df['Timestamp'] - comp
-        df['transmit.time_epoch'] = df['transmit.time_epoch'] - epoch_comp
-        df['transmit.time'] = df['transmit.time'] - comp
-    # df['latency'] = (df['arrival.time'] - df['Timestamp']).dt.total_seconds().round(6)
-    # df.loc[:, df['lost'] == False]['latency'] = (df.loc[:, df['lost'] == False]['arrival.time'] - df.loc[:, df['lost'] == False]['Timestamp']).dt.total_seconds().round(6)
-    df.loc[df['lost'] == False, 'latency'] = (df.loc[df['lost'] == False, 'arrival.time'] - df.loc[df['lost'] == False, 'Timestamp']).dt.total_seconds().round(6)
+    # bm = (5 + random.randint(-2000, 2000)*1e-3) * 1e-3
+    # # latndf = df['latency'][df['lost'] == False]
+    # latndf = df.loc[df['lost'] == False, 'latency']
+    # minlatn = min(latndf)
+    # epoch_comp = bm - minlatn
+    # comp = pd.to_timedelta(epoch_comp, "sec")
+    # # print(epoch_comp)
+    # # print(comp)
+    # if mode == "dl":
+    #     df['arrival.time_epoch'] = df['arrival.time_epoch'] + epoch_comp
+    #     df['arrival.time'] = df['arrival.time'] + comp
+    # elif mode == "ul":
+    #     df['Timestamp_epoch'] = df['Timestamp_epoch'] - epoch_comp
+    #     df['Timestamp'] = df['Timestamp'] - comp
+    #     df['transmit.time_epoch'] = df['transmit.time_epoch'] - epoch_comp
+    #     df['transmit.time'] = df['transmit.time'] - comp
+    # # df['latency'] = (df['arrival.time'] - df['Timestamp']).dt.total_seconds().round(6)
+    # # df.loc[:, df['lost'] == False]['latency'] = (df.loc[:, df['lost'] == False]['arrival.time'] - df.loc[:, df['lost'] == False]['Timestamp']).dt.total_seconds().round(6)
+    # df.loc[df['lost'] == False, 'latency'] = (df.loc[df['lost'] == False, 'arrival.time'] - df.loc[df['lost'] == False, 'Timestamp']).dt.total_seconds().round(6)
     
     return df
 
@@ -579,18 +580,18 @@ if __name__ == "__main__":
                     
                     ### Timedelta
                     # timedelta, epoch_delta = calc_delta(txdl_df, rxdl_df, txul_df, rxul_df)
-                    with open(os.path.join(database, date, "tsync", dev, "delta.txt"), encoding="utf-8") as f:
-                        lines = f.readlines()
-                        timerec1 = pd.to_datetime(lines[0])
-                        epoch_delta1 = float(lines[1])
-                        timedelta1 = pd.Timedelta(seconds=epoch_delta1).round('us')
-                    with open(os.path.join(database, date, "tsync", dev, "delta1.txt"), encoding="utf-8") as f:
-                        lines = f.readlines()
-                        timerec2 = pd.to_datetime(lines[0])
-                        epoch_delta2 = float(lines[1])
-                        timedelta2 = pd.Timedelta(seconds=epoch_delta2).round('us')
-                    delta1 = (timerec1, epoch_delta1, timedelta1)
-                    delta2 = (timerec2, epoch_delta2, timedelta2)
+                    # with open(os.path.join(database, date, "tsync", dev, "delta.txt"), encoding="utf-8") as f:
+                    #     lines = f.readlines()
+                    #     timerec1 = pd.to_datetime(lines[0])
+                    #     epoch_delta1 = float(lines[1])
+                    #     timedelta1 = pd.Timedelta(seconds=epoch_delta1).round('us')
+                    # with open(os.path.join(database, date, "tsync", dev, "delta1.txt"), encoding="utf-8") as f:
+                    #     lines = f.readlines()
+                    #     timerec2 = pd.to_datetime(lines[0])
+                    #     epoch_delta2 = float(lines[1])
+                    #     timedelta2 = pd.Timedelta(seconds=epoch_delta2).round('us')
+                    # delta1 = (timerec1, epoch_delta1, timedelta1)
+                    # delta2 = (timerec2, epoch_delta2, timedelta2)
                     
                     # print(timerec1)
                     # print(epoch_delta1)
@@ -609,7 +610,7 @@ if __name__ == "__main__":
                     df = pd.concat([lossdf, latndf], axis=0)
                     df.sort_values(by=["sequence.number"], inplace=True)
                     df.reset_index(drop=True, inplace=True)
-                    df = get_compensate(df.copy(), "dl", delta1, delta2)
+                    # df = get_compensate(df.copy(), "dl", delta1, delta2)
                     df = get_latency_jitter(df.copy(), "dl")
                     get_statistics(df.copy(), fout1_dl, fout2_dl, fout3_dl)
                     
@@ -623,7 +624,7 @@ if __name__ == "__main__":
                     df = pd.concat([lossdf, latndf], axis=0)
                     df.sort_values(by=["sequence.number"], inplace=True)
                     df.reset_index(drop=True, inplace=True)
-                    df = get_compensate(df.copy(), "ul", delta1, delta2)
+                    # df = get_compensate(df.copy(), "ul", delta1, delta2)
                     df = get_latency_jitter(df.copy(), "ul")
                     get_statistics(df.copy(), fout1_ul, fout2_ul, fout3_ul)
                     
