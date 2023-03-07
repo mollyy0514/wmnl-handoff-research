@@ -64,7 +64,7 @@ elif sys.argv[1] == '-s':
         print('recvfrom ' + str(addr) + ': ' + indata[:3])
         
         time1 = time.time()
-        outdata = f'{outdata[:3]} {time0} {time1}'
+        outdata = f'{indata[:3]} {time0} {time1}'
         s.sendto(outdata.encode(), addr)
         print(outdata[:3], time0, time1)
         csv_writer.writerow([outdata[:3], time0, time1])
