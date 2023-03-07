@@ -14,7 +14,8 @@ if sys.argv[1] == '-c':
     num_packet_per_round = 100
     packet_interval = 0
 
-    time_stamp = []
+    timestamp_client = []
+    timestamp_server = []
 
     i = 0
     while i <= num_packet_per_round:
@@ -27,11 +28,12 @@ if sys.argv[1] == '-c':
             time1 = time.time()
             indata = indata.decode()
         except:
-            print("timeout", outdata[:3])
+            print("timeout", outdata)
             continue
         print('recvfrom ' + str(addr) + ': ' + indata)
-        print(outdata[:3], time0, time1, "RTT =", (time1-time0)*1000, "ms")
-        time_stamp.append([time0, time1])
+        print(outdata, time0, time1, "RTT =", (time1-time0)*1000, "ms")
+        timestamp_client.append([outdata, time0, time1])
+        timestamp_server.append(indata.split(' '))
         time.sleep(packet_interval)
         i += 1
     outdata = "end"
@@ -39,7 +41,10 @@ if sys.argv[1] == '-c':
 
     with open('sync_client_'+sys.argv[2]+'.csv', 'w') as f:
         csv_writer = csv.writer(f)
-        csv_writer.writerows(time_stamp)
+        csv_writer.writerows(timestamp_client)
+    with open('sync_server_'+sys.argv[2]+'.csv', 'w') as f:
+        csv_writer = csv.writer(f)
+        csv_writer.writerows(timestamp_server)
     
     f.close()
 
@@ -61,12 +66,12 @@ elif sys.argv[1] == '-s':
         indata = indata.decode()
         if indata == 'end':
             break
-        print('recvfrom ' + str(addr) + ': ' + indata[:3])
+        print('recvfrom ' + str(addr) + ': ' + indata)
         
         time1 = time.time()
-        outdata = f'{indata[:3]} {time0} {time1}'
+        outdata = f'{indata} {time0} {time1}'
         s.sendto(outdata.encode(), addr)
-        print(outdata[:3], time0, time1)
-        csv_writer.writerow([outdata[:3], time0, time1])
+        print(indata, time0, time1)
+        csv_writer.writerow([indata, time0, time1])
 
     f.close()
