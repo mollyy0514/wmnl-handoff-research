@@ -63,7 +63,7 @@ if sys.argv[1] == '-c':
     timestamp_server = []
 
     i = 0
-    tmo_cnt = 0
+    ctmo_cnt = 0
     while i <= num_packet_per_round:
         time0 = time.time()
         outdata = str(i).zfill(3)
@@ -73,11 +73,11 @@ if sys.argv[1] == '-c':
             indata, addr = s.recvfrom(1024)
             time1 = time.time()
             indata = indata.decode()
-            tmo_cnt = 0
+            ctmo_cnt = 0
         except:
             print("timeout", outdata)
-            tmo_cnt += 1
-            if tmo_cnt == 3:
+            ctmo_cnt += 1
+            if ctmo_cnt == 3:
                 break
             continue
         # print('recvfrom ' + str(addr) + ': ' + indata)
