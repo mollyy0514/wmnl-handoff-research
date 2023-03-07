@@ -45,7 +45,6 @@ def clock_diff(device):
 if sys.argv[1] == '-c':
     with open('device.txt', 'r', encoding='utf-8') as f:
         device = f.readline().strip()
-    print("device:", device)
     
     now = dt.datetime.today()
     date = [str(x) for x in [now.year, now.month, now.day]]
@@ -99,6 +98,7 @@ if sys.argv[1] == '-c':
     
     current_time = dt.datetime.now()
     diff = clock_diff(device)
+    print("device:", device)
     print(current_time, diff, "seconds")
     
     json_file = os.path.join(dirpath, f'time_sync_{device}.json')
