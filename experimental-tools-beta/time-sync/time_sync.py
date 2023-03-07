@@ -60,11 +60,15 @@ elif sys.argv[1] == '-s':
         if indata == 'end':
             break
         print('recvfrom ' + str(addr) + ': ' + indata[:3])
-
+        print(indata)
+        
         outdata = indata
         time1 = time.time()
         s.sendto(outdata.encode(), addr)
         print(outdata[:4], time0, time1)
-        csv_writer.writerow([time0, time1])
+        csv_writer.writerow([outdata[:4], time0, time1])
+        
+        # outdata = f'{outdata[:4]}, {time0}, {time1}'
+        # s.sendto(outdata.encode(), addr)
 
     f.close()
