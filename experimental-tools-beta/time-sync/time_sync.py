@@ -30,7 +30,7 @@ if sys.argv[1] == '-c':
         except:
             print("timeout", outdata)
             continue
-        print('recvfrom ' + str(addr) + ': ' + indata)
+        # print('recvfrom ' + str(addr) + ': ' + indata)
         print(outdata, time0, time1, "RTT =", (time1-time0)*1000, "ms")
         timestamp_client.append([outdata, time0, time1])
         timestamp_server.append(indata.split(' '))
@@ -45,9 +45,6 @@ if sys.argv[1] == '-c':
     with open('sync_server_'+sys.argv[2]+'.csv', 'w') as f:
         csv_writer = csv.writer(f)
         csv_writer.writerows(timestamp_server)
-    
-    f.close()
-
 
 # server
 elif sys.argv[1] == '-s':
@@ -57,8 +54,8 @@ elif sys.argv[1] == '-s':
     print('server start at: %s:%s' % ('0.0.0.0', PORT))
     print('wait for connection...')
 
-    f = open('sync_server_'+sys.argv[2]+'.csv', 'w')
-    csv_writer = csv.writer(f)
+    # f = open('sync_server_'+sys.argv[2]+'.csv', 'w')
+    # csv_writer = csv.writer(f)
 
     while True:
         indata, addr = s.recvfrom(1024)
@@ -72,6 +69,6 @@ elif sys.argv[1] == '-s':
         outdata = f'{indata} {time0} {time1}'
         s.sendto(outdata.encode(), addr)
         print(indata, time0, time1)
-        csv_writer.writerow([indata, time0, time1])
+        # csv_writer.writerow([indata, time0, time1])
 
-    f.close()
+    # f.close()
