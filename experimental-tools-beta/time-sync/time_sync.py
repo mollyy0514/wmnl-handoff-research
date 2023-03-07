@@ -29,7 +29,7 @@ def clock_diff(device):
     cnt = 0
     for i in range(len(client)):
         RTT = float(client[i][2]) - float(client[i][1])
-        if(RTT > 0.1):
+        if (RTT > 0.1):
             continue
         cen_client = (float(client[i][2]) + float(client[i][1]))/2
         cen_server = (float(server[i][2]) + float(server[i][1]))/2
