@@ -4,7 +4,7 @@ import csv
 import sys
 
 HOST = '140.112.20.183'
-PORT = 8000
+PORT = 3299
 
 # client
 if sys.argv[1] == '-c':
