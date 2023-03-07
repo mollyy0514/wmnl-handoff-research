@@ -45,9 +45,9 @@ if sys.argv[1] == '-c':
 # server
 elif sys.argv[1] == '-s':
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.bind((HOST, PORT))
+    s.bind(('0.0.0.0', PORT))
 
-    print('server start at: %s:%s' % (HOST, PORT))
+    print('server start at: %s:%s' % ('0.0.0.0', PORT))
     print('wait for connection...')
 
     f = open('sync_server_'+sys.argv[2]+'.csv', 'w')
