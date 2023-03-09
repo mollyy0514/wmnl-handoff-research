@@ -1,0 +1,157 @@
+import os
+import sys
+import argparse
+import csv
+import pandas as pd
+import datetime as dt
+import numpy as np
+from pprint import pprint
+from tqdm import tqdm
+from pytictoc import TicToc
+import traceback
+from statistics import median
+from statistics import mean
+from statistics import mode
+from statistics import stdev
+from scipy import stats
+from scipy import signal
+import portion as P
+import math
+import random
+import itertools
+
+# ******************************* User Settings *******************************
+database = "/home/wmnlab/D/database/"
+dates = ["2023-03-08"]
+devices = [
+    # "sm00",
+    # "sm01",
+    # "sm02",
+    # "sm03",
+    # "sm04",
+    # "sm05",
+    # "sm06",
+    # "sm07",
+    # "sm08",
+    "qc00",
+    "qc01",
+    "qc02",
+    "qc03",
+]
+schemes = [
+    "B1",
+    "B3",
+    "B7",
+    "B8",
+    # "All@qc01",
+    # "All@qc02",
+    # "All@qc03",
+]
+exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_round)
+            # If the list is None, it will not list as directories.
+            # If the list is empty, it will list all directories in the current directory by default.
+            # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
+    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (2, ["#01", "#02"]),
+    # "_Bandlock_Udp_B3_B7_B8_RM500Q": (1, ["#01",]),
+    # "_Bandlock_Udp_B3_B7_B8_RM500Q": (2, ["#01", "#02"]),
+    # "_Bandlock_Udp_all_RM500Q": (1, ["#01",]),
+    # "_Bandlock_Udp_all_RM500Q": (2, ["#01", "#02"]),
+}
+
+LENGTH = 250
+DATA_RATE = 1000e3  # bits-per-second
+PKT_RATE = DATA_RATE / LENGTH / 8  # packets-per-second
+print("packet_rate (pps):", PKT_RATE, "\n")
+
+def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
+    if os.path.isdir(dirpath):
+        if mode:
+            print("mkdir: cannot create directory '{}': directory has already existed.".format(dirpath))
+        return
+    ### recursively make directory
+    _temp = []
+    while not os.path.isdir(dirpath):
+        _temp.append(dirpath)
+        dirpath = os.path.dirname(dirpath)
+    while _temp:
+        dirpath = _temp.pop()
+        print("mkdir", dirpath)
+        os.mkdir(dirpath)
+        
+for date in dates:
+    for expr, (times, traces) in exps.items():
+        for trace in traces:
+            target_dir = os.path.join(database, date, expr, "combo", trace)
+            makedir(target_dir)
+            # for tag in ["dnlk", "uplk"]:
+            # for tag in ["dnlk",]:
+            for tag in ["uplk",]:
+                print("------------------------------------------")
+                print(date, expr, trace, tag)  
+                print("------------------------------------------")
+                t = TicToc()
+                t.tic()
+                dfs = []
+                for i, (dev, scheme) in enumerate(zip(devices, schemes)):
+                    source_dir = os.path.join(database, date, expr, dev, trace, "data")
+                    dfs.append(pd.read_csv(os.path.join(source_dir, f"udp_{tag}_loss_latency.csv")))
+                ### TODO 1
+                st, et = [], []
+                for i, (dev, scheme) in enumerate(zip(devices, schemes)):
+                    st.append(dfs[i]['seq'].array[0])
+                    et.append(dfs[i]['seq'].array[-1])
+                st, et = max(st), min(et)
+                for i, (dev, scheme) in enumerate(zip(devices, schemes)):
+                    dfs[i] = dfs[i][(dfs[i]['seq'] >= st) & (dfs[i]['seq'] <= et)]
+                    dfs[i].reset_index(drop=True, inplace=True)
+                df = dfs[0][['seq', 'Timestamp']]
+                for i, (dev, scheme) in enumerate(zip(devices, schemes)):
+                    dfs[i] = dfs[i][['xmit_time','arr_time','lost','excl','latency']]
+                    dfs[i].rename(
+                        columns={
+                            'xmit_time': f'xmit_time_{scheme}',
+                            'arr_time': f'arr_time_{scheme}',
+                            'lost': f'lost_{scheme}',
+                            'excl': f'excl_{scheme}',
+                            'latency': f'latency_{scheme}',
+                        }, inplace=True
+                    )
+                df = pd.concat([df, *dfs], axis=1)
+                ### TODO 2
+                xs = list(itertools.combinations(range(len(schemes)), 2))
+                for x in xs:
+                    df[f'lost_{schemes[x[0]]}+{schemes[x[1]]}'] = df[f'lost_{schemes[x[0]]}'] & df[f'lost_{schemes[x[1]]}']
+                    df[f'excl_{schemes[x[0]]}+{schemes[x[1]]}'] = df[f'excl_{schemes[x[0]]}'] & df[f'excl_{schemes[x[1]]}']
+                    df[f'latency_{schemes[x[0]]}+{schemes[x[1]]}'] = df[[f'latency_{schemes[x[0]]}', f'latency_{schemes[x[1]]}']].min(axis=1)
+                fout1 = os.path.join(target_dir, f"udp_{tag}_combo_loss_latency.csv")
+                print("output >>>", fout1)
+                df.to_csv(fout1, index=False)
+                ### TODO 3
+                colnames = []
+                data = []
+                for i, (dev, scheme) in enumerate(zip(devices, schemes)):
+                    _df = df[df[f'lost_{scheme}'] == False]
+                    loss = sum(df[f'lost_{scheme}']) / (len(df)+1e-9) * 100
+                    excl = sum(_df[f'excl_{scheme}']) / (len(_df)+1e-9) * 100
+                    latn = round(mean(_df[f'latency_{scheme}']), 6)
+                    mlatn = round(max(_df[f'latency_{scheme}']), 6)
+                    data = [*data, *[loss, excl, latn, mlatn]]
+                    colnames = [*colnames, *[f'lost_{scheme}', f'excl_{scheme}', f'latency_{scheme}', f'mlatency_{scheme}']]
+                    print(loss, excl, latn, mlatn, sep='\t')
+                for x in xs:
+                    _df = df[df[f'lost_{schemes[x[0]]}+{schemes[x[1]]}'] == False]
+                    loss = sum(df[f'lost_{schemes[x[0]]}+{schemes[x[1]]}']) / (len(df)+1e-9) * 100
+                    excl = sum(_df[f'excl_{schemes[x[0]]}+{schemes[x[1]]}']) / (len(_df)+1e-9) * 100
+                    latn = round(mean(_df[f'latency_{schemes[x[0]]}+{schemes[x[1]]}']), 6)
+                    mlatn = round(max(_df[f'latency_{schemes[x[0]]}+{schemes[x[1]]}']), 6)
+                    data = [*data, *[loss, excl, latn, mlatn]]
+                    colnames = [*colnames, *[f'lost_{schemes[x[0]]}+{schemes[x[1]]}', f'excl_{schemes[x[0]]}+{schemes[x[1]]}', f'latency_{schemes[x[0]]}+{schemes[x[1]]}', f'mlatency_{schemes[x[0]]}+{schemes[x[1]]}']]
+                    print(loss, excl, latn, mlatn, sep='\t')
+                fout2 = os.path.join(target_dir, f"udp_{tag}_combo_statistics.csv")
+                print("output >>>", fout2)
+                with open(fout2, "w", newline='') as fp:
+                    writer = csv.writer(fp)
+                    writer.writerow(colnames)
+                    writer.writerow(data)
+                t.toc()
+                ### TODO END
