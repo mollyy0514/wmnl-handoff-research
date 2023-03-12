@@ -13,7 +13,7 @@ import datetime as dt
 from myutils import makedir
 
 HOST = '140.112.20.183'
-PORT = 3299
+PORT = 3298
 
 def clock_diff(device):
     server = []
