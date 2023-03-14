@@ -1,15 +1,15 @@
 # YYYY/MM/DD
 
 CHT
-B1 525
-B3 1750, 1400
-B7 3050, 3400
-B8 3650
+- B1 525
+- B3 1750, 1400
+- B7 3050, 3400
+- B8 3650
 
 TWM
-B1 275
-B3 1275
-B28 9560
+- B1 275
+- B3 1275
+- B28 9560
 
 ## 流程
 1. 每趟實驗前，ntpq -p 或 ntpd -q ntp.server.ip/name，確保時間有週期性/手動同步。
@@ -35,52 +35,56 @@ B28 9560
 
 
 ## 實驗設定
-Proto: [UDP/TCP]
-PYL Length: (default 250 bytes)
-Data Rate: (default 1 Mbps; 500 pps)
-Oper: [CHT/TWM/FET]
-Description: 
+- roto: [UDP/TCP]
+- YL Length: (default 250 bytes)
+- ata Rate: (default 1 Mbps; 500 pps)
+- per: [CHT/TWM/FET]
+- escription: 
 
 ## 時間同步 offset
-behind server by (+)
-ahead of server by (-) 
+- behind server by (+)
+- ahead of server by (-) 
 
 
 ## 實驗紀錄
 
 ### --------- Experiment #1 ---------
-Proto: [UDP/TCP]
-Oper: [CHT/TWM/FET]
-Terminal: [lpt0,1,2,3]
-Devices: [qc00,01,02; sm00,01,02; xm00,01,02]
-
-qc00 B1
-qc01 B3
-qc02 B7
-qc03 B8
+- Proto: [UDP/TCP]
+- Oper: [CHT/TWM/FET]
+- Terminal: [lpt0,1,2,3]
+- Devices: [qc00,01,02; sm00,01,02; xm00,01,02]
+   - qc00 B1
+   - qc01 B3
+   - qc02 B7
+   - qc03 B8
 
 起點 -> 終點 HH:MM[發車時間] [備註]
+
 終點 -> 起點 HH:MM[發車時間] [備註]
+
 起點 -> 終點 HH:MM[發車時間] [備註]
+
 終點 -> 起點 HH:MM[發車時間] [備註]
 
 每站車程約 2 分鐘；候車時間約 1-4 分鐘
 
 
-### --------- Experiment #2 ---------
-Proto: [UDP/TCP]
-Oper: [CHT/TWM/FET]
-Terminal: [lpt0,1,2,3]
-Devices: [qc00,01,02; sm00,01,02; xm00,01,02]
-
-qc00 B1
-qc01 B3
-qc02 B7
-qc03 B8
+### --------- Experiment #1 ---------
+- Proto: [UDP/TCP]
+- Oper: [CHT/TWM/FET]
+- Terminal: [lpt0,1,2,3]
+- Devices: [qc00,01,02; sm00,01,02; xm00,01,02]
+   - qc00 B1
+   - qc01 B3
+   - qc02 B7
+   - qc03 B8
 
 起點 -> 終點 HH:MM[發車時間] [備註]
+
 終點 -> 起點 HH:MM[發車時間] [備註]
+
 起點 -> 終點 HH:MM[發車時間] [備註]
+
 終點 -> 起點 HH:MM[發車時間] [備註]
 
 每站車程約 2 分鐘；候車時間約 1-4 分鐘
