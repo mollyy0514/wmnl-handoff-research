@@ -68,7 +68,7 @@ TWM
 > 每站車程約 2 分鐘；候車時間約 1-4 分鐘
 
 
-### --------- Experiment #1 ---------
+### --------- Experiment #2 ---------
 - Proto: [UDP/TCP]
 - Oper: [CHT/TWM/FET]
 - Terminal: [lpt0,1,2,3]
