@@ -37,11 +37,11 @@ TWM
 
 
 ## 實驗設定
-- roto: [UDP/TCP]
-- YL Length: (default 250 bytes)
-- ata Rate: (default 1 Mbps; 500 pps)
-- per: [CHT/TWM/FET]
-- escription: 
+- Proto: [UDP/TCP]
+- PYL Length: (default 250 bytes)
+- Data Rate: (default 1 Mbps; 500 pps)
+- Oper: [CHT/TWM/FET]
+- Description: 
 
 ## 時間同步 offset
 - behind server by (+)
