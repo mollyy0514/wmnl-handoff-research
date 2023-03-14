@@ -15,7 +15,7 @@ TWM
 1. 每趟實驗前，ntpq -p 或 ntpd -q ntp.server.ip/name，確保時間有週期性/手動同步。
 2. 量測 server/client 之間的時間誤差，自動記錄到 json 檔。
 3. 啟動 MobileInsight。
-4. 先後啟動 socket 或 iperf 的 server 和 client。
+4. 先後啟動 socket 或 iPerf 的 server 和 client。
 
 ## 模組操作
 1. 獨立電源給 Hub 供電
@@ -51,6 +51,7 @@ TWM
 ## 實驗紀錄
 
 ### --------- Experiment #1 ---------
+- Tools: [socket/iPerf]
 - Proto: [UDP/TCP]
 - Oper: [CHT/TWM/FET]
 - Terminal: [lpt0,1,2,3]
@@ -69,6 +70,7 @@ TWM
 
 
 ### --------- Experiment #2 ---------
+- Tools: [socket/iPerf]
 - Proto: [UDP/TCP]
 - Oper: [CHT/TWM/FET]
 - Terminal: [lpt0,1,2,3]
