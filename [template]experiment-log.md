@@ -20,10 +20,12 @@ TWM
 ## 模組操作
 1. 獨立電源給 Hub 供電
 2. Hub 插上筆電
-3. 模組一一插上 Hub，只要發生筆電讀取不到模組的情況，一律拔掉重插
-   - Serial Exception
-   - No such device
-   - [cmderror]
+3. 模組一一插上 Hub
+
+> 只要發生筆電讀取不到模組的情況，一律按步驟 3 拔掉重插
+> - Serial Exception
+> - No such device
+> - [cmderror]
 
 ## 連線操作
 - 連網 ./dial-all.py
@@ -66,10 +68,10 @@ TWM
 
 終點 -> 起點 HH:MM[發車時間] [備註]
 
-每站車程約 2 分鐘；候車時間約 1-4 分鐘
+> 每站車程約 2 分鐘；候車時間約 1-4 分鐘
 
 
-### --------- Experiment #1 ---------
+### --------- Experiment #2 ---------
 - Proto: [UDP/TCP]
 - Oper: [CHT/TWM/FET]
 - Terminal: [lpt0,1,2,3]
@@ -87,5 +89,5 @@ TWM
 
 終點 -> 起點 HH:MM[發車時間] [備註]
 
-每站車程約 2 分鐘；候車時間約 1-4 分鐘
+> 每站車程約 2 分鐘；候車時間約 1-4 分鐘
 
