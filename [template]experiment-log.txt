@@ -34,7 +34,7 @@ TWM
 - 切頻 sudo ./band-setting.sh -i `device` -l `lte:band` -e `nr:band`
 - 檢查連線頻帶 sudo ./band-setting.sh -i `device`
 - 重置頻帶設定 ./reset-all-band.py
-
+- Force Set RAT to LTE & 5G NR: sudo ./qc-at -i `device` -c at+qnwprefcfg="mode_pref",LTE:NR5G
 
 ## 實驗設定
 - Proto: [UDP/TCP]
