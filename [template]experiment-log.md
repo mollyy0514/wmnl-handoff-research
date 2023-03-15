@@ -12,7 +12,7 @@ TWM
 - B28 9560
 
 ## 流程
-1. 每趟實驗前，ntpq -p 或 ntpd -q ntp.server.ip/name，確保時間有週期性/手動同步。
+1. 每趟實驗前，ntpq -p 或 sudo ntpd -q ntp.server.ip/name，確保時間有週期性/手動同步。
 2. 量測 server/client 之間的時間誤差，自動記錄到 json 檔。
 3. 啟動 MobileInsight。
 4. 先後啟動 socket 或 iPerf 的 server 和 client。
