@@ -86,7 +86,8 @@ def give_server_DL_addr():
     
     for s, port in zip(rx_sockets, ports):
         outdata = 'hello'
-        s.sendto(outdata.encode(), (HOST, port[1]))
+        for i in range(10):
+            s.sendto(outdata.encode(), (HOST, port[1]))
 
 def receive(s, dev):
 
