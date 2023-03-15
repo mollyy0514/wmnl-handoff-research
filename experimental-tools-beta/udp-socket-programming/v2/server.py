@@ -91,8 +91,12 @@ udp_addr = {}
 # Function define
 
 def fill_udp_addr(s):
-
-    indata, addr = s.recvfrom(1024)
+    
+    while True:
+        indata, addr = s.recvfrom(1024)
+        if indata.decode() == 'hello':
+            print(addr)
+            break
     udp_addr[s] = addr 
 
 def receive(s, dev, port):
