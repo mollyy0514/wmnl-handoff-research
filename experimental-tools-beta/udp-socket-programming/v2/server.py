@@ -90,12 +90,12 @@ udp_addr = {}
 
 # Function define
 
-def fill_udp_addr(s):
+def fill_udp_addr(s, device):
     
     while True:
         indata, addr = s.recvfrom(1024)
         if indata.decode() == 'hello':
-            print(addr)
+            print(device, addr)
             break
     udp_addr[s] = addr 
 
@@ -194,8 +194,8 @@ for dev, port in zip(devices, ports):
 
 # Get client addr with server DL port first
 t_fills = []
-for s in tx_sockets:
-    t = threading.Thread(target=fill_udp_addr, args=(s, ))
+for s, dev in zip(tx_sockets, devices):
+    t = threading.Thread(target=fill_udp_addr, args=(s, dev, ))
     t.start()
     t_fills.append(t)
 
