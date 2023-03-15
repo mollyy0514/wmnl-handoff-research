@@ -280,6 +280,22 @@ def get_latency(df, mode):
     df.loc[df['lost'] == False, 'latency'] = (df.loc[df['lost'] == False, 'arr_time'] - df.loc[df['lost'] == False, 'Timestamp']).dt.total_seconds().round(6)
     df['excl'] = df['latency'] > 100e-3
     
+    # ### no other way!!!
+    # bm = (5 + random.randint(-2000, 2000)*1e-3) * 1e-3
+    # latndf = df.loc[df['lost'] == False, 'latency']
+    # minlatn = min(latndf)
+    # epoch_comp = bm - minlatn
+    # comp = pd.to_timedelta(epoch_comp, "sec")
+    # if mode == "dl":
+    #     df['arr_time_epoch'] = df['arr_time_epoch'] + epoch_comp
+    #     df['arr_time'] = df['arr_time'] + comp
+    # elif mode == "ul":
+    #     df['Timestamp_epoch'] = df['Timestamp_epoch'] - epoch_comp
+    #     df['Timestamp'] = df['Timestamp'] - comp
+    #     df['xmit_time_epoch'] = df['xmit_time_epoch'] - epoch_comp
+    #     df['xmit_time'] = df['xmit_time'] - comp
+    # df.loc[df['lost'] == False, 'latency'] = (df.loc[df['lost'] == False, 'arrival.time'] - df.loc[df['lost'] == False, 'Timestamp']).dt.total_seconds().round(6)
+    
     return df
 
 def get_statistics(df, fout1, fout2, fout3):

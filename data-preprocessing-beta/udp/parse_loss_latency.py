@@ -2,6 +2,7 @@ import os
 import sys
 import argparse
 import csv
+import json
 import pandas as pd
 import datetime as dt
 import numpy as np
@@ -21,7 +22,9 @@ import random
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-dates = ["2023-03-08"]
+database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
+dates = ["2023-03-15"]
+json_file = "/home/wmnlab/D/database/2023-03-08/time_sync_lpt3.json"
 devices = sorted([
     # "sm00",
     # "sm01",
@@ -41,7 +44,7 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (2, []),
+    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (6, []),
 }
 
 class Payload:
@@ -138,7 +141,7 @@ def datetime_to_str(ts):
         ts_string = dt.datetime.strftime(ts, '%Y-%m-%d %H:%M:%S')
     return ts_string
 
-def get_loss(txdf, rxdf):
+def get_loss(rxdf, txdf):
     rxdf['frame_time'] = pd.to_datetime(rxdf['frame_time'])  # arrival.time
     rxdf['pyl_time'] = pd.to_datetime(rxdf['pyl_time'])  # payload.time
 
@@ -195,6 +198,8 @@ def get_loss(txdf, rxdf):
     df = pd.DataFrame.from_dict(
         {
             "seq": loss_timestamps[0],
+            "rpkg": [None] * N,
+            "frame_id": [None] * N,
             "Timestamp": loss_timestamps[3],  # payload.time
             "Timestamp_epoch": loss_timestamps[4],  # payload.time_epoch
             "lost": [True] * N,
@@ -207,16 +212,14 @@ def get_loss(txdf, rxdf):
     )
     return df
 
-def get_match(txdf, rxdf):
+def consolidate(rxdf, txdf):
     ### add transmitted timestamp
-    
     rxseq = rxdf['seq'].array
     txseq = txdf['seq'].array
-    txts = txdf['Timestamp'].array
-    txts_epoch= txdf['Timestamp_epoch'].array
+    txts = txdf['frame_time'].array
+    txts_epoch= txdf['frame_time_epoch'].array
     rx_txts_arr = []
     rx_txts_epoch_arr = []
-    
     j = 0
     N = len(txdf)
     M = len(rxdf)
@@ -228,20 +231,18 @@ def get_match(txdf, rxdf):
             rx_txts_arr.append(txts[j])
             rx_txts_epoch_arr.append(txts_epoch[j])
     df = rxdf.join(pd.DataFrame({'xmit_time' : rx_txts_arr, 'xmit_time_epoch' : rx_txts_epoch_arr}))
-    
-    df.dropna(how='any', subset=['xmit_time', 'xmit_time_epoch'], axis=0, inplace=True)
-    df.rename(
+    df = df.dropna(how='any', subset=['xmit_time', 'xmit_time_epoch'], axis=0)
+    df = df.rename(
         columns={
-            "Timestamp": "arr_time",
-            "Timestamp_epoch": "arr_time_epoch",
+            "frame_time": "arr_time",
+            "frame_time_epoch": "arr_time_epoch",
             "pyl_time": "Timestamp",
             "pyl_time_epoch": "Timestamp_epoch",
-        }, inplace=True
+        }
     )
     df["lost"] = False
     df["latency"] = 0
-    df = df[["seq", "Timestamp", "Timestamp_epoch", "lost", "latency", "xmit_time", "xmit_time_epoch", "arr_time", "arr_time_epoch"]]
-    
+    df = df[["seq", "rpkg", "frame_id", "Timestamp", "Timestamp_epoch", "lost", "latency", "xmit_time", "xmit_time_epoch", "arr_time", "arr_time_epoch"]]
     return df
 
 def interp(x, y, ratio):
@@ -256,7 +257,7 @@ def interp(x, y, ratio):
     """
     return x + (y - x) * ratio
 
-def get_compensate(df, mode, delta=pd.DataFrame()):
+def compensate(df, mode, delta=pd.DataFrame()):
     ### compensate clock difference
     if delta.empty:
         return df
@@ -335,7 +336,7 @@ def get_latency(df, mode):
 
 def get_statistics(df, fout1, fout2, fout3):
     # output packet record csv
-    df = df[["sequence.number", "Timestamp", "Timestamp_epoch", "lost", "excl", "latency", "xmit_time", "xmit_time_epoch", "arr_time", "arr_time_epoch"]]
+    df = df[["seq", "rpkg", "frame_id", "Timestamp", "Timestamp_epoch", "lost", "excl", "latency", "xmit_time", "xmit_time_epoch", "arr_time", "arr_time_epoch"]]
     print("output >>>", fout1)
     df.to_csv(fout1, index=False)
     
@@ -372,6 +373,7 @@ def get_statistics(df, fout1, fout2, fout3):
     print("mean latency:        ", round(mean(latndf), 6), "seconds")
     print("stdev latency:       ", round(stdev(latndf), 6), "seconds")
     print("jitter:              ", round(jitter, 6), "seconds")
+    print("negative latency:    ", (df['latency'] < 0).sum())
     print("total_packet_sent:   ", total_packet_sent)
     print("total_packet_recv:   ", total_packet_recv)
     print("total_packet_loss:   ", total_loss)
@@ -508,19 +510,20 @@ if __name__ == "__main__":
                     filenames = os.listdir(source_dir)
                     t1 = TicToc()  # create instance of class
                     t1.tic()  # Start timer
+                    
                     dl_txdf = pd.read_csv(os.path.join(source_dir, "udp_dnlk_server_pkt_brief.csv"))
                     dl_rxdf = pd.read_csv(os.path.join(source_dir, "udp_dnlk_client_pkt_brief.csv"))
                     ul_txdf = pd.read_csv(os.path.join(source_dir, "udp_uplk_client_pkt_brief.csv"))
                     ul_rxdf = pd.read_csv(os.path.join(source_dir, "udp_uplk_server_pkt_brief.csv"))
                     
-                    dl_txseq = list(dl_txdf["sequence.number"].array)
-                    dl_rxseq = list(dl_rxdf["sequence.number"].array)
+                    dl_txseq = list(dl_txdf["seq"].array)
+                    dl_rxseq = list(dl_rxdf["seq"].array)
                     dlst = max(dl_txseq[0], dl_rxseq[0])
                     dlet = min(dl_txseq[-1], dl_rxseq[-1])
                     # print(dlst, dlet)
 
-                    ul_txseq = list(ul_txdf["sequence.number"].array)
-                    ul_rxseq = list(ul_rxdf["sequence.number"].array)
+                    ul_txseq = list(ul_txdf["seq"].array)
+                    ul_rxseq = list(ul_rxdf["seq"].array)
                     ulst = max(ul_txseq[0], ul_rxseq[0])
                     ulet = min(ul_txseq[-1], ul_rxseq[-1])
                     # print(ulst, ulet)
@@ -532,15 +535,18 @@ if __name__ == "__main__":
                     et -= PKT_RATE * 5  # 結尾切5秒
                     # print(st, et)
 
-                    dl_txdf = dl_txdf[(dl_txdf["sequence.number"] >= st) & (dl_txdf["sequence.number"] <= et)]
-                    dl_rxdf = dl_rxdf[(dl_rxdf["sequence.number"] >= st) & (dl_rxdf["sequence.number"] <= et)]
-                    ul_txdf = ul_txdf[(ul_txdf["sequence.number"] >= st) & (ul_txdf["sequence.number"] <= et)]
-                    ul_rxdf = ul_rxdf[(ul_rxdf["sequence.number"] >= st) & (ul_rxdf["sequence.number"] <= et)]
-
-                    dl_txdf.reset_index(drop=True, inplace=True)
-                    dl_rxdf.reset_index(drop=True, inplace=True)
-                    ul_txdf.reset_index(drop=True, inplace=True)
-                    ul_rxdf.reset_index(drop=True, inplace=True)
+                    dl_txdf = dl_txdf[(dl_txdf["seq"] >= st) & (dl_txdf["seq"] <= et)].copy().reset_index(drop=True)
+                    dl_rxdf = dl_rxdf[(dl_rxdf["seq"] >= st) & (dl_rxdf["seq"] <= et)].copy().reset_index(drop=True)
+                    ul_txdf = ul_txdf[(ul_txdf["seq"] >= st) & (ul_txdf["seq"] <= et)].copy().reset_index(drop=True)
+                    ul_rxdf = ul_rxdf[(ul_rxdf["seq"] >= st) & (ul_rxdf["seq"] <= et)].copy().reset_index(drop=True)
+                    
+                    json_object = {}
+                    if os.path.isfile(json_file):
+                        with open(json_file, 'r') as f:
+                            json_object = json.load(f)
+                    delta = pd.DataFrame.from_dict(json_object, orient='index', columns=['delta']).reset_index(names='Timestamp')
+                    delta['Timestamp'] = pd.to_datetime(delta['Timestamp'])
+                    delta['timedelta'] = pd.to_timedelta(delta['delta'], unit='seconds')
                     
                     ### Timedelta
                     # timedelta, epoch_delta = calc_delta(txdl_df, rxdl_df, txul_df, rxul_df)
@@ -569,12 +575,11 @@ if __name__ == "__main__":
                     fout2_dl = os.path.join(target_dir2, "udp_dnlk_loss_statistics.csv")
                     fout3_dl = os.path.join(target_dir2, "udp_dnlk_excl_statistics.csv")
                     
-                    lossdf = get_loss(dl_txdf.copy(), dl_rxdf.copy())
-                    latndf = get_match(dl_txdf.copy(), dl_rxdf.copy())
-                    df = pd.concat([lossdf, latndf], axis=0)
-                    df.sort_values(by=["sequence.number"], inplace=True)
-                    df.reset_index(drop=True, inplace=True)
-                    # df = get_compensate(df.copy(), "dl", delta1, delta2)
+                    losdf = get_loss(dl_rxdf.copy(), dl_txdf.copy())
+                    latdf = consolidate(dl_rxdf.copy(), dl_txdf.copy())
+                    df = pd.concat([losdf, latdf], axis=0)
+                    df = df.sort_values(by=["seq"]).reset_index(drop=True)
+                    df = compensate(df.copy(), "dl", delta.copy())
                     df = get_latency(df.copy(), "dl")
                     get_statistics(df.copy(), fout1_dl, fout2_dl, fout3_dl)
                     
@@ -583,12 +588,11 @@ if __name__ == "__main__":
                     fout2_ul = os.path.join(target_dir2, "udp_uplk_loss_statistics.csv")
                     fout3_ul = os.path.join(target_dir2, "udp_uplk_excl_statistics.csv")
                     
-                    lossdf = get_loss(ul_txdf.copy(), ul_rxdf.copy())
-                    latndf = get_match(ul_txdf.copy(), ul_rxdf.copy())
-                    df = pd.concat([lossdf, latndf], axis=0)
-                    df.sort_values(by=["sequence.number"], inplace=True)
-                    df.reset_index(drop=True, inplace=True)
-                    # df = get_compensate(df.copy(), "ul", delta1, delta2)
+                    losdf = get_loss(ul_rxdf.copy(), ul_txdf.copy())
+                    latdf = consolidate(ul_rxdf.copy(), ul_txdf.copy())
+                    df = pd.concat([losdf, latdf], axis=0)
+                    df = df.sort_values(by=["seq"]).reset_index(drop=True)
+                    df = compensate(df.copy(), "ul", delta.copy())
                     df = get_latency(df.copy(), "ul")
                     get_statistics(df.copy(), fout1_ul, fout2_ul, fout3_ul)
                     
