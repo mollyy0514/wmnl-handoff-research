@@ -167,6 +167,7 @@ def transmit(sockets):
     print("---transmission timeout---")
     print("transmit", seq, "packets")
 
+os.system("echo wmnlab | sudo -S su")
 # Create DL receive and UL transmit multi-client sockets
 rx_sockets = []
 tx_sockets = []
