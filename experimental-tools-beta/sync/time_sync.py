@@ -41,6 +41,7 @@ def clock_diff(device):
     diff = 0.0
     cnt = 0
     qset = qset_bdd(client)
+    deltas = []
     for i in range(len(client)):
         # RTT = float(client[i][2]) - float(client[i][1])
         RTT = client[i][3]
@@ -48,10 +49,22 @@ def clock_diff(device):
             continue
         cen_client = (float(client[i][2]) + float(client[i][1]))/2
         cen_server = (float(server[i][2]) + float(server[i][1]))/2
-        diff += cen_server - cen_client
-        cnt += 1
-    diff /= cnt
-    print(cnt, qset)
+        # diff += cen_server - cen_client
+        # cnt += 1
+        diff = cen_server - cen_client
+        deltas.append(diff)
+    # diff /= cnt
+    # print(cnt, qset)
+    
+    sorted_deltas = sorted(deltas)
+    upper_q = np.percentile(sorted_deltas, 75)
+    lower_q = np.percentile(sorted_deltas, 25)
+    iqr = (upper_q - lower_q) * 1.5
+    qset = (lower_q - iqr, upper_q + iqr)
+    
+    deltas = [s for s in deltas if s >= qset[0] and s <= qset[1]]
+    diff = np.mean(deltas)
+    print(len(deltas), qset)
 
     # diff > 0: client is behind server by abs(diff) seconds
     # diff < 0: client is ahead of server by abs(diff) seconds
@@ -72,7 +85,7 @@ if sys.argv[1] == '-c':
     server_addr = (HOST, PORT)
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.settimeout(3)
-    num_packet_per_round = 100
+    num_packet_per_round = 500
     packet_interval = 0
 
     timestamp_client = []

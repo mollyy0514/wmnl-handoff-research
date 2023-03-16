@@ -22,7 +22,11 @@ import itertools
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-dates = ["2023-03-08"]
+database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
+dates = [
+        "2023-03-15",
+        #   "2023-02-04#1",
+         ]
 devices = [
     # "sm00",
     # "sm01",
@@ -51,7 +55,8 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (2, ["#01", "#02"]),
+    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (2, ["#01", "#02"]),
+    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (6, ["#01", "#02", "#03", "#04", "#05", "#06"]),
     # "_Bandlock_Udp_B3_B7_B8_RM500Q": (1, ["#01",]),
     # "_Bandlock_Udp_B3_B7_B8_RM500Q": (2, ["#01", "#02"]),
     # "_Bandlock_Udp_all_RM500Q": (1, ["#01",]),
@@ -83,9 +88,9 @@ for date in dates:
         for trace in traces:
             target_dir = os.path.join(database, date, expr, "combo", trace)
             makedir(target_dir)
-            # for tag in ["dnlk", "uplk"]:
+            for tag in ["dnlk", "uplk"]:
             # for tag in ["dnlk",]:
-            for tag in ["uplk",]:
+            # for tag in ["uplk",]:
                 print("------------------------------------------")
                 print(date, expr, trace, tag)  
                 print("------------------------------------------")
@@ -129,24 +134,27 @@ for date in dates:
                 ### TODO 3
                 colnames = []
                 data = []
+                print('', 'loss(%)', 'excl(%)', 'latency', 'max_latency', sep='\t')
                 for i, (dev, scheme) in enumerate(zip(devices, schemes)):
                     _df = df[df[f'lost_{scheme}'] == False]
                     loss = sum(df[f'lost_{scheme}']) / (len(df)+1e-9) * 100
                     excl = sum(_df[f'excl_{scheme}']) / (len(_df)+1e-9) * 100
-                    latn = round(mean(_df[f'latency_{scheme}']), 6)
-                    mlatn = round(max(_df[f'latency_{scheme}']), 6)
-                    data = [*data, *[loss, excl, latn, mlatn]]
-                    colnames = [*colnames, *[f'lost_{scheme}', f'excl_{scheme}', f'latency_{scheme}', f'mlatency_{scheme}']]
-                    print(loss, excl, latn, mlatn, sep='\t')
+                    latency = round(mean(_df[f'latency_{scheme}']), 6)
+                    max_lat = round(max(_df[f'latency_{scheme}']), 6)
+                    data = [*data, *[loss, excl, latency, max_lat]]
+                    colnames = [*colnames, *[f'lost_{scheme}', f'excl_{scheme}', f'latency_{scheme}', f'max_lat_{scheme}']]
+                    # print(scheme, round(loss, 3), round(excl, 3), latency, max_lat, sep='\t')
+                    print(scheme, loss, excl, latency, max_lat, sep='\t')
                 for x in xs:
                     _df = df[df[f'lost_{schemes[x[0]]}+{schemes[x[1]]}'] == False]
                     loss = sum(df[f'lost_{schemes[x[0]]}+{schemes[x[1]]}']) / (len(df)+1e-9) * 100
                     excl = sum(_df[f'excl_{schemes[x[0]]}+{schemes[x[1]]}']) / (len(_df)+1e-9) * 100
-                    latn = round(mean(_df[f'latency_{schemes[x[0]]}+{schemes[x[1]]}']), 6)
-                    mlatn = round(max(_df[f'latency_{schemes[x[0]]}+{schemes[x[1]]}']), 6)
-                    data = [*data, *[loss, excl, latn, mlatn]]
-                    colnames = [*colnames, *[f'lost_{schemes[x[0]]}+{schemes[x[1]]}', f'excl_{schemes[x[0]]}+{schemes[x[1]]}', f'latency_{schemes[x[0]]}+{schemes[x[1]]}', f'mlatency_{schemes[x[0]]}+{schemes[x[1]]}']]
-                    print(loss, excl, latn, mlatn, sep='\t')
+                    latency = round(mean(_df[f'latency_{schemes[x[0]]}+{schemes[x[1]]}']), 6)
+                    max_lat = round(max(_df[f'latency_{schemes[x[0]]}+{schemes[x[1]]}']), 6)
+                    data = [*data, *[loss, excl, latency, max_lat]]
+                    colnames = [*colnames, *[f'lost_{schemes[x[0]]}+{schemes[x[1]]}', f'excl_{schemes[x[0]]}+{schemes[x[1]]}', f'latency_{schemes[x[0]]}+{schemes[x[1]]}', f'max_lat_{schemes[x[0]]}+{schemes[x[1]]}']]
+                    # print(f'{schemes[x[0]]}+{schemes[x[1]]}', round(loss, 3), round(excl, 3), latency, max_lat, sep='\t')
+                    print(f'{schemes[x[0]]}+{schemes[x[1]]}', loss, excl, latency, max_lat, sep='\t')
                 fout2 = os.path.join(target_dir, f"udp_{tag}_combo_statistics.csv")
                 print("output >>>", fout2)
                 with open(fout2, "w", newline='') as fp:
