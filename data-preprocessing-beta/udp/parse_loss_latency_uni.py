@@ -177,21 +177,23 @@ def get_loss(rxdf):
     
     N = len(loss_timestamp_list)
     loss_timestamps = list(map(list, zip(*loss_timestamp_list)))
-    df = pd.DataFrame.from_dict(
-        {
-            "seq": loss_timestamps[0],
-            "rpkg": [None] * N,
-            "frame_id": [None] * N,
-            "Timestamp": [None] * N,  # payload.time
-            "Timestamp_epoch": [None] * N,  # payload.time_epoch
-            "lost": [True] * N,
-            "latency": [float('inf')] * N,
-            "xmit_time": [None] * N,
-            "xmit_time_epoch": [None] * N,
-            "arr_time": loss_timestamps[1],
-            "arr_time_epoch": loss_timestamps[2],
-        }
-    )
+    df = pd.DataFrame()
+    if len(loss_timestamps) > 0:
+        df = pd.DataFrame.from_dict(
+            {
+                "seq": loss_timestamps[0],
+                "rpkg": [None] * N,
+                "frame_id": [None] * N,
+                "Timestamp": [None] * N,  # payload.time
+                "Timestamp_epoch": [None] * N,  # payload.time_epoch
+                "lost": [True] * N,
+                "latency": [float('inf')] * N,
+                "xmit_time": [None] * N,
+                "xmit_time_epoch": [None] * N,
+                "arr_time": loss_timestamps[1],
+                "arr_time_epoch": loss_timestamps[2],
+            }
+        )
     return df
 
 def consolidate(rxdf):
@@ -476,7 +478,7 @@ if __name__ == "__main__":
                     
                     losdf = get_loss(rxdf.copy())
                     latdf = consolidate(rxdf.copy())
-                    df = pd.concat([losdf, latdf], axis=0)
+                    df = pd.concat([latdf, losdf], axis=0)
                     df = df.sort_values(by=["seq"]).reset_index(drop=True)
                     df = compensate(df.copy(), "dl", delta.copy())
                     df = get_latency(df.copy(), "dl")
@@ -496,7 +498,7 @@ if __name__ == "__main__":
                     
                     # losdf = get_loss(rxdf.copy())
                     # latdf = consolidate(rxdf.copy())
-                    # df = pd.concat([losdf, latdf], axis=0)
+                    # df = pd.concat([latdf, losdf], axis=0)
                     # df = df.sort_values(by=["seq"]).reset_index(drop=True)
                     # df = compensate(df.copy(), "ul", delta.copy())
                     # df = get_latency(df.copy(), "ul")
