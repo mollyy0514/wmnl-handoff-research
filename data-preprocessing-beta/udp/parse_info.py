@@ -48,7 +48,7 @@ import swifter
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
+# database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
 # date = "2023-01-12"
 dates = [
         #  "2023-02-04", 

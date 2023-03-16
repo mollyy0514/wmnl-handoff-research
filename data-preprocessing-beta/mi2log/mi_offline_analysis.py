@@ -50,9 +50,11 @@ args = parser.parse_args()
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
 # date = "2022-12-26"
-dates = ["2023-02-04", 
-         "2023-02-04#1",
-         "2023-02-04#2",
+dates = [
+        # "2023-02-04", 
+        #  "2023-02-04#1",
+        #  "2023-02-04#2",
+         "2023-03-16"
          ]
 devices = sorted([
     # "sm00",
@@ -64,7 +66,7 @@ devices = sorted([
     # "sm06",
     # "sm07",
     # "sm08",
-    # "qc00",
+    "qc00",
     "qc01",
     "qc02",
     "qc03",
@@ -73,8 +75,8 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    "_Bandlock_Udp_B3_B7_B8_RM500Q": (2, []),
-    "_Bandlock_Udp_all_RM500Q": (2, []),
+    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (16, []),
+    # "_Bandlock_Udp_all_RM500Q": (2, []),
     # "tsync": (1, None),
     # "_Bandlock_Udp": (4, ["#01", "#02", "#03", "#04"]),
     # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),

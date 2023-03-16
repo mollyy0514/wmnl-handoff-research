@@ -21,10 +21,11 @@ import math
 import random
 
 # ******************************* User Settings *******************************
-# database = "/home/wmnlab/D/database/"
-database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
+database = "/home/wmnlab/D/database/"
+json_file = "/home/wmnlab/D/database/Code/data/2023-03-16/time_sync_lpt3.json"
 dates = ["2023-03-16"]
-json_file = "/Users/jackbedford/Desktop/MOXA/Code/data/2023-03-16/time_sync_lpt3.json"
+# database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
+# json_file = "/Users/jackbedford/Desktop/MOXA/Code/data/2023-03-16/time_sync_lpt3.json"
 devices = sorted([
     # "sm00",
     # "sm01",
