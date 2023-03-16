@@ -21,10 +21,10 @@ import math
 import random
 
 # ******************************* User Settings *******************************
-database = "/home/wmnlab/D/database/"
+# database = "/home/wmnlab/D/database/"
 database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
-dates = ["2023-03-15"]
-json_file = "/home/wmnlab/D/database/2023-03-08/time_sync_lpt3.json"
+dates = ["2023-03-16"]
+json_file = "/Users/jackbedford/Desktop/MOXA/Code/data/2023-03-16/time_sync_lpt3.json"
 devices = sorted([
     # "sm00",
     # "sm01",
@@ -44,7 +44,7 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (6, []),
+    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (12, ["#{:02d}".format(i+1) for i in range(12)]),
 }
 
 class Payload:
@@ -544,6 +544,8 @@ if __name__ == "__main__":
                     if os.path.isfile(json_file):
                         with open(json_file, 'r') as f:
                             json_object = json.load(f)
+                    else:
+                        print(json_file, 'does not exist!')
                     delta = pd.DataFrame.from_dict(json_object, orient='index', columns=['delta']).reset_index(names='Timestamp')
                     delta['Timestamp'] = pd.to_datetime(delta['Timestamp'])
                     delta['timedelta'] = pd.to_timedelta(delta['delta'], unit='seconds')

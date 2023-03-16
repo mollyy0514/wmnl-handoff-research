@@ -21,9 +21,10 @@ import math
 import random
 
 # ******************************* User Settings *******************************
-database = "/home/wmnlab/D/database/"
-dates = ["2023-03-08"]
-json_file = "/home/wmnlab/D/database/2023-03-08/time_sync_lpt3.json"
+# database = "/home/wmnlab/D/database/"
+database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
+dates = ["2023-03-16"]
+json_file = "/Users/jackbedford/Desktop/MOXA/Code/data/2023-03-16/time_sync_lpt3.json"
 devices = sorted([
     # "sm00",
     # "sm01",
@@ -43,7 +44,7 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (2, []),
+    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (4, [["#{:02d}".format(i+1) for i in range(12, 16)]]),
 }
 
 class Payload:
@@ -454,49 +455,51 @@ if __name__ == "__main__":
                     if os.path.isfile(json_file):
                         with open(json_file, 'r') as f:
                             json_object = json.load(f)
+                    else:
+                        print(json_file, 'does not exist!')
                     delta = pd.DataFrame.from_dict(json_object, orient='index', columns=['delta']).reset_index(names='Timestamp')
                     delta['Timestamp'] = pd.to_datetime(delta['Timestamp'])
                     delta['timedelta'] = pd.to_timedelta(delta['delta'], unit='seconds')
 
-                    # ### Downlink
-                    # rxdf = pd.read_csv(os.path.join(source_dir, "udp_dnlk_client_pkt_brief.csv"))
-                    # rxseq = list(rxdf['seq'].array)
-                    
-                    # st = rxseq[0] + PKT_RATE * 5  # 開頭切5秒
-                    # et = rxseq[-1] - PKT_RATE * 5  # 結尾切5秒
-                    # rxdf = rxdf[(rxdf["seq"] >= st) & (rxdf["seq"] <= et)].copy().reset_index(drop=True)
-                    
-                    # fout1 = os.path.join(target_dir1, "udp_dnlk_loss_latency.csv")
-                    # fout2 = os.path.join(target_dir2, "udp_dnlk_loss_statistics.csv")
-                    # fout3 = os.path.join(target_dir2, "udp_dnlk_excl_statistics.csv")
-                    
-                    # losdf = get_loss(rxdf.copy())
-                    # latdf = consolidate(rxdf.copy())
-                    # df = pd.concat([losdf, latdf], axis=0)
-                    # df = df.sort_values(by=["seq"]).reset_index(drop=True)
-                    # df = compensate(df.copy(), "dl", delta.copy())
-                    # df = get_latency(df.copy(), "dl")
-                    # get_statistics(df.copy(), fout1, fout2, fout3)
-                    
-                    ### Uplink
-                    rxdf = pd.read_csv(os.path.join(source_dir, "udp_uplk_server_pkt_brief.csv"))
+                    ### Downlink
+                    rxdf = pd.read_csv(os.path.join(source_dir, "udp_dnlk_client_pkt_brief.csv"))
                     rxseq = list(rxdf['seq'].array)
-
+                    
                     st = rxseq[0] + PKT_RATE * 5  # 開頭切5秒
                     et = rxseq[-1] - PKT_RATE * 5  # 結尾切5秒
                     rxdf = rxdf[(rxdf["seq"] >= st) & (rxdf["seq"] <= et)].copy().reset_index(drop=True)
                     
-                    fout1 = os.path.join(target_dir1, "udp_uplk_loss_latency.csv")
-                    fout2 = os.path.join(target_dir2, "udp_uplk_loss_statistics.csv")
-                    fout3 = os.path.join(target_dir2, "udp_uplk_excl_statistics.csv")
+                    fout1 = os.path.join(target_dir1, "udp_dnlk_loss_latency.csv")
+                    fout2 = os.path.join(target_dir2, "udp_dnlk_loss_statistics.csv")
+                    fout3 = os.path.join(target_dir2, "udp_dnlk_excl_statistics.csv")
                     
                     losdf = get_loss(rxdf.copy())
                     latdf = consolidate(rxdf.copy())
                     df = pd.concat([losdf, latdf], axis=0)
                     df = df.sort_values(by=["seq"]).reset_index(drop=True)
-                    df = compensate(df.copy(), "ul", delta.copy())
-                    df = get_latency(df.copy(), "ul")
+                    df = compensate(df.copy(), "dl", delta.copy())
+                    df = get_latency(df.copy(), "dl")
                     get_statistics(df.copy(), fout1, fout2, fout3)
+                    
+                    # ### Uplink
+                    # rxdf = pd.read_csv(os.path.join(source_dir, "udp_uplk_server_pkt_brief.csv"))
+                    # rxseq = list(rxdf['seq'].array)
+
+                    # st = rxseq[0] + PKT_RATE * 5  # 開頭切5秒
+                    # et = rxseq[-1] - PKT_RATE * 5  # 結尾切5秒
+                    # rxdf = rxdf[(rxdf["seq"] >= st) & (rxdf["seq"] <= et)].copy().reset_index(drop=True)
+                    
+                    # fout1 = os.path.join(target_dir1, "udp_uplk_loss_latency.csv")
+                    # fout2 = os.path.join(target_dir2, "udp_uplk_loss_statistics.csv")
+                    # fout3 = os.path.join(target_dir2, "udp_uplk_excl_statistics.csv")
+                    
+                    # losdf = get_loss(rxdf.copy())
+                    # latdf = consolidate(rxdf.copy())
+                    # df = pd.concat([losdf, latdf], axis=0)
+                    # df = df.sort_values(by=["seq"]).reset_index(drop=True)
+                    # df = compensate(df.copy(), "ul", delta.copy())
+                    # df = get_latency(df.copy(), "ul")
+                    # get_statistics(df.copy(), fout1, fout2, fout3)
                     
                     t1.toc()
     t.toc()  # Time elapsed since t.tic()
