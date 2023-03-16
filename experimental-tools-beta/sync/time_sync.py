@@ -10,10 +10,22 @@ import time
 import csv
 import json
 import datetime as dt
+import numpy as np
 from myutils import makedir
 
 HOST = '140.112.20.183'
 PORT = 3298
+
+
+def qset_bdd(client_rtt):
+    sorted_rtt = sorted([s[3] for s in client_rtt])
+    
+    upper_q = np.percentile(sorted_rtt, 75)
+    lower_q = np.percentile(sorted_rtt, 25)
+    iqr = (upper_q - lower_q) * 1.5
+    
+    qset = (lower_q - iqr, upper_q + iqr)
+    return qset
 
 def clock_diff(device):
     server = []
@@ -21,21 +33,25 @@ def clock_diff(device):
     with open(f"sync_client_{device}.csv", newline='') as f:
         reader = csv.reader(f)
         client = list(reader)
+    client = [[*s, float(s[2]) - float(s[1])] for s in client]
     with open(f"sync_server_{device}.csv", newline='') as f:
         reader = csv.reader(f)
         server = list(reader)
 
     diff = 0.0
     cnt = 0
+    qset = qset_bdd(client)
     for i in range(len(client)):
-        RTT = float(client[i][2]) - float(client[i][1])
-        if (RTT > 0.1):
+        # RTT = float(client[i][2]) - float(client[i][1])
+        RTT = client[i][3]
+        if (RTT < qset[0]) or (RTT > qset[1]):
             continue
         cen_client = (float(client[i][2]) + float(client[i][1]))/2
         cen_server = (float(server[i][2]) + float(server[i][1]))/2
         diff += cen_server - cen_client
         cnt += 1
     diff /= cnt
+    print(cnt, qset)
 
     # diff > 0: client is behind server by abs(diff) seconds
     # diff < 0: client is ahead of server by abs(diff) seconds
