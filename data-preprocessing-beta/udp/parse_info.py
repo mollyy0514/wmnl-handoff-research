@@ -48,13 +48,11 @@ import swifter
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-# database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
+database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
 # date = "2023-01-12"
 dates = [
-        #  "2023-02-04", 
-        #  "2023-02-04#1",
-         "2023-03-16",
-        ]
+    "2023-03-16",
+]
 devices = sorted([
     # "sm00",
     # "sm01",
