@@ -23,9 +23,9 @@ import random
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
 json_file = "/home/wmnlab/D/database/2023-03-16/time_sync_lpt3.json"
-dates = ["2023-03-16"]
-# database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
-# json_file = "/Users/jackbedford/Desktop/MOXA/Code/data/2023-03-16/time_sync_lpt3.json"
+database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
+json_file = "/Users/jackbedford/Desktop/MOXA/Code/data/2023-03-16/time_sync_lpt3.json"
+dates = ["2023-03-15"]
 devices = sorted([
     # "sm00",
     # "sm01",
@@ -36,16 +36,19 @@ devices = sorted([
     # "sm06",
     # "sm07",
     # "sm08",
-    # "qc00",
-    # "qc01",
-    # "qc02",
+    "qc00",
+    "qc01",
+    "qc02",
     "qc03",
 ])
 exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_round)
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (12, ["#{:02d}".format(i+1) for i in range(12)]),
+    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (12, ["#{:02d}".format(i+1) for i in range(12)]),
+    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (6, []),
+    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (1, ['#01']),
+    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (5, ["#{:02d}".format(i+1) for i in range(1, 6)]),
 }
 
 class Payload:
