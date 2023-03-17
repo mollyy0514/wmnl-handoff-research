@@ -1,0 +1,193 @@
+packet_rate (pps): 500.0 
+
+/Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q
+|___ /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc00
+|     1
+|    |___ /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc00/#01
+|___ /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc01
+|     1
+|    |___ /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc01/#01
+|___ /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc02
+|     1
+|    |___ /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc02/#01
+|___ /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc03
+|     1
+|    |___ /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc03/#01
+
+------------------------------------------
+2023-03-15 _Bandlock_Udp_B1_B3_B7_B8_RM500Q qc00 #01
+------------------------------------------
+0.012418234702384118 seconds
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc00/#01/data/udp_dnlk_loss_latency.csv
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc00/#01/statistics/udp_dnlk_loss_statistics.csv
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc00/#01/statistics/udp_dnlk_excl_statistics.csv
+------------------------------------------
+min latency:          -0.01323 seconds
+max latency:          0.433327 seconds
+mean latency:         0.001806 seconds
+stdev latency:        0.022513 seconds
+jitter:               0.00271 seconds
+negative latency:     74465
+total_packet_sent:    138272
+total_packet_recv:    136867
+total_packet_loss:    1405
+packet_loss_rate(%):  1.016 %
+total_excs_latency:   1108
+excs_latency_rate(%): 0.81 %
+experiment_time(sec): 276.554923 seconds
+------------------------------------------
+
+0.012418234702384118 seconds
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc00/#01/data/udp_uplk_loss_latency.csv
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc00/#01/statistics/udp_uplk_loss_statistics.csv
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc00/#01/statistics/udp_uplk_excl_statistics.csv
+------------------------------------------
+min latency:          0.011602 seconds
+max latency:          0.675238 seconds
+mean latency:         0.028796 seconds
+stdev latency:        0.020413 seconds
+jitter:               0.001921 seconds
+negative latency:     0
+total_packet_sent:    138272
+total_packet_recv:    138263
+total_packet_loss:    9
+packet_loss_rate(%):  0.007 %
+total_excs_latency:   353
+excs_latency_rate(%): 0.255 %
+experiment_time(sec): 276.554922 seconds
+------------------------------------------
+
+Elapsed time is 6.597790 seconds.
+------------------------------------------
+2023-03-15 _Bandlock_Udp_B1_B3_B7_B8_RM500Q qc01 #01
+------------------------------------------
+0.012418234702384118 seconds
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc01/#01/data/udp_dnlk_loss_latency.csv
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc01/#01/statistics/udp_dnlk_loss_statistics.csv
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc01/#01/statistics/udp_dnlk_excl_statistics.csv
+------------------------------------------
+min latency:          -0.01323 seconds
+max latency:          0.433327 seconds
+mean latency:         0.001806 seconds
+stdev latency:        0.022513 seconds
+jitter:               0.00271 seconds
+negative latency:     74459
+total_packet_sent:    138272
+total_packet_recv:    136867
+total_packet_loss:    1405
+packet_loss_rate(%):  1.016 %
+total_excs_latency:   1108
+excs_latency_rate(%): 0.81 %
+experiment_time(sec): 276.554923 seconds
+------------------------------------------
+
+0.012418234702384118 seconds
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc01/#01/data/udp_uplk_loss_latency.csv
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc01/#01/statistics/udp_uplk_loss_statistics.csv
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc01/#01/statistics/udp_uplk_excl_statistics.csv
+------------------------------------------
+min latency:          0.00727 seconds
+max latency:          0.488726 seconds
+mean latency:         0.019729 seconds
+stdev latency:        0.01418 seconds
+jitter:               0.001444 seconds
+negative latency:     0
+total_packet_sent:    138272
+total_packet_recv:    138194
+total_packet_loss:    78
+packet_loss_rate(%):  0.056 %
+total_excs_latency:   398
+excs_latency_rate(%): 0.288 %
+experiment_time(sec): 276.554922 seconds
+------------------------------------------
+
+Elapsed time is 6.314733 seconds.
+------------------------------------------
+2023-03-15 _Bandlock_Udp_B1_B3_B7_B8_RM500Q qc02 #01
+------------------------------------------
+0.012418234702384118 seconds
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc02/#01/data/udp_dnlk_loss_latency.csv
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc02/#01/statistics/udp_dnlk_loss_statistics.csv
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc02/#01/statistics/udp_dnlk_excl_statistics.csv
+------------------------------------------
+min latency:          -0.01323 seconds
+max latency:          0.433327 seconds
+mean latency:         0.001806 seconds
+stdev latency:        0.022513 seconds
+jitter:               0.00271 seconds
+negative latency:     74462
+total_packet_sent:    138272
+total_packet_recv:    136867
+total_packet_loss:    1405
+packet_loss_rate(%):  1.016 %
+total_excs_latency:   1108
+excs_latency_rate(%): 0.81 %
+experiment_time(sec): 276.554923 seconds
+------------------------------------------
+
+0.012418234702384118 seconds
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc02/#01/data/udp_uplk_loss_latency.csv
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc02/#01/statistics/udp_uplk_loss_statistics.csv
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc02/#01/statistics/udp_uplk_excl_statistics.csv
+------------------------------------------
+min latency:          0.007244 seconds
+max latency:          0.615154 seconds
+mean latency:         0.022102 seconds
+stdev latency:        0.026386 seconds
+jitter:               0.001577 seconds
+negative latency:     0
+total_packet_sent:    138272
+total_packet_recv:    138150
+total_packet_loss:    122
+packet_loss_rate(%):  0.088 %
+total_excs_latency:   1144
+excs_latency_rate(%): 0.828 %
+experiment_time(sec): 276.554922 seconds
+------------------------------------------
+
+Elapsed time is 6.355644 seconds.
+------------------------------------------
+2023-03-15 _Bandlock_Udp_B1_B3_B7_B8_RM500Q qc03 #01
+------------------------------------------
+0.012418234702384118 seconds
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc03/#01/data/udp_dnlk_loss_latency.csv
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc03/#01/statistics/udp_dnlk_loss_statistics.csv
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc03/#01/statistics/udp_dnlk_excl_statistics.csv
+------------------------------------------
+min latency:          -0.01323 seconds
+max latency:          0.433327 seconds
+mean latency:         0.001807 seconds
+stdev latency:        0.022513 seconds
+jitter:               0.00271 seconds
+negative latency:     74459
+total_packet_sent:    138272
+total_packet_recv:    136867
+total_packet_loss:    1405
+packet_loss_rate(%):  1.016 %
+total_excs_latency:   1108
+excs_latency_rate(%): 0.81 %
+experiment_time(sec): 276.554923 seconds
+------------------------------------------
+
+0.012418234702384118 seconds
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc03/#01/data/udp_uplk_loss_latency.csv
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc03/#01/statistics/udp_uplk_loss_statistics.csv
+output >>> /Users/jackbedford/Desktop/MOXA/Code/data/2023-03-15/_Bandlock_Udp_B1_B3_B7_B8_RM500Q/qc03/#01/statistics/udp_uplk_excl_statistics.csv
+------------------------------------------
+min latency:          0.007272 seconds
+max latency:          0.481346 seconds
+mean latency:         0.022467 seconds
+stdev latency:        0.028839 seconds
+jitter:               0.001551 seconds
+negative latency:     0
+total_packet_sent:    138272
+total_packet_recv:    138161
+total_packet_loss:    111
+packet_loss_rate(%):  0.08 %
+total_excs_latency:   1468
+excs_latency_rate(%): 1.063 %
+experiment_time(sec): 276.554922 seconds
+------------------------------------------
+
+Elapsed time is 6.346937 seconds.
+Elapsed time is 25.616282 seconds.

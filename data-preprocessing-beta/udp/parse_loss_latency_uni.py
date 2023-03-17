@@ -23,9 +23,9 @@ import random
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
 json_file = "/home/wmnlab/D/database/2023-03-16/time_sync_lpt3.json"
-dates = ["2023-03-16"]
 # database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
 # json_file = "/Users/jackbedford/Desktop/MOXA/Code/data/2023-03-16/time_sync_lpt3.json"
+dates = ["2023-03-16"]
 devices = sorted([
     # "sm00",
     # "sm01",
