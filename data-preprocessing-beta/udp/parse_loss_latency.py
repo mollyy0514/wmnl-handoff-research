@@ -36,9 +36,9 @@ devices = sorted([
     # "sm06",
     # "sm07",
     # "sm08",
-    "qc00",
-    "qc01",
-    "qc02",
+    # "qc00",
+    # "qc01",
+    # "qc02",
     "qc03",
 ])
 exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_round)
