@@ -105,9 +105,9 @@ def pcap_to_csv(fin, fout):
             -e data.len -e udp.payload -e _ws.col.Info \
             -E header=y -E separator=@ > {}".format(fin, fout)
         subprocess.Popen(s, shell=True)
-        time.sleep(1)  # Not enough for 30min-500pps-pcap 
-        time.sleep(3)
-        time.sleep(5)
+        # time.sleep(1)  # Not enough for 30min-500pps-pcap 
+        # time.sleep(3)
+        # time.sleep(5)
     except:
         ### Record error message without halting the program
         return (fin, fout, traceback.format_exc())
