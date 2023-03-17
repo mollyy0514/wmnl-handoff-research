@@ -75,12 +75,15 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (16, []),
+    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (16, []),
+    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (1, ['#01']),
 }
 # *****************************************************************************
 
 # **************************** Auxiliary Functions ****************************
 def pcap_to_csv(fin, fout):
+    t1 = TicToc()  # create instance of class
+    t1.tic()  # Start timer
     try:
         # Frame Number: (frame.number) the number of packet captured by tcpdump, start from 1
         # Arrival Time: (frame.time) packet arrival time 'Sep 29, 2022 16:24:58.254416000' (utc-8, CST)
@@ -104,13 +107,16 @@ def pcap_to_csv(fin, fout):
             -e udp.length -e udp.srcport -e udp.dstport \
             -e data.len -e udp.payload -e _ws.col.Info \
             -E header=y -E separator=@ > {}".format(fin, fout)
-        subprocess.Popen(s, shell=True)
-        # time.sleep(1)  # Not enough for 30min-500pps-pcap 
-        # time.sleep(3)
-        # time.sleep(5)
+        p = subprocess.Popen(s, shell=True, preexec_fn=os.setpgrp)
     except:
         ### Record error message without halting the program
         return (fin, fout, traceback.format_exc())
+    
+    while p.poll() is None:
+        # print(p.pid, p.poll())
+        time.sleep(1)
+    
+    t1.toc()
     return (fin, fout, None)
 # *****************************************************************************
 

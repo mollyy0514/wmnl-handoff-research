@@ -76,6 +76,8 @@ devices = sorted([
 
 # --------------------- Util Functions ---------------------
 def pcap_to_csv(fin, fout):
+    t1 = TicToc()  # create instance of class
+    t1.tic()  # Start timer
     try:
         # Frame Number: (frame.number) the number of packet captured by tcpdump, start from 1
         # Arrival Time: (frame.time) packet arrival time 'Sep 29, 2022 16:24:58.254416000' (utc-8, CST)
@@ -104,12 +106,16 @@ def pcap_to_csv(fin, fout):
             -e tcp.analysis.retransmission -e tcp.analysis.fast_retransmission \
             -e tcp.analysis.out_of_order \
             -E header=y -E separator=@ > {}".format(fin, fout)
-        subprocess.Popen(s, shell=True)
-        time.sleep(1)  # Not enough for 30min-500pps-pcap 
-        # time.sleep(4)
+        p = subprocess.Popen(s, shell=True, preexec_fn=os.setpgrp)
     except:
         ### Record error message without halting the program
         return (fin, fout, traceback.format_exc())
+    
+    while p.poll() is None:
+        # print(p.pid, p.poll())
+        time.sleep(1)
+    t1.toc()
+    
     return (fin, fout, None)
 
 def error_handling(err_handle):
