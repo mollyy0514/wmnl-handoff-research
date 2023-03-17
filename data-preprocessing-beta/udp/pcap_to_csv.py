@@ -75,8 +75,8 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (16, []),
-    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (1, ['#01']),
+    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (16, []),
+    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (1, ['#01']),
 }
 # *****************************************************************************
 
@@ -108,14 +108,13 @@ def pcap_to_csv(fin, fout):
             -e data.len -e udp.payload -e _ws.col.Info \
             -E header=y -E separator=@ > {}".format(fin, fout)
         p = subprocess.Popen(s, shell=True, preexec_fn=os.setpgrp)
+        while p.poll() is None:
+            # print(p.pid, p.poll())
+            time.sleep(1)
     except:
         ### Record error message without halting the program
+        t1.toc()
         return (fin, fout, traceback.format_exc())
-    
-    while p.poll() is None:
-        # print(p.pid, p.poll())
-        time.sleep(1)
-    
     t1.toc()
     return (fin, fout, None)
 # *****************************************************************************

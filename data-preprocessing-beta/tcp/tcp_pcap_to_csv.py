@@ -107,15 +107,14 @@ def pcap_to_csv(fin, fout):
             -e tcp.analysis.out_of_order \
             -E header=y -E separator=@ > {}".format(fin, fout)
         p = subprocess.Popen(s, shell=True, preexec_fn=os.setpgrp)
+        while p.poll() is None:
+            # print(p.pid, p.poll())
+            time.sleep(1)
     except:
         ### Record error message without halting the program
+        t1.toc()
         return (fin, fout, traceback.format_exc())
-    
-    while p.poll() is None:
-        # print(p.pid, p.poll())
-        time.sleep(1)
     t1.toc()
-    
     return (fin, fout, None)
 
 def error_handling(err_handle):
