@@ -215,7 +215,7 @@ pcap_path = '/home/wmnlab/temp'
 tcpproc_list = []
 for device, port in zip(devices, ports):
     pcap = os.path.join(pcap_path, f"server_pcap_BL_{device}_{port[0]}_{port[1]}_{n}_sock.pcap")
-    tcpproc =  subprocess.Popen([f"sudo tcpdump -i any port '({port[0]} or {port[1]})' -w {pcap}"], shell=True, preexec_fn = os.setpgrp)
+    tcpproc =  subprocess.Popen([f"tcpdump -i any port '({port[0]} or {port[1]})' -w {pcap}"], shell=True, preexec_fn = os.setpgrp)
     tcpproc_list.append(tcpproc)    
 time.sleep(1)
 
