@@ -27,13 +27,9 @@ args = parser.parse_args()
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
 database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
-date = "2022-12-22"
 dates = [
-        #  "2023-02-04", 
-        #  "2023-02-04#1",
-        #  "2023-02-04#2",
-        "2023-03-15"
-         ]
+    "2023-03-16"
+]
 devices = sorted([
     # "sm00",
     # "sm01",
@@ -53,22 +49,9 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (6, []),
-    # "_Bandlock_Udp_all_RM500Q": (2, []),
-    # "tsync": (1, None),
-    # "_Bandlock_Udp": (4, ["#01", "#02", "#03", "#04"]),
-    # "_Bandlock_Udp": (4, ["#03", "#04", "#05", "#06"]),
-    # "_Bandlock_Udp": (4, []),
-    # "_Bandlock_Udp": (6, []),
-    # "_Bandlock_Udp_B1_B3":  (6, []),
-    # "_Bandlock_Udp_B3_B28": (2, []),
-    # "_Bandlock_Udp_B28_B1": (2, []),
-    # "_Mobile_Bandlock_Test": (1, None),
-    # "_Bandlock_Udp_B1_B3": (4, []),
-    # "_Bandlock_Udp_B3_B7": (4, []),
-    # "_Bandlock_Udp_B7_B8": (4, []),
-    # "_Bandlock_Udp_B8_B1": (4, []),
-    # "_Modem_Phone_Comparative_Exeriments": (6, []),
+    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (16, []),
+    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (6, ["#{:02d}".format(i+1) for i in range(6)]),
+    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (3, ["#{:02d}".format(i+1) for i in range(3, 6)]),
 }
 # *****************************************************************************
 
