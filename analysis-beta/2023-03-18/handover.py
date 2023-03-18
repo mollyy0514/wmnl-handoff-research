@@ -425,6 +425,8 @@ def mi_parse_ho(df, tz=0, debug=False):
     for key in A.keys():
         df_HO = pd.concat([df_HO, \
             pd.DataFrame(A[key], index=[key]*len(A[key]))])
+    if df_HO.empty:
+        print("************** Empty DataFrame!! **************")
     df_HO = df_HO.sort_values(by=['start']).reset_index()
     df_HO = df_HO.rename(columns={'index': 'ho_type'})
     df_HO = df_HO.reindex(
