@@ -6,13 +6,13 @@ from collections import namedtuple
 from pprint import pprint
 import portion as P
 
-__all__ = [
-    'myQueue',
-    'mi_parse_ho',
-    'cut_head_tail',
-    'get_ho_interval',
-    'label_ho_info',
-]
+# __all__ = [
+#     'myQueue',
+#     'mi_parse_ho',
+#     'cut_head_tail',
+#     'get_ho_interval',
+#     'label_ho_info',
+# ]
 
 class myQueue:
     def __init__(self, maxsize=0):
@@ -516,8 +516,13 @@ def get_ho_interval(df, sec=(1, 3), ratio=0.5,
     E = { col:[] for col in column_names }
     
     for i, row in df.iterrows():
-        prior_row = df.iloc[i - 1] if i != 0 else None
-        post_row = df.iloc[i + 1] if i != len(df)-1 else None
+        prior_row = df.iloc[i-1] if i != 0 else None
+        post_row = df.iloc[i+1] if i != len(df)-1 else None
+        ### peek the next event
+        if i != len(df)-1 and pd.notna(row.end) and row.end > post_row.start:
+            print(i, row.start, row.end, row.ho_type, row.cause)
+            print(i+1, post_row.start, post_row.end, post_row.ho_type, post_row.cause)
+            continue
         ### peri_interval
         if pd.isna(row.end):
             peri_interval = P.singleton(row.start)
@@ -559,12 +564,15 @@ def get_ho_interval(df, sec=(1, 3), ratio=0.5,
             state1, state2 = 'link_failure', 'link_failure'
         if type_name in ['LTE_HO','MN_HO','MNSN_HO','SN_Rel_MN_HO','SN_Setup_MN_HO']:
             state1 = 'inter_freq' if row.sFreq != row.tFreq else 'intra_freq'
-            if row.eNB != row.eNB1:
+            if pd.notna(row.eNB) and pd.notna(row.eNB1) and row.eNB != row.eNB1:
                 state2 = 'inter_enb'
             elif row.sPCI != row.tPCI:
                 state2 = 'inter_sector'
-            else:
+            elif row.sPCI == row.tPCI:
                 state2 = 'intra_sector'
+            else:
+                print("************** inter_enb, unknown eNB_ID **************")
+                state2 = 'inter_enb'
         E[f'before_{type_name}'].append(HO_INTV(i, prior_interval, state1, state2, row.st_scel, row.cause, row.intr, row.sPCI, row.sFreq, row.snrPCI, row.tPCI, row.tFreq, row.tnrPCI))
         E[f'during_{type_name}'].append(HO_INTV(i, peri_interval, state1, state2, row.st_scel, row.cause, row.intr, row.sPCI, row.sFreq, row.snrPCI, row.tPCI, row.tFreq, row.tnrPCI))
         E[f'after_{type_name}'].append(HO_INTV(i, post_interval, state1, state2, row.st_scel, row.cause, row.intr, row.sPCI, row.sFreq, row.snrPCI, row.tPCI, row.tFreq, row.tnrPCI))
