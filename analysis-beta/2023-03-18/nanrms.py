@@ -6,10 +6,10 @@ from numpy.core.multiarray import asanyarray
 from numpy.core import numerictypes as nt
 from numpy.core._ufunc_config import _no_nep50_warning
 
-# __all__ = [
-#     'nansumsq',
-#     'nanrms',
-# ]
+__all__ = [
+    'nansumsq',
+    'nanrms',
+]
 
 umr_sum = um.add.reduce
 umr_any = um.logical_or.reduce
