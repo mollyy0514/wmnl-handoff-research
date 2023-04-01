@@ -23,9 +23,11 @@ import random
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
 json_file = "/home/wmnlab/D/database/2023-03-16/time_sync_lpt3.json"
-# database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
-# json_file = "/Users/jackbedford/Desktop/MOXA/Code/data/2023-03-16/time_sync_lpt3.json"
-dates = ["2023-03-16"]
+database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
+json_file = "/Users/jackbedford/Desktop/MOXA/Code/data/2023-03-16/time_sync_lpt3.json"
+dates = [
+    "2023-03-16"
+]
 devices = sorted([
     # "sm00",
     # "sm01",
@@ -45,7 +47,10 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (4, [["#{:02d}".format(i+1) for i in range(12, 16)]]),
+    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (16, []),
+    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (4, ["#{:02d}".format(i+1) for i in range(12, 16)]),
+    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (6, ["#{:02d}".format(i+1) for i in range(6)]),
+    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (3, ["#{:02d}".format(i+1) for i in range(3, 6)]),
 }
 
 class Payload:
@@ -459,7 +464,7 @@ if __name__ == "__main__":
                         with open(json_file, 'r') as f:
                             json_object = json.load(f)
                     else:
-                        print(json_file, 'does not exist!')
+                        print('*************', json_file, 'does not exist! *************')
                     delta = pd.DataFrame.from_dict(json_object, orient='index', columns=['delta']).reset_index(names='Timestamp')
                     delta['Timestamp'] = pd.to_datetime(delta['Timestamp'])
                     delta['timedelta'] = pd.to_timedelta(delta['delta'], unit='seconds')
