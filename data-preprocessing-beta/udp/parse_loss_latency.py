@@ -285,7 +285,9 @@ def compensate(df, mode, delta=pd.DataFrame()):
     delta['Timestamp'] = pd.to_datetime(delta['Timestamp'])
     
     bm_timestamp = df.at[0, 'Timestamp']
-    epodelta, timedelta = delta[delta['Timestamp'] < bm_timestamp].reset_index(drop=True).iloc[-1][['delta', 'timedelta']]
+    # epodelta, timedelta = delta[delta['Timestamp'] < bm_timestamp].reset_index(drop=True).iloc[-1][['delta', 'timedelta']]
+    delta_o_delta = (delta["Timestamp"] - bm_timestamp).dt.total_seconds().abs()
+    epodelta, timedelta = delta.loc[delta_o_delta.argmin(), ['delta', 'timedelta']]
     # print(delta[delta['Timestamp'] < bm_timestamp])
     print(epodelta, "seconds")
     

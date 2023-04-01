@@ -22,12 +22,12 @@ import random
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-json_file = "/home/wmnlab/D/database/2023-03-16/time_sync_lpt3.json"
 database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
-json_file = "/Users/jackbedford/Desktop/MOXA/Code/data/2023-03-16/time_sync_lpt3.json"
 dates = [
     "2023-03-16"
 ]
+json_files = ["time_sync_lpt3.json"]
+json_files = [os.path.join(database, date, json_file) for date, json_file in zip(dates, json_files)]
 devices = sorted([
     # "sm00",
     # "sm01",
@@ -241,7 +241,9 @@ def compensate(df, mode, delta=pd.DataFrame()):
     delta['Timestamp'] = pd.to_datetime(delta['Timestamp'])
     
     bm_timestamp = df.at[0, 'Timestamp']
-    epodelta, timedelta = delta[delta['Timestamp'] < bm_timestamp].reset_index(drop=True).iloc[-1][['delta', 'timedelta']]
+    # epodelta, timedelta = delta[delta['Timestamp'] < bm_timestamp].reset_index(drop=True).iloc[-1][['delta', 'timedelta']]
+    delta_o_delta = (delta["Timestamp"] - bm_timestamp).dt.total_seconds().abs()
+    epodelta, timedelta = delta.loc[delta_o_delta.argmin(), ['delta', 'timedelta']]
     # print(delta[delta['Timestamp'] < bm_timestamp])
     print(epodelta, "seconds")
     
@@ -421,7 +423,7 @@ if __name__ == "__main__":
             
     # --------------------- Phase 2: Parse packet loss & latency --------------------- 
     ### Read files
-    for date in dates:
+    for date, json_file in zip(dates, json_files):
         for expr, (times, traces) in exps.items():
             for dev in devices:
                 if not os.path.isdir(os.path.join(database, date, expr, dev)):
