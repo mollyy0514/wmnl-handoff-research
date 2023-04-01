@@ -26,6 +26,8 @@ class myQueue:
         return self.len() == 0
     def full(self):
         return self.len() == self.maxsize
+    def clear(self):
+        self.data = []
     def pop(self, index=0):
         """
         if index > 0, recursively pop() until pop out the specific element.
