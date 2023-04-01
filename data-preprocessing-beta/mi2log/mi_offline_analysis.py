@@ -37,15 +37,20 @@ from pytictoc import TicToc
 from mobile_insight.monitor import OfflineReplayer
 from mobile_insight.analyzer import MsgLogger, NrRrcAnalyzer, LteRrcAnalyzer, WcdmaRrcAnalyzer, LteNasAnalyzer, UmtsNasAnalyzer, LteMacAnalyzer, LtePhyAnalyzer, LteMeasurementAnalyzer
 
+__all__ = [
+    'mi_decode',
+    'error_handling'
+]
+
 # --------------------- Arguments ---------------------
-parser = argparse.ArgumentParser()
-parser.add_argument("-i", "--input", type=str,
-                    help="input filepath")
-parser.add_argument("-D", "--indir", type=str,
-                    help="input dirctory path")
-parser.add_argument("-O", "--outdir", type=str,
-                    help="output dirctory path")
-args = parser.parse_args()
+# parser = argparse.ArgumentParser()
+# parser.add_argument("-i", "--input", type=str,
+#                     help="input filepath")
+# parser.add_argument("-D", "--indir", type=str,
+#                     help="input dirctory path")
+# parser.add_argument("-O", "--outdir", type=str,
+#                     help="output dirctory path")
+# args = parser.parse_args()
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"

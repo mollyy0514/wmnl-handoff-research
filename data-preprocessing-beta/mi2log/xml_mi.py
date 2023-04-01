@@ -14,29 +14,28 @@ from itertools import chain
 import shutil
 import re
 
+__all__ = [
+    'xml_to_csv_rrc',
+    'xml_to_csv_ml1',
+    'xml_to_csv_nr_ml1'
+]
+
 # --------------------- Arguments ---------------------
-parser = argparse.ArgumentParser()
-parser.add_argument("-i", "--input", type=str,
-                    help="input filepath")
-parser.add_argument("-D", "--indir", type=str,
-                    help="input dirctory path")
-parser.add_argument("-O", "--outdir", type=str,
-                    help="output dirctory path")
-args = parser.parse_args()
+# parser = argparse.ArgumentParser()
+# parser.add_argument("-i", "--input", type=str,
+#                     help="input filepath")
+# parser.add_argument("-D", "--indir", type=str,
+#                     help="input dirctory path")
+# parser.add_argument("-O", "--outdir", type=str,
+#                     help="output dirctory path")
+# args = parser.parse_args()
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-<<<<<<< HEAD
 # database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
 dates = [
         "2023-03-26"
          ]
-=======
-database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
-dates = [
-    "2023-03-16"
-]
->>>>>>> 0abebcacda35945f52ef3c1be9f369e96acc7bc4
 devices = sorted([
     # "sm00",
     # "sm01",
@@ -56,7 +55,6 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-<<<<<<< HEAD
     "_Bandlock_Udp_B3_B7_B8_RM500Q": (6, []),
     "_Bandlock_Udp_All_RM500Q": (4, []),
     # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (6, []),
@@ -75,11 +73,6 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
     # "_Bandlock_Udp_B7_B8": (4, []),
     # "_Bandlock_Udp_B8_B1": (4, []),
     # "_Modem_Phone_Comparative_Exeriments": (6, []),
-=======
-    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (16, []),
-    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (6, ["#{:02d}".format(i+1) for i in range(6)]),
-    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (3, ["#{:02d}".format(i+1) for i in range(3, 6)]),
->>>>>>> 0abebcacda35945f52ef3c1be9f369e96acc7bc4
 }
 # *****************************************************************************
 
