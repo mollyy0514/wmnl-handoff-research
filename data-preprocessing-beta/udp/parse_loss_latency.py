@@ -22,10 +22,11 @@ import random
 
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
-json_file = "/home/wmnlab/D/database/2023-03-16/time_sync_lpt3.json"
-database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
-json_file = "/Users/jackbedford/Desktop/MOXA/Code/data/2023-03-16/time_sync_lpt3.json"
-dates = ["2023-03-15"]
+# database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
+# json_file = "/Users/jackbedford/Desktop/MOXA/Code/data/2023-03-16/time_sync_lpt3.json"
+dates = ["2023-03-26"]
+json_files = ["time_sync_lpt3.json"]
+json_files = [os.path.join(database, date, json_file) for date, json_file in zip(dates, json_files)]
 devices = sorted([
     # "sm00",
     # "sm01",
@@ -37,7 +38,7 @@ devices = sorted([
     # "sm07",
     # "sm08",
     "qc00",
-    "qc01",
+    # "qc01",
     "qc02",
     "qc03",
 ])
@@ -48,7 +49,9 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
     # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (12, ["#{:02d}".format(i+1) for i in range(12)]),
     # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (6, []),
     # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (1, ['#01']),
-    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (5, ["#{:02d}".format(i+1) for i in range(1, 6)]),
+    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (5, ["#{:02d}".format(i+1) for i in range(1, 6)]),
+    "_Bandlock_Udp_B3_B7_B8_RM500Q": (6, []),
+    "_Bandlock_Udp_All_RM500Q": (4, []),
 }
 
 class Payload:
@@ -479,7 +482,7 @@ if __name__ == "__main__":
             
     # --------------------- Phase 2: Parse packet loss & latency --------------------- 
     ### Read files
-    for date in dates:
+    for date, json_file in zip(dates, json_files):
         for expr, (times, traces) in exps.items():
             for dev in devices:
                 if not os.path.isdir(os.path.join(database, date, expr, dev)):
