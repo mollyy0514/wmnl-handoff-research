@@ -17,7 +17,7 @@ helpFunction()
     echo "e.g. sudo ./band-setting.sh -i [interface] -m rat1:rat2:...ratN"
     exit 1 # Exit script after printing help
 }
-while getopts "i:l:e:" opt
+while getopts "i:m:" opt
 do
     case "$opt" in
         i ) interface="$OPTARG" ;;
