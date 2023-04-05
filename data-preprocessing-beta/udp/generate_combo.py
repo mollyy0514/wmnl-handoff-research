@@ -135,7 +135,7 @@ for date in dates:
                 ### TODO 3
                 colnames = []
                 data = []
-                print('', 'loss(%)', 'excl(%)', 'latency', 'max_latency', sep='\t')
+                print('', 'loss(%)', 'excl(%)', 'latency', 'max_latency', 'min_latency', sep='\t')
                 for i, (dev, scheme) in enumerate(zip(devices, schemes)):
                     _df = df[df[f'lost_{scheme}'] == False]
                     loss = sum(df[f'lost_{scheme}']) / (len(df)+1e-9) * 100
