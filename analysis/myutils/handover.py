@@ -299,7 +299,7 @@ def mi_parse_ho(df, tz=0, debug=False):
             
             n = 0
             if df["SCellToAddMod-r10"].iloc[i] == 1:
-                n =len(str(df["SCellIndex-r10.1"].iloc[i]).split('@'))
+                n = len(str(df["SCellIndex-r10.1"].iloc[i]).split('@'))
                 others=f'Set up {n} SCell.'
             else:
                 others=None
