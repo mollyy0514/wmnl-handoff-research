@@ -233,6 +233,7 @@ def mi_parse_ho(df, tz=0, debug=False):
     init = 1
     pcell, pscell = LTE_CEL(), NR_CEL()
     prev_pci, prev_freq = None, None
+    nr_pci = ''
     
     for i, row in df.iterrows():
         if NR_OTA():
@@ -285,6 +286,7 @@ def mi_parse_ho(df, tz=0, debug=False):
             _pcell = peek_eci(pos=j)
             D['Conn_Setup'].append(HO(start=t, end=end))
             A['Conn_Setup'].append(C(*HO(start=t, end=end), *stLTE(tPCI=pci, tFreq=freq), *stNR(), *pcell, *_pcell, *pscell, *pscell))
+            nr_pci = ''
             dprint(f"{t}, {end} | Conn_Setup to PCI={pci} EARFCN={freq}.")
             dprint(f'{tuple(pcell)} -> {tuple(_pcell)}')
             dprint(f'{tuple(pscell)} -> {tuple(pscell)}')
@@ -299,13 +301,15 @@ def mi_parse_ho(df, tz=0, debug=False):
             
             n = 0
             if df["SCellToAddMod-r10"].iloc[i] == 1:
-                n =len(str(df["SCellIndex-r10.1"].iloc[i]).split('@'))
+                n = len(str(df["SCellIndex-r10.1"].iloc[i]).split('@'))
                 others=f'Set up {n} SCell.'
             else:
                 others=None
             
             if serv_freq != target_freq:
                 others = f'{others} Inter-Freq HO.' if others else 'Inter-Freq HO.'
+                if a is not None:
+                    others = f'{others} Near after RLF.' if others else 'Near after RLF.'
             
             ### SN_Setup, MN_HO
             if df["nr-rrc.t304"].iloc[i] == 1 and df["dualConnectivityPHR: setup (1)"].iloc[i] == 1:
@@ -314,6 +318,7 @@ def mi_parse_ho(df, tz=0, debug=False):
                     _pscell = peek_nr(pos=j)
                     D['SN_Setup'].append(HO(start=t, end=end, others=others, st_scel=n))
                     A['SN_Setup'].append(C(*HO(start=t, end=end, others=others, st_scel=n), *stLTE(sPCI=serv_cell, sFreq=serv_freq), *stNR(tnrPCI=nr_target_cell), *pcell, *pcell, *pscell, *_pscell))
+                    nr_pci = df['nr_physCellId'].iloc[i]
                     dprint(f"{t}, {end} | SN_Setup to nrPCI={nr_target_cell} | {others}")
                     dprint(f'{tuple(pcell)} -> {tuple(pcell)}')
                     dprint(f'{tuple(pscell)} -> {tuple(_pscell)}')
@@ -323,12 +328,13 @@ def mi_parse_ho(df, tz=0, debug=False):
                     _pcell = peek_eci(pos=j)
                     D['MN_HO'].append(HO(start=t, end=end, others=others, st_scel=n))
                     A['MN_HO'].append(C(*HO(start=t, end=end, others=others, st_scel=n), *stLTE(sPCI=serv_cell, sFreq=serv_freq, tPCI=target_cell, tFreq=target_freq), *stNR(snrPCI=pscell[0]), *pcell, *_pcell, *pscell, *pscell))
+                    nr_pci = df['nr_physCellId'].iloc[i]
                     dprint(f"{t}, {end} | MN_HO ({serv_cell}, {serv_freq}) -> ({target_cell}, {target_freq}) | {others}")
                     dprint(f'{tuple(pcell)} -> {tuple(_pcell)}')
                     dprint(f'{tuple(pscell)} -> {tuple(pscell)}')
                     dprint()
             else:
-            ### SN_Rel, LTE_HO
+            ### SN_Rel, LTE_HO, SN_Rel_MN_HO
                 ### SN_Rel
                 if serv_cell == target_cell and serv_freq == target_freq:
                     a, b = find_1st_before("scgFailureInformationNR-r15")
@@ -336,20 +342,32 @@ def mi_parse_ho(df, tz=0, debug=False):
                         others = f'{others} Caused by scg-failure.' if others else 'Caused by scg-failure.'
                     D['SN_Rel'].append(HO(start=t, end=end, others=others, st_scel=n))
                     A['SN_Rel'].append(C(*HO(start=t, end=end, others=others, st_scel=n), *stLTE(sPCI=serv_cell, sFreq=serv_freq), *stNR(snrPCI=pscell[0]), *pcell, *pcell, *pscell, *NR_CEL()))
+                    nr_pci = ''
                     dprint(f"{t}, {end} | SN_Rel at nrPCI={pscell[0]} | {others}")
                     dprint(f'{tuple(pcell)} -> {tuple(pcell)}')
                     dprint(f'{tuple(pscell)} -> {tuple(NR_CEL())}')
                     pscell = NR_CEL()
                     dprint()
                 else:
-                ### LTE_HO
+                ### LTE_HO, SN_Rel_MN_HO
+                    a, b = find_1st_before("rrcConnectionSetup", 3)
+                    if a is not None:
+                        others = f'{others} Near After Connection Setup.' if others else 'Near After Connection Setup.'
                     _pcell = peek_eci(pos=j)
-                    D['LTE_HO'].append(HO(start=t, end=end, others=others, st_scel=n))
-                    A['LTE_HO'].append(C(*HO(start=t, end=end, others=others, st_scel=n), *stLTE(sPCI=serv_cell, sFreq=serv_freq, tPCI=target_cell, tFreq=target_freq), *stNR(), *pcell, *_pcell, *pscell, *pscell))
-                    dprint(f"{t}, {end} | LTE_HO ({serv_cell}, {serv_freq}) -> ({target_cell}, {target_freq}) | {others}")
-                    dprint(f'{tuple(pcell)} -> {tuple(_pcell)}')
-                    dprint(f'{tuple(pscell)} -> {tuple(pscell)}')
-                    dprint()
+                    if nr_pci != '':
+                        D['LTE_HO'].append(HO(start=t, end=end, others=others, st_scel=n))
+                        A['LTE_HO'].append(C(*HO(start=t, end=end, others=others, st_scel=n), *stLTE(sPCI=serv_cell, sFreq=serv_freq, tPCI=target_cell, tFreq=target_freq), *stNR(), *pcell, *_pcell, *pscell, *pscell))
+                        dprint(f"{t}, {end} | LTE_HO ({serv_cell}, {serv_freq}) -> ({target_cell}, {target_freq}) | {others}")
+                        dprint(f'{tuple(pcell)} -> {tuple(_pcell)}')
+                        dprint(f'{tuple(pscell)} -> {tuple(pscell)}')
+                        dprint()
+                    else:
+                        D['SN_Rel_MN_HO'].append(HO(start=t, end=end, others=others, st_scel=n))
+                        A['SN_Rel_MN_HO'].append(C(*HO(start=t, end=end, others=others, st_scel=n), *stLTE(sPCI=serv_cell, sFreq=serv_freq, tPCI=target_cell, tFreq=target_freq), *stNR(snrPCI=pscell[0]), *pcell, *_pcell, *pscell, *NR_CEL()))
+                        dprint(f"{t}, {end} | SN_Rel_MN_HO ({serv_cell}, {serv_freq}) -> ({target_cell}, {target_freq}) | {others}")
+                        dprint(f'{tuple(pcell)} -> {tuple(_pcell)}')
+                        dprint(f'{tuple(pscell)} -> {tuple(NR_CEL())}')
+                        dprint()
 
         ### SN_HO
         if df["nr-rrc.t304"].iloc[i] == 1 and not df["dualConnectivityPHR: setup (1)"].iloc[i] == 1:
@@ -358,6 +376,7 @@ def mi_parse_ho(df, tz=0, debug=False):
             _pscell = peek_nr(pos=j)
             D['SN_HO'].append(HO(start=t, end=end))
             A['SN_HO'].append(C(*HO(start=t, end=end), *stLTE(sPCI=pci, sFreq=freq), *stNR(snrPCI=pscell[0], tnrPCI=nr_target_cell), *pcell, *pcell, *pscell, *_pscell))
+            nr_pci = df['nr_physCellId'].iloc[i]
             dprint(f"{t}, {end} | SN_HO to nrPCI={nr_target_cell}")
             dprint(f'{tuple(pcell)} -> {tuple(pcell)}')
             dprint(f'{tuple(pscell)} -> {tuple(_pscell)}')
