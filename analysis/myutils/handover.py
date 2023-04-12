@@ -307,6 +307,7 @@ def mi_parse_ho(df, tz=0, debug=False):
                 others=None
             
             if serv_freq != target_freq:
+                a, b = find_1st_before("rrcConnectionReestablishmentRequest", 1)
                 others = f'{others} Inter-Freq HO.' if others else 'Inter-Freq HO.'
                 if a is not None:
                     others = f'{others} Near after RLF.' if others else 'Near after RLF.'
