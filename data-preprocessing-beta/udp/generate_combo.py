@@ -176,29 +176,31 @@ for date in dates:
                 ### TODO 3
                 colnames = []
                 data = []
-                print('', 'loss(%)', 'excl(%)', 'latency', 'max_latency', 'min_latency', sep='\t')
+                print('', 'loss(%)', 'excl(%)', 'latency', 'max_latency', 'min_latency', 'negative_ratio(%)', sep='\t')
                 for i, (dev, scheme) in enumerate(zip(devices, schemes)):
                     _df = df[df[f'lost_{scheme}'] == False]
-                    loss = sum(df[f'lost_{scheme}']) / (len(df)+1e-9) * 100
-                    excl = sum(_df[f'excl_{scheme}']) / (len(_df)+1e-9) * 100
+                    loss = round(sum(df[f'lost_{scheme}']) / (len(df)+1e-9) * 100, 3)
+                    excl = round(sum(_df[f'excl_{scheme}']) / (len(_df)+1e-9) * 100, 3)
                     latency = round(mean(_df[f'latency_{scheme}']), 6)
                     max_lat = round(max(_df[f'latency_{scheme}']), 6)
                     min_lat = round(min(_df[f'latency_{scheme}']), 6)
-                    data = [*data, *[loss, excl, latency, max_lat]]
-                    colnames = [*colnames, *[f'lost_{scheme}', f'excl_{scheme}', f'latency_{scheme}', f'max_lat_{scheme}', f'min_lat_{scheme}']]
+                    neg_ratio = round(sum(_df[f'latency_{scheme}'] < 0) / (len(_df)+1e-9) * 100, 3)
+                    data = [*data, *[loss, excl, latency, max_lat, min_lat, neg_ratio]]
+                    colnames = [*colnames, *[f'lost_{scheme}', f'excl_{scheme}', f'latency_{scheme}', f'max_lat_{scheme}', f'min_lat_{scheme}', f'negative_ratio_{scheme}']]
                     # print(scheme, round(loss, 3), round(excl, 3), latency, max_lat, sep='\t')
-                    print(scheme, loss, excl, latency, max_lat, min_lat, sep='\t')
+                    print(scheme, loss, excl, latency, max_lat, min_lat, neg_ratio, sep='\t')
                 for x in xs:
                     _df = df[df[f'lost_{schemes[x[0]]}+{schemes[x[1]]}'] == False]
-                    loss = sum(df[f'lost_{schemes[x[0]]}+{schemes[x[1]]}']) / (len(df)+1e-9) * 100
-                    excl = sum(_df[f'excl_{schemes[x[0]]}+{schemes[x[1]]}']) / (len(_df)+1e-9) * 100
+                    loss = round(sum(df[f'lost_{schemes[x[0]]}+{schemes[x[1]]}']) / (len(df)+1e-9) * 100, 3)
+                    excl = round(sum(_df[f'excl_{schemes[x[0]]}+{schemes[x[1]]}']) / (len(_df)+1e-9) * 100, 3)
                     latency = round(mean(_df[f'latency_{schemes[x[0]]}+{schemes[x[1]]}']), 6)
                     max_lat = round(max(_df[f'latency_{schemes[x[0]]}+{schemes[x[1]]}']), 6)
                     min_lat = round(min(_df[f'latency_{schemes[x[0]]}+{schemes[x[1]]}']), 6)
-                    data = [*data, *[loss, excl, latency, max_lat]]
-                    colnames = [*colnames, *[f'lost_{schemes[x[0]]}+{schemes[x[1]]}', f'excl_{schemes[x[0]]}+{schemes[x[1]]}', f'latency_{schemes[x[0]]}+{schemes[x[1]]}', f'max_lat_{schemes[x[0]]}+{schemes[x[1]]}', f'min_lat_{schemes[x[0]]}+{schemes[x[1]]}']]
+                    neg_ratio = round(sum(_df[f'latency_{schemes[x[0]]}+{schemes[x[1]]}'] < 0) / (len(_df)+1e-9) * 100, 3)
+                    data = [*data, *[loss, excl, latency, max_lat, min_lat, neg_ratio]]
+                    colnames = [*colnames, *[f'lost_{schemes[x[0]]}+{schemes[x[1]]}', f'excl_{schemes[x[0]]}+{schemes[x[1]]}', f'latency_{schemes[x[0]]}+{schemes[x[1]]}', f'max_lat_{schemes[x[0]]}+{schemes[x[1]]}', f'min_lat_{schemes[x[0]]}+{schemes[x[1]]}', f'negative_ratio_{schemes[x[0]]}+{schemes[x[1]]}']]
                     # print(f'{schemes[x[0]]}+{schemes[x[1]]}', round(loss, 3), round(excl, 3), latency, max_lat, sep='\t')
-                    print(f'{schemes[x[0]]}+{schemes[x[1]]}', loss, excl, latency, max_lat, min_lat, sep='\t')
+                    print(f'{schemes[x[0]]}+{schemes[x[1]]}', loss, excl, latency, max_lat, min_lat, neg_ratio, sep='\t')
                 fout2 = os.path.join(target_dir, f"udp_{tag}_combo_statistics.csv")
                 print("output >>>", fout2)
                 with open(fout2, "w", newline='') as fp:
