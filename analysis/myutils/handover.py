@@ -292,7 +292,7 @@ def mi_parse_ho(df, tz=0, debug=False):
             dprint(f'{tuple(pscell)} -> {tuple(pscell)}')
             dprint()
         
-        ### SN_Setup, SN_Rel, MO_HO, LTE_HO
+        ### SN_Setup, SN_Rel, MO_HO, LTE_HO, SN_Rel_MN_HO
         if df["lte-rrc.t304"].iloc[i] == 1:
             end, j = find_1st_after('rrcConnectionReconfigurationComplete')
             serv_cell, target_cell = pci, int(df['lte_targetPhysCellId'].iloc[i])
@@ -307,6 +307,7 @@ def mi_parse_ho(df, tz=0, debug=False):
                 others=None
             
             if serv_freq != target_freq:
+                a, b = find_1st_before("rrcConnectionReestablishmentRequest", 1)
                 others = f'{others} Inter-Freq HO.' if others else 'Inter-Freq HO.'
                 if a is not None:
                     others = f'{others} Near after RLF.' if others else 'Near after RLF.'
