@@ -707,7 +707,8 @@ for date in dates:
                     )
                 df = pd.concat([df, *dfs], axis=1)
                 ### TODO 2
-                xs = list(itertools.combinations(range(len(schemes)), 2))
+                # xs = list(itertools.combinations(range(len(schemes)), 2))
+                xs = list(it.combinations(range(len(schemes)), 2))
                 for x in xs:
                     df[f'lost_{schemes[x[0]]}+{schemes[x[1]]}'] = df[f'lost_{schemes[x[0]]}'] & df[f'lost_{schemes[x[1]]}']
                     df[f'excl_{schemes[x[0]]}+{schemes[x[1]]}'] = df[f'excl_{schemes[x[0]]}'] & df[f'excl_{schemes[x[1]]}']

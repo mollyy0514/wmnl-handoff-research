@@ -6,7 +6,7 @@ from numpy.core import multiarray as mu
 from numpy.core import umath as um
 from numpy.core.multiarray import asanyarray
 from numpy.core import numerictypes as nt
-from numpy.core._ufunc_config import _no_nep50_warning
+# from numpy.core._ufunc_config import _no_nep50_warning
 
 __all__ = ['nansumsq','nanrms']
 
@@ -74,9 +74,10 @@ def _sumsq(a, axis=None, dtype=None, out=None, ddof=0, keepdims=False, *,
         # matching rcount to arrmean when where is specified as array
         div = rcount.reshape(arrmean.shape)
     if isinstance(arrmean, mu.ndarray):
-        with _no_nep50_warning():
-            arrmean = um.true_divide(arrmean, div, out=arrmean,
-                                     casting='unsafe', subok=False)
+        pass
+        # with _no_nep50_warning():
+        #     arrmean = um.true_divide(arrmean, div, out=arrmean,
+        #                              casting='unsafe', subok=False)
     elif hasattr(arrmean, "dtype"):
         arrmean = arrmean.dtype.type(arrmean / rcount)
     else:
@@ -107,9 +108,10 @@ def _sumsq(a, axis=None, dtype=None, out=None, ddof=0, keepdims=False, *,
 
     # divide by degrees of freedom
     if isinstance(ret, mu.ndarray):
-        with _no_nep50_warning():
-            ret = um.true_divide(
-                    ret, rcount, out=ret, casting='unsafe', subok=False)
+        pass
+        # with _no_nep50_warning():
+        #     ret = um.true_divide(
+        #             ret, rcount, out=ret, casting='unsafe', subok=False)
     elif hasattr(ret, 'dtype'):
         ret = ret.dtype.type(ret / rcount)
     else:
