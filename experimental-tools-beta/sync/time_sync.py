@@ -16,12 +16,29 @@ from myutils import makedir
 HOST = '140.112.20.183'
 PORT = 3298
 
+def mean(numlist):
+    _sum = 0
+    for item in numlist:
+        _sum += item
+    return _sum / len(numlist)
+
+def quantile(data, q):
+    q /= 100
+    sorted_data = sorted(data)
+    n = len(sorted_data)
+    index = q * (n - 1)
+    if index.is_integer():
+        return sorted_data[int(index)]
+    else:
+        lower = sorted_data[int(index)]
+        upper = sorted_data[int(index) + 1]
+        return lower + (upper - lower) * (index - int(index))
 
 def qset_bdd(client_rtt):
     sorted_rtt = sorted([s[3] for s in client_rtt])
     
-    upper_q = np.percentile(sorted_rtt, 75)
-    lower_q = np.percentile(sorted_rtt, 25)
+    upper_q = quantile(sorted_rtt, 75)
+    lower_q = quantile(sorted_rtt, 25)
     iqr = (upper_q - lower_q) * 1.5
     
     qset = (lower_q - iqr, upper_q + iqr)
@@ -57,13 +74,13 @@ def clock_diff(device):
     # print(cnt, qset)
     
     sorted_deltas = sorted(deltas)
-    upper_q = np.percentile(sorted_deltas, 75)
-    lower_q = np.percentile(sorted_deltas, 25)
+    upper_q = quantile(sorted_deltas, 75)
+    lower_q = quantile(sorted_deltas, 25)
     iqr = (upper_q - lower_q) * 1.5
     qset = (lower_q - iqr, upper_q + iqr)
     
     deltas = [s for s in deltas if s >= qset[0] and s <= qset[1]]
-    diff = np.mean(deltas)
+    diff = mean(deltas)
     print(len(deltas), qset)
 
     # diff > 0: client is behind server by abs(diff) seconds
