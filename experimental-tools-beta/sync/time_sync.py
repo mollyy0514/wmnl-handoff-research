@@ -10,7 +10,7 @@ import time
 import csv
 import json
 import datetime as dt
-import numpy as np
+# import numpy as np
 from myutils import makedir
 
 HOST = '140.112.20.183'
