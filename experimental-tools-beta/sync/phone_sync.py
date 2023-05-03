@@ -3,6 +3,7 @@ import subprocess
 from device_to_port import device_to_port
 from device_to_serial import device_to_serial
 import argparse
+import time
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-H", "--host", type=str,
@@ -34,6 +35,8 @@ serials = [device_to_serial[dev] for dev in devices]
 
 print(devices)
 print(serials)
+
+time.sleep(3)
 
 for device, serial in zip(devices, serials):
     su_cmd = 'cd sdcard/wmnl-handoff-research/experimental-tools-beta/sync && python3 time_sync.py -c'
