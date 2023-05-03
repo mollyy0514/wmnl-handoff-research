@@ -17,6 +17,8 @@ HOST = '140.112.20.183'
 PORT = 3298
 
 def mean(numlist):
+    if len(numlist) == 0:
+        return 0
     _sum = 0
     for item in numlist:
         _sum += item
