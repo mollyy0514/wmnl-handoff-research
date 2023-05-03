@@ -16,13 +16,13 @@ from myutils import makedir
 HOST = '140.112.20.183'
 PORT = 3298
 
-def mean(numlist):
-    if len(numlist) == 0:
+def mean(numbers):
+    if len(numbers) == 0:
         return 0
     _sum = 0
-    for item in numlist:
+    for item in numbers:
         _sum += item
-    return _sum / len(numlist)
+    return _sum / len(numbers)
 
 def quantile(data, q):
     q /= 100
