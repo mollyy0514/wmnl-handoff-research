@@ -281,9 +281,14 @@ def mi_parse_ho(df, tz=0, debug=False):
         if df["rrcConnectionRequest"].iloc[i] == 1:
             a, j1 = find_1st_after('rrcConnectionReconfigurationComplete',look_after=2)
             b, j2 = find_1st_after('securityModeComplete',look_after=2)
-            end = a if a > b else b
-            j = j1 if a > b else j2
-            _pcell = peek_eci(pos=j)
+            if a == None and b == None:
+                print("Warning: Conn_Setup without end!")
+                end, j = None, None
+                _pcell = peek_eci()
+            else:
+                end = a if a > b else b
+                j = j1 if a > b else j2
+                _pcell = peek_eci(pos=j)
             D['Conn_Setup'].append(HO(start=t, end=end))
             A['Conn_Setup'].append(C(*HO(start=t, end=end), *stLTE(tPCI=pci, tFreq=freq), *stNR(), *pcell, *_pcell, *pscell, *pscell))
             nr_pci = ''

@@ -1,0 +1,5 @@
+df = pd.read_csv(data)
+            df, _, _ = mi_parse_ho(df, tz=8)
+            df['ho_type0'] = df['ho_type'].astype('string')
+            df.loc[df['cause'].notna(), 'ho_type0'] = df['ho_type'].astype('string') + '_' + df['cause'].astype('string')
+            df['ho_type0'] = df['ho_type0'].astype('category')
