@@ -360,7 +360,7 @@ def mi_parse_ho(df, tz=0, debug=False):
                     if a is not None:
                         others = f'{others} Near After Connection Setup.' if others else 'Near After Connection Setup.'
                     _pcell = peek_eci(pos=j)
-                    if nr_pci != '':
+                    if nr_pci == '':
                         D['LTE_HO'].append(HO(start=t, end=end, others=others, st_scel=n))
                         A['LTE_HO'].append(C(*HO(start=t, end=end, others=others, st_scel=n), *stLTE(sPCI=serv_cell, sFreq=serv_freq, tPCI=target_cell, tFreq=target_freq), *stNR(), *pcell, *_pcell, *pscell, *pscell))
                         dprint(f"{t}, {end} | LTE_HO ({serv_cell}, {serv_freq}) -> ({target_cell}, {target_freq}) | {others}")
