@@ -25,7 +25,7 @@ from myutils import makedir
 database = "/home/wmnlab/D/database/"
 # database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
 dates = [
-    "2023-04-17",
+    "2023-05-15",
 ]
 json_files = [
     "time_sync_lpt3.json",
