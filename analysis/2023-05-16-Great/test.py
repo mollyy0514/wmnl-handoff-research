@@ -1,0 +1,7 @@
+df_pscel = df_eutra.loc[df_eutra['serv_cel_index'] == 'PCell', ['Timestamp','PCI','EARFCN','RSRP','RSRQ']].reset_index(drop=True).copy()
+df_pscel['Time'] = df_pscel['Timestamp'].dt.strftime("%H:%M:%S")
+df_pscel['index_cng'] = df_pscel['PCI'].diff().fillna(1)
+df_pscel['earfcn_cng'] = df_pscel['EARFCN'].diff().fillna(1)
+table = df_pscel.loc[(df_pscel['index_cng'] != 0) | (df_pscel['earfcn_cng'] != 0), ['Time','PCI','EARFCN']].reset_index(drop=True).copy()
+print('PCell Sequence')
+display(table.T)
