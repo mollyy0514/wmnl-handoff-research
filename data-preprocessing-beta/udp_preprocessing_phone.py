@@ -25,7 +25,7 @@ from myutils import makedir
 database = "/home/wmnlab/D/database/"
 # database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
 dates = [
-    "2023-05-24",
+    "2023-05-26",
 ]
 json_files = [
     ["time_sync_sm00.json", "time_sync_sm01.json", "time_sync_sm02.json", "time_sync_sm03.json",
@@ -53,7 +53,7 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
     # "_Bandlock_Udp_All_LTE_B1_B3_RM500Q": (2, ["#{:02d}".format(i+1) for i in range(2)]),
     # "_Bandlock_Udp_All_LTE_B7_B8_RM500Q": (2, ["#{:02d}".format(i+1) for i in range(2)]),
     # "_LabTest": (1, ["#{:02d}".format(i+1) for i in range(1)]),
-    "_Bandlock_8_Schemes_Phone": (8, ["#{:02d}".format(i+1) for i in range(8)]),
+    "Bandlock_8_Schemes_Phone": (10, ["#{:02d}".format(i+1) for i in range(10)]),
 }
 _devices = [
     # ["qc00", "qc01", "qc02", "qc03"],
