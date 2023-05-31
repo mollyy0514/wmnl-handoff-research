@@ -752,3 +752,40 @@ for date in dates:
                     writer.writerow(data)
                 t.toc()
                 ### TODO END
+
+for date in dates:
+    for (expr, (times, traces)), devices in zip(exps.items(), _devices):
+        for dev in devices:
+            if not os.path.isdir(os.path.join(database, date, expr, dev)):
+                print("{} does not exist.\n".format(os.path.join(database, date, expr, dev)))
+                continue
+
+            if traces == None:
+                print("------------------------------------------")
+                print(date, expr, dev)
+                print("------------------------------------------")
+                source_dir = os.path.join(database, date, expr, dev)
+                target_dir = os.path.join(database, date, expr, dev)
+                makedir(target_dir)
+                filenames = os.listdir(source_dir)
+                continue
+            elif len(traces) == 0:
+                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+            
+            traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
+            for trace in traces:
+                print("------------------------------------------")
+                print(date, expr, dev, trace)
+                print("------------------------------------------")
+                source_dir = os.path.join(database, date, expr, dev, trace, "data")
+                target_dir = os.path.join(database, date, expr, dev, trace, "data")
+                
+                for filename in sorted(os.listdir(source_dir)):
+                    if not filename.endswith('.csv'):
+                        continue
+                    filepath = os.path.join(source_dir, filename)
+                    print(filepath, os.path.isfile(filepath))
+                    print(f'{filepath[:-4]}.pkl')
+                    
+                    fp = pd.read_csv(filepath)
+                    fp.to_pickle(f'{filepath[:-4]}.pkl')
