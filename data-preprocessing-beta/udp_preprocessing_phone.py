@@ -25,9 +25,12 @@ from myutils import makedir
 database = "/home/wmnlab/D/database/"
 # database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
 dates = [
-    "2023-05-26",
+    "2023-06-12",
+    "2023-06-13",
 ]
 json_files = [
+    ["time_sync_sm00.json", "time_sync_sm01.json", "time_sync_sm02.json", "time_sync_sm03.json",
+     "time_sync_sm04.json", "time_sync_sm05.json", "time_sync_sm06.json", "time_sync_sm07.json",],
     ["time_sync_sm00.json", "time_sync_sm01.json", "time_sync_sm02.json", "time_sync_sm03.json",
      "time_sync_sm04.json", "time_sync_sm05.json", "time_sync_sm06.json", "time_sync_sm07.json",],
 ]
@@ -63,6 +66,7 @@ _devices = [
     # ["qc00", "qc01", "qc02", "qc03"],
     # ["qc00", "qc01", "qc02", "qc03"],
     ["sm00", "sm01", "sm02", "sm03", "sm04", "sm05", "sm06", "sm07",],
+    ["sm00", "sm01", "sm02", "sm03", "sm04", "sm05", "sm06", "sm07",],
 ]
 _schemes = [
     # ["All", "LTE", "B1B3", "B3B7"],
@@ -71,6 +75,7 @@ _schemes = [
     # ["All0", "LTE1", "All2", "LTE3"],
     # ["All", "LTE", "B1", "B3"],
     # ["All", "LTE", "B7", "B8"],
+    ["All", "B3", "B7", "B8", "B3B7", "B3B8", "B7B8", "LTE",],
     ["All", "B3", "B7", "B8", "B3B7", "B3B8", "B7B8", "LTE",],
 ]
 
