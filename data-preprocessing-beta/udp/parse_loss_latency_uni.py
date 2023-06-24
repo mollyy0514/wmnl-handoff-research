@@ -20,11 +20,19 @@ import portion as P
 import math
 import random
 
+__all__ = [
+    'get_loss',
+    'consolidate',
+    'compensate',
+    'get_latency',
+    'get_statistics'
+]
+
 # ******************************* User Settings *******************************
 database = "/home/wmnlab/D/database/"
 database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
 dates = [
-    "2023-03-16"
+    "2023-06-14"
 ]
 json_files = ["time_sync_lpt3.json"]
 json_files = [os.path.join(database, date, json_file) for date, json_file in zip(dates, json_files)]
@@ -39,8 +47,8 @@ devices = sorted([
     # "sm07",
     # "sm08",
     "qc00",
-    "qc01",
-    "qc02",
+    # "qc01",
+    # "qc02",
     "qc03",
 ])
 exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_round)
@@ -48,9 +56,10 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
     # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (16, []),
-    "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (4, ["#{:02d}".format(i+1) for i in range(12, 16)]),
+    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (4, ["#{:02d}".format(i+1) for i in range(12, 16)]),
     # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (6, ["#{:02d}".format(i+1) for i in range(6)]),
     # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (3, ["#{:02d}".format(i+1) for i in range(3, 6)]),
+    "Modem_Action_Test": (2, ["#{:02d}".format(i+1) for i in range(2)]),
 }
 
 class Payload:

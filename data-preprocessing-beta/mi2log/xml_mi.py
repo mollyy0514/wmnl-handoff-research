@@ -693,17 +693,23 @@ def xml_to_csv_rrc(fin, fout):
                                 type_code[c] = 'nr or cqi report'
                                 c += 1
                             next = 3
-                        elif type in l and type not in ["physCellId", "measObjectId", "measObject", "reportConfigId", "measId","carrierFreq"]:
+                        elif type in l and type == "\"SupportedBandEUTRA\"":
+                            type_code[c] = "1"
+                            c += 1
+                            l = passlines(1, f)
+                            multi_output_write(type_code, c, "bandEUTRA", l)
+                            next = 1
+                        elif type in l and type not in ["physCellId", "measObjectId", "measObject", "reportConfigId", "measId","carrierFreq","bandEUTRA"]:
                             type_code[c] = "1"
                             
                         c += 1
                     
                     l = f.readline()
                 l = f.readline()
-                # f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ['']*7 + type_code)+'\n')
-                f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ['']*9 + type_code)+'\n')
+                f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ['']*7 + type_code)+'\n')
         else:
             print(l,"Error! Invalid data content.")
+            delete = True
             break 
     
     f2.close()

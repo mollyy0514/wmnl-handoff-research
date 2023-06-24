@@ -492,19 +492,9 @@ def xml_to_csv_rrc(fin, fout):
                 PCI = "-"
                 Freq = '-'
 
-            if type_id != 'LTE_RRC_OTA_Packet' and type_id != '5G_NR_RRC_OTA_Packet' and type_id != "LTE_RRC_Serv_Cell_Info": ## 只處理RRC
-                while l and r"</dm_log_packet>" not in l:
-                    l = f.readline()
-                l = f.readline()
-                continue
-            # if r"</dm_log_packet>" in l: # 過濾不能parse只有一行的message
-            #     l = f.readline()
-            #     continue
-            #     f2.write(",".join([timestamp, type_id, PCI, "-"] + type_code)+'\n')
-            # print(222)
+            
 
-            elif type_id == "LTE_RRC_Serv_Cell_Info":
-                # print("LTE_RRC_Serv_Cell_Info")
+            if type_id == "LTE_RRC_Serv_Cell_Info": # 處理serv cell info
                 PCI = soup.find(key="Cell ID").get_text()
                 DL_f = soup.find(key="Downlink frequency").get_text()
                 UL_f = soup.find(key="Uplink frequency").get_text()
@@ -514,12 +504,18 @@ def xml_to_csv_rrc(fin, fout):
                 TAC = soup.find(key="TAC").get_text()
                 Band_ID = soup.find(key="Band Indicator").get_text()
                 MCC = soup.find(key="MCC").get_text()
-                MNC_d = soup.find(key="MNC Digit").get_text()
-                MNC = soup.find(key="MNC").get_text()
-                # f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ["", "", "", "", "", "", "", "", "", ""] + type_code)+'\n')
-                f2.write(",".join([timestamp, type_id, PCI, "", "", DL_f, UL_f, DL_BW, UL_BW, Cell_identity, TAC, Band_ID, MCC, MNC, MNC_d] )+'\n')
-                # print("LTE_RRC_Serv_Cell_Info end!!")
+                # MNC_d = soup.find(key="MNC Digit").get_text()
+                MNC = soup.find(key="MNC").get_text()                
+                # f2.write(",".join([timestamp, type_id, PCI,'','', DL_f, UL_f, Cell_identity, TAC, Band_ID, MCC, MNC] )+'\n')
+                f2.write(",".join([timestamp, type_id, PCI,'','', DL_f, UL_f, DL_BW, UL_BW, Cell_identity, TAC, Band_ID, MCC, MNC] )+'\n')
                 l = f.readline()
+                continue
+                
+            elif type_id != 'LTE_RRC_OTA_Packet' and type_id != '5G_NR_RRC_OTA_Packet': ## 過濾其他只處理RRC
+                while l and r"</dm_log_packet>" not in l:
+                    l = f.readline()
+                l = f.readline()
+                continue
 
             else:
                 UL_DL = '-'
@@ -537,18 +533,20 @@ def xml_to_csv_rrc(fin, fout):
                             next -= 1
                             continue
     
-                        if type in l and type == "\"measurementReport\"":
+                        if type in l and type ==  "\"lte-rrc.measurementReport_element\"":
                             type_code[c] = "1"
-                            c += 1
-                            if "\"lte-rrc.measurementReport_element\"" in l:
-                                l = passlines(10, f)
+                            c+=2
+                            l = passlines(10, f)
+                            type_code[c] = get_text(l, "measId")
+                            next = 2
+                        elif type in l and type ==  "\"nr-rrc.measurementReport_element\"" :
+                            type_code[c] = "1"
+                            c+=1
+                            l = passlines(9, f)
+                            try :
                                 type_code[c] = get_text(l, "measId")
-                            elif "\"nr-rrc.measurementReport_element\"" in l:
-                                l = passlines(9, f)
-                                try :
-                                    type_code[c] = get_text(l, "measId")
-                                except:
-                                    type_code[c] = "none"
+                            except:
+                                type_code[c] = "none"
                             next = 1
                         elif type in l and type == "\"MeasResultEUTRA\"":
                             type_code[c] = "1"
@@ -580,12 +578,21 @@ def xml_to_csv_rrc(fin, fout):
                             l = passlines(3, f)
                             multi_output_write(type_code, c, "pci-r15", l)
                             next = 1
-                        elif type in l and type == "\"MeasObjectToAddMod\"":
-                            type_code[c] = "1"
-                            c += 1
-                            l = f.readline()
-                            multi_output_write(type_code, c, "measObjectId", l)
-                            c += 1 
+                        elif type in l and (type == "\"lte-rrc.MeasObjectToAddMod_element\"" or type == "\"nr-rrc.MeasObjectToAddMod_element\""):
+                            
+                            if type == "\"lte-rrc.MeasObjectToAddMod_element\"":
+                                type_code[c] = "1"
+                                c += 2
+                                l = f.readline()
+                                multi_output_write(type_code, c, "measObjectId", l)
+                                c += 1 
+                            elif type == "\"nr-rrc.MeasObjectToAddMod_element\"":
+                                type_code[c] = "1"
+                                c += 1
+                                l = f.readline()
+                                multi_output_write(type_code, c, "measObjectId", l)
+                                c += 1 
+
                             while l:
                                 l = f.readline()
                                 if "\"lte-rrc.measObject\"" in l:
@@ -610,15 +617,14 @@ def xml_to_csv_rrc(fin, fout):
                                         multi_output_write(type_code, c, "ssbFrequency", l)
                                     next = 5
                                     break
-                        elif type in l and type == "\"ReportConfigToAddMod\"":
+                        
+                        elif type in l and type == "\"lte-rrc.ReportConfigToAddMod_element\"": 
                             type_code[c] = "1"
                             c += 1
                             l = f.readline()
                             multi_output_write(type_code, c, "reportConfigId", l)
-
                             c += 1
                             triggerType, l = find_next_str_and_write(type_code, f, ["triggerType", "reportType"], c)
-
                             c += 1
                             if triggerType == "event (0)":
                                 eventId, l = find_next_str_and_write(type_code,f,["eventId"],c)
@@ -631,22 +637,31 @@ def xml_to_csv_rrc(fin, fout):
                                 c += 1
                                 paras = r'{}'
                                 multi_output_write(type_code, c, paras)
-                            elif triggerType == "eventTriggered (1)":
+                            next = 4
+
+                        elif type in l and type == "\"nr-rrc.ReportConfigToAddMod_element\"":
+                            type_code[c] = "1"
+                            c += 1
+                            l = f.readline()
+                            multi_output_write(type_code, c, "reportConfigId", l)
+                            c += 1
+                            triggerType, l = find_next_str_and_write(type_code, f, ["triggerType", "reportType"], c)
+                            c += 1
+                            if triggerType == "eventTriggered (1)":
                                 eventId, l = find_next_str_and_write(type_code,f,["eventId"],c)
                                 c += 1
                                 paras = get_event_paras(f, eventId, l)
                                 multi_output_write(type_code, c, paras)
-
                             next = 4
-                        elif type in l and type == 'measIdToRemoveList':
-                            if "lte-rrc.measIdToRemoveList" in l:
-                                n = ''.join(filter(str.isdigit, get_text(l, "measIdToRemoveList")))
-                                n = int(n)
-                                l = passlines(2, f)
-                                for i in range(n):
-                                    multi_output_write(type_code, c, get_text(l, "MeasId"))
-                                    l = passlines(3, f)
-                        elif type in l and type == "\"MeasIdToAddMod\"":
+
+                        elif type in l and type == "\"lte-rrc.measIdToRemoveList\"":
+                            n = ''.join(filter(str.isdigit, get_text(l, "measIdToRemoveList")))
+                            n = int(n)
+                            l = passlines(2, f)
+                            for i in range(n):
+                                multi_output_write(type_code, c, get_text(l, "MeasId"))
+                                l = passlines(3, f)
+                        elif type in l and (type == "\"lte-rrc.MeasIdToAddMod_element\"" or type == "\"nr-rrc.MeasIdToAddMod_element\""):
                             multi_output_write(type_code, c, get_meas_report_pairs(f))
                         elif type in l and type == "\"rrcConnectionReestablishmentRequest\"":
                             type_code[c] = "1"
@@ -664,42 +679,69 @@ def xml_to_csv_rrc(fin, fout):
                             type_code[c] = get_text(l, "failureType-r15")
                             next = 1
                         elif type in l and type == "\"lte-rrc.targetPhysCellId\"":
-                            type_code[c] = get_text(l, "targetPhysCellId")                                         
+                            type_code[c] = get_text(l, "targetPhysCellId")
+                            c += 1
+                            l = passlines(2, f)
+                            if "\"lte-rrc.t304\"" in l:
+                                type_code[c] = 'intrafreq'
+                                c += 1
+                                type_code[c] = "1"
+                                next = 2
+                            else:
+                                l = passlines(1, f)
+                                type_code[c] = get_text(l, "dl-CarrierFreq")
+                                next = 1
                         elif type in l and type == "\"nr-rrc.physCellId\"":
                             type_code[c] = get_text(l, "physCellId")
                         elif type in l and type == "\"sCellToReleaseList-r10:":
-                            type_code[c] = "1"
+                            type_code[c] = get_text(l, "sCellToReleaseList-r10")
                             c += 1
-                            l = passlines(2, f)
-                            type_code[c] = get_text(l, "SCellIndex-r10")
+                            num = int(re.sub( "[^0-9]", '', get_text(l, "sCellToReleaseList-r10")))
+                            for i in range(num):
+                                if i == 0:
+                                    l = passlines(2, f)
+                                else:
+                                    l = passlines(3,    f)
+                                multi_output_write(type_code, c, "SCellIndex-r10", l)
+                            # type_code[c] = get_text(l, "SCellIndex-r10")
                             next = 1
                         elif type in l and type == "\"SCellToAddMod-r10\"":
                             type_code[c] = "1"
                             c += 1
                             l = passlines(5, f)
-                            type_code[c] = get_text(l, "sCellIndex-r10")
-                            try:
-                                c += 1
-                                l = passlines(2, f)
-                                type_code[c] = get_text(l, "physCellId-r10")
+                            multi_output_write(type_code, c, "sCellIndex-r10", l)
+                            # type_code[c] = get_text(l, "sCellIndex-r10")
+                            c += 1
+                            l = passlines(2, f)
+                            if "physCellId-r10" in l:
+                                multi_output_write(type_code, c, "physCellId-r10", l)
+                                # type_code[c] = get_text(l, "physCellId-r10")
                                 c += 1
                                 l = passlines(1, f)
-                                type_code[c] = get_text(l, "dl-CarrierFreq-r10")
-                            except:
-                                c += 2
+                                multi_output_write(type_code, c, "dl-CarrierFreq-r10", l)
+                                # type_code[c] = get_text(l, "dl-CarrierFreq-r10")
+                            else:
+                                type_code[c] = 'nr or cqi report'
+                                c += 1
                             next = 3
-                        elif type in l and type not in ["physCellId", "measObjectId", "measObject", "reportConfigId", "measId",]:
+                        elif type in l and type == "\"SupportedBandEUTRA\"":
+                            type_code[c] = "1"
+                            c += 1
+                            l = passlines(1, f)
+                            multi_output_write(type_code, c, "bandEUTRA", l)
+                            next = 1
+                        elif type in l and type not in ["physCellId", "measObjectId", "measObject", "reportConfigId", "measId","carrierFreq","bandEUTRA"]:
                             type_code[c] = "1"
                             
                         c += 1
                     
                     l = f.readline()
                 l = f.readline()
-                f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ["", "", "", "", "", "", "", "", "", ""] + type_code)+'\n')
-                # f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + type_code)+'\n')
+                f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ['']*7 + type_code)+'\n')
         else:
-            print(l,"Error!")
-            break 
+            print(l,"Error! Invalid data content.")
+            delete = True
+            break
             
     f2.close()
     f.close()

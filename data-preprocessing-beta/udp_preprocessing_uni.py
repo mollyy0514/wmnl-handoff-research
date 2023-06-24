@@ -25,7 +25,7 @@ from myutils import makedir
 database = "/home/wmnlab/D/database/"
 # database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
 dates = [
-    "2023-06-21",
+    "2023-06-14",
 ]
 json_files = [
     "time_sync_lpt3.json",
@@ -36,39 +36,13 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    # "_Bandlock_Udp_B3_B7_B8_RM500Q": (6, ["#{:02d}".format(i+1) for i in range(6)]),
-    # "_Bandlock_Udp_All_RM500Q": (4, ["#{:02d}".format(i+1) for i in range(4)]),
-    # "_Bandlock_Udp_B3_B7_B8_RM500Q": (1, ["#{:02d}".format(i+1) for i in range(1, 2)]),
-    # "_Bandlock_Udp_All_RM500Q": (1, ["#{:02d}".format(i+1) for i in range(1, 2)]),
-    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (6, ["#{:02d}".format(i+1) for i in range(6)]),
-    # "_Bandlock_Udp_All_LTE_B1B3_B1B8_RM500Q": (4, ["#{:02d}".format(i+1) for i in range(4)]),
-    # "_Experiment1": (2, ["#{:02d}".format(i+1) for i in range(2)]),
-    # "_Experiment2": (2, ["#{:02d}".format(i+1) for i in range(2)]),
-    # "_Experiment3": (2, ["#{:02d}".format(i+1) for i in range(2)]),
-    # "_Bandlock_Udp_All_LTE_B1B3_B3B7_RM500Q": (4, ["#{:02d}".format(i+1) for i in range(4)]),
-    # "_Bandlock_Udp_All_LTE_B1B7_B7B8_RM500Q": (4, ["#{:02d}".format(i+1) for i in range(4)]),
-    # "_Bandlock_Udp_All_LTE_B1B8_B3B8_RM500Q": (4, ["#{:02d}".format(i+1) for i in range(4)]),
-    # "_Bandlock_Udp_All_LTE_All_LTE_RM500Q": (4, ["#{:02d}".format(i+1) for i in range(4)]),
-    # "_Bandlock_Udp_All_LTE_B1_B3_RM500Q": (2, ["#{:02d}".format(i+1) for i in range(2)]),
-    # "_Bandlock_Udp_All_LTE_B7_B8_RM500Q": (2, ["#{:02d}".format(i+1) for i in range(2)]),
-    "Modem_Action_Test": (4, ["#{:02d}".format(i+1) for i in range(4)]),
+    "Modem_Action_Test": (2, ["#{:02d}".format(i+1) for i in range(2)]),
 }
 _devices = [
+    ["qc00",  "qc03"],
     # ["qc00", "qc01", "qc02", "qc03"],
-    # ["qc00", "qc01", "qc02", "qc03"],
-    # ["qc00", "qc01", "qc02", "qc03"],
-    # ["qc00", "qc01", "qc02", "qc03"],
-    # ["qc00", "qc01", "qc02", "qc03"],
-    # ["qc00", "qc01", "qc02", "qc03"],
-    ["qc00", "qc03"],
 ]
 _schemes = [
-    # ["All", "LTE", "B1B3", "B3B7"],
-    # ["All", "LTE", "B1B7", "B7B8"],
-    # ["All", "LTE", "B1B8", "B3B8"],
-    # ["All0", "LTE1", "All2", "LTE3"],
-    # ["All", "LTE", "B1", "B3"],
-    # ["All", "LTE", "B7", "B8"],
     ["radio1", "radio2"]
 ]
 
@@ -523,7 +497,7 @@ for date in dates:
 t.toc()  # Time elapsed since t.tic()
 # *****************************************************************************
 
-from udp.parse_loss_latency import get_loss, consolidate, compensate, get_latency, get_statistics
+from udp.parse_loss_latency_uni import get_loss, consolidate, compensate, get_latency, get_statistics
 
 t = TicToc()  # create instance of class
 t.tic()  # Start timer
@@ -594,34 +568,50 @@ for date, json_file in zip(dates, json_files):
                 t1 = TicToc()  # create instance of class
                 t1.tic()  # Start timer
                 
-                dl_txdf = pd.read_csv(os.path.join(source_dir, "udp_dnlk_server_pkt_brief.csv"))
-                dl_rxdf = pd.read_csv(os.path.join(source_dir, "udp_dnlk_client_pkt_brief.csv"))
-                ul_txdf = pd.read_csv(os.path.join(source_dir, "udp_uplk_client_pkt_brief.csv"))
-                ul_rxdf = pd.read_csv(os.path.join(source_dir, "udp_uplk_server_pkt_brief.csv"))
+                if sys.argv[1] == '-c':
+                    dl_rxdf = pd.read_csv(os.path.join(source_dir, "udp_dnlk_client_pkt_brief.csv"))
+                    ul_txdf = pd.read_csv(os.path.join(source_dir, "udp_uplk_client_pkt_brief.csv"))
+                elif sys.argv[1] == '-s':
+                    dl_txdf = pd.read_csv(os.path.join(source_dir, "udp_dnlk_server_pkt_brief.csv"))
+                    ul_rxdf = pd.read_csv(os.path.join(source_dir, "udp_uplk_server_pkt_brief.csv"))
+                else:
+                    pass
                 
-                dl_txseq = list(dl_txdf["seq"].array)
-                dl_rxseq = list(dl_rxdf["seq"].array)
-                dlst = max(dl_txseq[0], dl_rxseq[0])
-                dlet = min(dl_txseq[-1], dl_rxseq[-1])
-                # print(dlst, dlet)
-
-                ul_txseq = list(ul_txdf["seq"].array)
-                ul_rxseq = list(ul_rxdf["seq"].array)
-                ulst = max(ul_txseq[0], ul_rxseq[0])
-                ulet = min(ul_txseq[-1], ul_rxseq[-1])
-                # print(ulst, ulet)
-
-                st = max(dlst, ulst)
-                et = min(dlet, ulet)
+                
+                if sys.argv[1] == '-c':
+                    dl_rxseq = list(dl_rxdf["seq"].array)
+                    dlst = dl_rxseq[0]
+                    dlet = dl_rxseq[-1]
+                    ul_txseq = list(ul_txdf["seq"].array)
+                    ulst = ul_txseq[0]
+                    ulet = ul_txseq[-1]
+                    st = max(dlst, ulst)
+                    et = min(dlet, ulet)
+                elif sys.argv[1] == '-s':
+                    dl_txseq = list(dl_txdf["seq"].array)
+                    dlst = dl_txseq[0]
+                    dlet = dl_txseq[-1]
+                    ul_rxseq = list(ul_rxdf["seq"].array)
+                    ulst = ul_rxseq[0]
+                    ulet = ul_rxseq[-1]
+                    st = max(dlst, ulst)
+                    et = min(dlet, ulet)
+                else:
+                    pass
+                
                 # print("----------------")
                 st += PKT_RATE * 5  # 開頭切5秒
-                et -= PKT_RATE * 5  # 結尾切5秒
+                et += PKT_RATE * 5  # 結尾切5秒
                 # print(st, et)
-
-                dl_txdf = dl_txdf[(dl_txdf["seq"] >= st) & (dl_txdf["seq"] <= et)].copy().reset_index(drop=True)
-                dl_rxdf = dl_rxdf[(dl_rxdf["seq"] >= st) & (dl_rxdf["seq"] <= et)].copy().reset_index(drop=True)
-                ul_txdf = ul_txdf[(ul_txdf["seq"] >= st) & (ul_txdf["seq"] <= et)].copy().reset_index(drop=True)
-                ul_rxdf = ul_rxdf[(ul_rxdf["seq"] >= st) & (ul_rxdf["seq"] <= et)].copy().reset_index(drop=True)
+                
+                if sys.argv[1] == '-c':
+                    dl_rxdf = dl_rxdf[(dl_rxdf["seq"] >= st) & (dl_rxdf["seq"] <= et)].copy().reset_index(drop=True)
+                    ul_txdf = ul_txdf[(ul_txdf["seq"] >= st) & (ul_txdf["seq"] <= et)].copy().reset_index(drop=True)
+                elif sys.argv[1] == '-s':
+                    dl_txdf = dl_txdf[(dl_txdf["seq"] >= st) & (dl_txdf["seq"] <= et)].copy().reset_index(drop=True)
+                    ul_rxdf = ul_rxdf[(ul_rxdf["seq"] >= st) & (ul_rxdf["seq"] <= et)].copy().reset_index(drop=True)
+                else:
+                    pass
                 
                 json_object = {}
                 if os.path.isfile(json_file):
@@ -638,8 +628,14 @@ for date, json_file in zip(dates, json_files):
                 fout2_dl = os.path.join(target_dir2, "udp_dnlk_loss_statistics.csv")
                 fout3_dl = os.path.join(target_dir2, "udp_dnlk_excl_statistics.csv")
                 
-                losdf = get_loss(dl_rxdf.copy(), dl_txdf.copy())
-                latdf = consolidate(dl_rxdf.copy(), dl_txdf.copy())
+                if sys.argv[1] == '-c':
+                    losdf = get_loss(dl_rxdf.copy())
+                    latdf = consolidate(dl_rxdf.copy())
+                elif sys.argv[1] == '-s':
+                    losdf = get_loss(dl_txdf.copy())
+                    latdf = consolidate(dl_txdf.copy())
+                else:
+                    pass
                 df = pd.concat([latdf, losdf], axis=0)
                 df = df.sort_values(by=["seq"]).reset_index(drop=True)
                 df = compensate(df.copy(), "dl", delta.copy())
@@ -651,8 +647,14 @@ for date, json_file in zip(dates, json_files):
                 fout2_ul = os.path.join(target_dir2, "udp_uplk_loss_statistics.csv")
                 fout3_ul = os.path.join(target_dir2, "udp_uplk_excl_statistics.csv")
                 
-                losdf = get_loss(ul_rxdf.copy(), ul_txdf.copy())
-                latdf = consolidate(ul_rxdf.copy(), ul_txdf.copy())
+                if sys.argv[1] == '-c':
+                    losdf = get_loss(ul_txdf.copy())
+                    latdf = consolidate(ul_txdf.copy())
+                elif sys.argv[1] == '-s':
+                    losdf = get_loss(ul_rxdf.copy())
+                    latdf = consolidate(ul_rxdf.copy())
+                else:
+                    pass
                 df = pd.concat([latdf, losdf], axis=0)
                 df = df.sort_values(by=["seq"]).reset_index(drop=True)
                 df = compensate(df.copy(), "ul", delta.copy())
