@@ -130,7 +130,7 @@ if sys.argv[1] == '-c':
                 break
             continue
         # print('recvfrom ' + str(addr) + ': ' + indata)
-        # print(outdata, time0, time1, "RTT =", (time1-time0)*1000, "ms")
+        print(outdata, time0, time1, "RTT =", (time1-time0)*1000, "ms")
         timestamp_client.append([outdata, time0, time1])
         timestamp_server.append(indata.split(' '))
         time.sleep(packet_interval)
@@ -179,9 +179,9 @@ elif sys.argv[1] == '-s':
             indata = indata.decode()
             if indata == 'end':
                 break
-            # print('recvfrom ' + str(addr) + ': ' + indata)
+            print('recvfrom ' + str(addr) + ': ' + indata)
             
             time1 = time.time()
             outdata = f'{indata} {time0} {time1}'
             s.sendto(outdata.encode(), addr)
-            # print(indata, time0, time1)
+            print(indata, time0, time1)
