@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+# Author: Chen, Yuan-Jye
+
 import os
 import sys
-pdir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))  # for py-script
-sys.path.insert(1, pdir)
-
 import socket
 import time
 import csv
@@ -45,14 +45,16 @@ def qset_bdd(client_rtt):
     qset = (lower_q - iqr, upper_q + iqr)
     return qset
 
-def clock_diff(device):
+def clock_diff(device=''):
     server = []
     client = []
-    with open(f"sync_client_{device}.csv", newline='') as f:
+    # with open(f"sync_client_{device}.csv", newline='') as f:
+    with open(f"sync_client.csv", newline='') as f:
         reader = csv.reader(f)
         client = list(reader)
     client = [[*s, float(s[2]) - float(s[1])] for s in client]
-    with open(f"sync_server_{device}.csv", newline='') as f:
+    # with open(f"sync_server_{device}.csv", newline='') as f:
+    with open(f"sync_server.csv", newline='') as f:
         reader = csv.reader(f)
         server = list(reader)
 
@@ -90,15 +92,15 @@ def clock_diff(device):
 
 # client
 if sys.argv[1] == '-c':
-    with open('device.txt', 'r', encoding='utf-8') as f:
-        device = f.readline().strip()
+    # with open('device.txt', 'r', encoding='utf-8') as f:
+    #     device = f.readline().strip()
     
     now = dt.datetime.today()
     date = [str(x) for x in [now.year, now.month, now.day]]
     date = [x.zfill(2) for x in date]
     date = '-'.join(date)
-    dirpath = f'./log/{date}'
-    makedir(dirpath)
+    # dirpath = f'./log/{date}'
+    # makedir(dirpath)
     
     server_addr = (HOST, PORT)
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -136,27 +138,31 @@ if sys.argv[1] == '-c':
     outdata = 'end'
     s.sendto(outdata.encode(), server_addr)
 
-    with open('sync_client_'+device+'.csv', 'w') as f:
+    # with open('sync_client_'+device+'.csv', 'w') as f:
+    with open('sync_client.csv', 'w') as f:
         csv_writer = csv.writer(f)
         csv_writer.writerows(timestamp_client)
-    with open('sync_server_'+device+'.csv', 'w') as f:
+    # with open('sync_server_'+device+'.csv', 'w') as f:
+    with open('sync_server.csv', 'w') as f:
         csv_writer = csv.writer(f)
         csv_writer.writerows(timestamp_server)
     
     current_time = dt.datetime.now()
-    diff = clock_diff(device)
-    print("device:", device)
+    # diff = clock_diff(device)
+    diff = clock_diff()
+    # print("device:", device)
+    print("device:", '')
     print(current_time, diff, "seconds")
     
-    json_file = os.path.join(dirpath, f'time_sync_{device}.json')
-    if os.path.isfile(json_file):
-        with open(json_file, 'r') as f:
-            json_object = json.load(f)
-    else:
-        json_object = {}
-    json_object[str(current_time)] = diff
-    with open(json_file, 'w') as f:
-        json.dump(json_object, f)
+    # json_file = os.path.join(dirpath, f'time_sync_{device}.json')
+    # if os.path.isfile(json_file):
+    #     with open(json_file, 'r') as f:
+    #         json_object = json.load(f)
+    # else:
+    #     json_object = {}
+    # json_object[str(current_time)] = diff
+    # with open(json_file, 'w') as f:
+    #     json.dump(json_object, f)
 
 # server
 elif sys.argv[1] == '-s':
