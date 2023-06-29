@@ -1,19 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Author: Chen, Yuan-Jye
+# Author: Chen Yuan-Jye, Kuo Wei-Zhe
 
-import os
 import sys
 import socket
 import time
 import csv
-import json
 import datetime as dt
-# import numpy as np
 
+###########################
 HOST = '140.112.20.183'
-PORT = 3298
+PORT = 4000
+###########################
 
 def mean(numbers):
     if len(numbers) == 0:
@@ -48,33 +47,26 @@ def qset_bdd(client_rtt):
 def clock_diff(device=''):
     server = []
     client = []
-    # with open(f"sync_client_{device}.csv", newline='') as f:
     with open(f"sync_client.csv", newline='') as f:
         reader = csv.reader(f)
         client = list(reader)
     client = [[*s, float(s[2]) - float(s[1])] for s in client]
-    # with open(f"sync_server_{device}.csv", newline='') as f:
     with open(f"sync_server.csv", newline='') as f:
         reader = csv.reader(f)
         server = list(reader)
 
     diff = 0.0
-    cnt = 0
     qset = qset_bdd(client)
     deltas = []
     for i in range(len(client)):
-        # RTT = float(client[i][2]) - float(client[i][1])
         RTT = client[i][3]
         if (RTT < qset[0]) or (RTT > qset[1]):
             continue
         cen_client = (float(client[i][2]) + float(client[i][1]))/2
         cen_server = (float(server[i][2]) + float(server[i][1]))/2
-        # diff += cen_server - cen_client
-        # cnt += 1
+        
         diff = cen_server - cen_client
         deltas.append(diff)
-    # diff /= cnt
-    # print(cnt, qset)
     
     sorted_deltas = sorted(deltas)
     upper_q = quantile(sorted_deltas, 75)
@@ -92,20 +84,16 @@ def clock_diff(device=''):
 
 # client
 if sys.argv[1] == '-c':
-    # with open('device.txt', 'r', encoding='utf-8') as f:
-    #     device = f.readline().strip()
     
     now = dt.datetime.today()
     date = [str(x) for x in [now.year, now.month, now.day]]
     date = [x.zfill(2) for x in date]
     date = '-'.join(date)
-    # dirpath = f'./log/{date}'
-    # makedir(dirpath)
     
     server_addr = (HOST, PORT)
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.settimeout(3)
-    num_packet_per_round = 5000
+    num_packet_per_round = 500
     packet_interval = 0
 
     timestamp_client = []
@@ -129,7 +117,6 @@ if sys.argv[1] == '-c':
             if ctmo_cnt == 3:
                 break
             continue
-        # print('recvfrom ' + str(addr) + ': ' + indata)
         print(outdata, time0, time1, "RTT =", (time1-time0)*1000, "ms")
         timestamp_client.append([outdata, time0, time1])
         timestamp_server.append(indata.split(' '))
@@ -138,31 +125,17 @@ if sys.argv[1] == '-c':
     outdata = 'end'
     s.sendto(outdata.encode(), server_addr)
 
-    # with open('sync_client_'+device+'.csv', 'w') as f:
     with open('sync_client.csv', 'w') as f:
         csv_writer = csv.writer(f)
         csv_writer.writerows(timestamp_client)
-    # with open('sync_server_'+device+'.csv', 'w') as f:
     with open('sync_server.csv', 'w') as f:
         csv_writer = csv.writer(f)
         csv_writer.writerows(timestamp_server)
     
     current_time = dt.datetime.now()
-    # diff = clock_diff(device)
     diff = clock_diff()
-    # print("device:", device)
-    print("device:", '')
+    print('--------------------------------------------------------')
     print(current_time, diff, "seconds")
-    
-    # json_file = os.path.join(dirpath, f'time_sync_{device}.json')
-    # if os.path.isfile(json_file):
-    #     with open(json_file, 'r') as f:
-    #         json_object = json.load(f)
-    # else:
-    #     json_object = {}
-    # json_object[str(current_time)] = diff
-    # with open(json_file, 'w') as f:
-    #     json.dump(json_object, f)
 
 # server
 elif sys.argv[1] == '-s':
