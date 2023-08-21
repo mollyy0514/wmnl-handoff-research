@@ -20,34 +20,35 @@ def makedir(dirpath, mode=0):  # mode=1: show message, mode=0: hide message
 client_pcap_flag, server_pcap_flag, tsync_flag, cimon_flag = False, False, False, False
 
 # ***********************************************************************************************
-# 設定目標日期
-target_date = "2023-05-04"
+# TODO: 設定目標日期
+target_date = "2023-08-16"
 
-# 設定電腦根目錄的資料夾路經
+# TODO: 設定電腦根目錄的資料夾路經
 # computer_root_folder = "/Users/jackbedford/Desktop/MOXA/temp/"
 computer_root_folder = "/home/wmnlab/D/temp/"
 
-# 設定手機和電腦的資料夾路徑
+# TODO: 設定手機和電腦的資料夾路徑
+client_pcap_flag = True
+tsync_flag = True
+cimon_flag = True
+server_pcap_flag = True
+
 client_pcap_phone_folder = "/sdcard/UDP_Phone/pcapdir/"
 client_pcap_computer_folder = os.path.join(computer_root_folder, target_date, "client_pcap")
 makedir(client_pcap_computer_folder)
-client_pcap_flag = True
 
 tsync_phone_folder = os.path.join("/sdcard/wmnl-handoff-research/experimental-tools-beta/sync/log/", target_date)
 tsync_computer_folder = os.path.join(computer_root_folder, target_date)
 makedir(tsync_computer_folder)
-tsync_flag = True
 
 cimon_phone_folder = "/sdcard/Android/data/com.example.cellinfomonitor/files/Documents/"
 cimon_computer_folder = os.path.join(computer_root_folder, target_date, "cimon")
 makedir(cimon_computer_folder)
-cimon_flag = True
 
 # 設定電腦的備份資料夾路徑
-# server_pcap_computer_folder1 = "/home/wmnlab/temp/"
-# server_pcap_computer_folder2 = os.path.join(computer_root_folder, target_date, "server_pcap")
-# makedir(server_pcap_computer_folder2)
-# server_pcap_flag = True
+server_pcap_computer_folder1 = "/home/wmnlab/temp/"
+server_pcap_computer_folder2 = os.path.join(computer_root_folder, target_date, "server_pcap")
+makedir(server_pcap_computer_folder2)
 # ***********************************************************************************************
 
 # 執行 adb 命令取得連接的手機資訊
@@ -114,6 +115,7 @@ print(unauthorized_serial_numbers)
 
 # 上傳 client_pcap 檔案
 if client_pcap_flag:
+    print('upload client pcap...')
     for dev, serial in serial_numbers.items():
         # 使用 adb 命令列出手機上的檔案清單
         adb_ls_command = f"adb -s {serial} shell ls {client_pcap_phone_folder}"
@@ -132,6 +134,7 @@ if client_pcap_flag:
             
 # 上傳 time_sync 檔案
 if tsync_flag:
+    print('upload time sync...')
     for dev, serial in serial_numbers.items():
         # 使用 adb 命令列出手機上的檔案清單
         adb_ls_command = f"adb -s {serial} shell ls {tsync_phone_folder}"
@@ -149,6 +152,7 @@ if tsync_flag:
 
 # 備份 server_pcap 檔案
 if server_pcap_flag:
+    print('copy server pcap...')
     # 遍歷檔案清單，複製符合目標日期的檔案到目標資料夾
     pcap_files = [filename for filename in os.listdir(server_pcap_computer_folder1) if filename.startswith("server_pcap_") and filename.endswith(".pcap")]
 
@@ -160,6 +164,7 @@ if server_pcap_flag:
 
 # 上傳 cimon 檔案
 if cimon_flag:
+    print('upload cimon...')
     for dev, serial in serial_numbers.items():
         # 使用 adb 命令列出手機上的檔案清單
         adb_ls_command = f"adb -s {serial} shell ls {cimon_phone_folder}"

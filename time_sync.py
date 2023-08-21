@@ -11,7 +11,7 @@ import datetime as dt
 
 ###########################
 HOST = '140.112.20.183'
-PORT = 4000
+PORT = 3298
 ###########################
 
 def mean(numbers):

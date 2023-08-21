@@ -25,7 +25,7 @@ from myutils import makedir
 database = "/home/wmnlab/D/database/"
 # database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
 dates = [
-    "2023-06-21",
+    "2023-06-24",
 ]
 json_files = [
     "time_sync_lpt3.json",
@@ -36,40 +36,18 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
             # If the list is None, it will not list as directories.
             # If the list is empty, it will list all directories in the current directory by default.
             # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
-    # "_Bandlock_Udp_B3_B7_B8_RM500Q": (6, ["#{:02d}".format(i+1) for i in range(6)]),
-    # "_Bandlock_Udp_All_RM500Q": (4, ["#{:02d}".format(i+1) for i in range(4)]),
-    # "_Bandlock_Udp_B3_B7_B8_RM500Q": (1, ["#{:02d}".format(i+1) for i in range(1, 2)]),
-    # "_Bandlock_Udp_All_RM500Q": (1, ["#{:02d}".format(i+1) for i in range(1, 2)]),
-    # "_Bandlock_Udp_B1_B3_B7_B8_RM500Q": (6, ["#{:02d}".format(i+1) for i in range(6)]),
-    # "_Bandlock_Udp_All_LTE_B1B3_B1B8_RM500Q": (4, ["#{:02d}".format(i+1) for i in range(4)]),
-    # "_Experiment1": (2, ["#{:02d}".format(i+1) for i in range(2)]),
-    # "_Experiment2": (2, ["#{:02d}".format(i+1) for i in range(2)]),
-    # "_Experiment3": (2, ["#{:02d}".format(i+1) for i in range(2)]),
-    # "_Bandlock_Udp_All_LTE_B1B3_B3B7_RM500Q": (4, ["#{:02d}".format(i+1) for i in range(4)]),
-    # "_Bandlock_Udp_All_LTE_B1B7_B7B8_RM500Q": (4, ["#{:02d}".format(i+1) for i in range(4)]),
-    # "_Bandlock_Udp_All_LTE_B1B8_B3B8_RM500Q": (4, ["#{:02d}".format(i+1) for i in range(4)]),
-    # "_Bandlock_Udp_All_LTE_All_LTE_RM500Q": (4, ["#{:02d}".format(i+1) for i in range(4)]),
-    # "_Bandlock_Udp_All_LTE_B1_B3_RM500Q": (2, ["#{:02d}".format(i+1) for i in range(2)]),
-    # "_Bandlock_Udp_All_LTE_B7_B8_RM500Q": (2, ["#{:02d}".format(i+1) for i in range(2)]),
-    "Modem_Action_Test": (4, ["#{:02d}".format(i+1) for i in range(4)]),
+    "Control_Group": (6, ["#{:02d}".format(i+1) for i in range(6)]),
+    # "Modem_Action_Test": (5, ["#{:02d}".format(i+1) for i in range(5)]),
 }
 _devices = [
     # ["qc00", "qc01", "qc02", "qc03"],
-    # ["qc00", "qc01", "qc02", "qc03"],
-    # ["qc00", "qc01", "qc02", "qc03"],
-    # ["qc00", "qc01", "qc02", "qc03"],
-    # ["qc00", "qc01", "qc02", "qc03"],
-    # ["qc00", "qc01", "qc02", "qc03"],
     ["qc00", "qc03"],
+    # ["qc00", "qc03"],
 ]
 _schemes = [
-    # ["All", "LTE", "B1B3", "B3B7"],
-    # ["All", "LTE", "B1B7", "B7B8"],
-    # ["All", "LTE", "B1B8", "B3B8"],
-    # ["All0", "LTE1", "All2", "LTE3"],
-    # ["All", "LTE", "B1", "B3"],
     # ["All", "LTE", "B7", "B8"],
-    ["radio1", "radio2"]
+    ["All_0", "All_1"],
+    # ["test1", "test2"],
 ]
 
 class Payload:
@@ -669,6 +647,35 @@ for date, json_file in zip(dates, json_files):
 #     print("No error occurs!!")
 #     print("**************************************************")
 t.toc()  # Time elapsed since t.tic()
+
+#! Extra
+database = "/home/wmnlab/D/database/"
+# database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
+dates = [
+    "2023-06-24",
+]
+json_files = [
+    "time_sync_lpt3.json",
+]
+json_files = [os.path.join(database, date, json_file) for date, json_file in zip(dates, json_files)]
+
+exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_round)
+            # If the list is None, it will not list as directories.
+            # If the list is empty, it will list all directories in the current directory by default.
+            # If the number of experiment times != the length of existing directories of list, it would trigger warning and skip the directory.
+    "Control_Group": (6, ["#{:02d}".format(i+1) for i in range(6)]),
+    "Modem_Action_Test": (5, ["#{:02d}".format(i+1) for i in range(5)]),
+}
+_devices = [
+    # ["qc00", "qc01", "qc02", "qc03"],
+    ["qc00", "qc03"],
+    ["qc00", "qc03"],
+]
+_schemes = [
+    # ["All", "LTE", "B7", "B8"],
+    ["All_0", "All_1"],
+    ["test1", "test2"],
+]
 
 for date in dates:
     for (expr, (times, traces)), devices, schemes in zip(exps.items(), _devices, _schemes):
