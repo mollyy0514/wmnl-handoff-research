@@ -58,9 +58,9 @@ _devices = [
     # ["sm00", "sm01", "sm02", "sm03", "sm04", "sm05", "sm06", "sm07",],
     # ["sm00", "sm01", "sm02", "sm03", "sm04", "sm05", "sm06", "sm07",],
     # ["sm00", "sm01", "sm02", "sm03", "sm04", "sm05", "sm06", "sm07",],
-    # ["sm00", "sm01",],
+    ["sm00", "sm01",],
     # ["sm00",],
-    ["sm01",],
+    # ["sm01",],
 ]
 _schemes = [
     # ["All", "LTE", "B1B3", "B3B7"],
@@ -75,9 +75,9 @@ _schemes = [
     # ["LTE_0", "LTE_1", "B3_0", "B3_1", "B7_0", "B7_1", "B8_0", "B8_1",],
     # ["LTE_0", "LTE_1", "LTEb3_0", "LTEb3_1", "LTEb7_0", "LTEb7_1", "LTEb8_0", "LTEb8_1",],
     # ["LTEb1_0", "LTEb1_1", "LTEb3_0", "LTEb3_1", "LTEb7_0", "LTEb7_1", "LTEb8_0", "LTEb8_1",],
-    # ['All', 'LTE'],
+    ['All', 'LTE'],
     # ['All',],
-    ['LTE'],
+    # ['LTE'],
 ]
 
 class Payload:
