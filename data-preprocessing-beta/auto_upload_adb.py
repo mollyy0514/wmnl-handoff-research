@@ -21,7 +21,7 @@ client_pcap_flag, server_pcap_flag, tsync_flag, cimon_flag = False, False, False
 
 # ***********************************************************************************************
 # TODO: 設定目標日期
-target_date = "2023-05-04"
+target_date = "2023-08-21"
 
 # TODO: 設定電腦根目錄的資料夾路經
 # computer_root_folder = "/Users/jackbedford/Desktop/MOXA/temp/"
