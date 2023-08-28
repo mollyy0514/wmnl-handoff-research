@@ -318,13 +318,15 @@ t_fills = []
 print(rx_sockets)
 print(tx_sockets)
 for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
-    fill_tcp_conn_addr(s1, s2, dev)
-    # t = threading.Thread(target=fill_tcp_conn_addr, args=(s1, s2, dev, ))
-    # t.start()
-    # t_fills.append(t)
+    # fill_tcp_conn_addr(s1, s2, dev)
+    t = threading.Thread(target=fill_tcp_conn_addr, args=(s1, s2, dev, ))
+    t.start()
+    t_fills.append(t)
 
-# for t in t_fills:
-#     t.join()
+print(t_fills)
+
+for t in t_fills:
+    t.join()
 
 # Start subprocess of tcpdump
 now = dt.datetime.today()
