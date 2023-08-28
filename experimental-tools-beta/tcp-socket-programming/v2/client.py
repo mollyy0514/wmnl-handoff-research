@@ -244,6 +244,8 @@ for dev, port in zip(devices, ports):
     t.start()
     t_fills.append(t)
 
+print(t_fills)
+
 for t in t_fills:
     t.join()
     
