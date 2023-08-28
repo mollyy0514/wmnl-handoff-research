@@ -240,7 +240,7 @@ def connection_setup(dev, port):
 
 t_fills = []
 for dev, port in zip(devices, ports):
-    t = threading.Thread(target=fill_tcp_conn_addr, args=(dev, port, ))
+    t = threading.Thread(target=connection_setup, args=(dev, port, ))
     t.start()
     t_fills.append(t)
 
