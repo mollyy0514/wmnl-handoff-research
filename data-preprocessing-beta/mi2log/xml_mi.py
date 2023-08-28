@@ -218,6 +218,7 @@ def get_event_paras(f, eventId, l):
 def xml_to_csv_rrc(fin, fout):
     f = open(fin, encoding='utf-8')
     f2 = open(fout, 'w') # _rrc.csv
+    delete = False
     # print("rrc >>>>>")
     # Writing the column names... If you want to add something, don't forget the comma at the end!!
     # -------------------------------------------------
