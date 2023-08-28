@@ -221,7 +221,8 @@ os.system("echo wmnlab | sudo -S su")
 
 rx_sockets = []
 tx_sockets = []
-for dev, port in zip(devices, ports):
+
+def connection_setup(dev, port):
     s1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # s1.setsockopt(socket.IPPROTO_TCP, TCP_CONGESTION, cong)
     s1.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (dev+'\0').encode())  # 綁定特定網路介面
@@ -236,6 +237,15 @@ for dev, port in zip(devices, ports):
     
     print(f'Create DL socket for {dev}.')
     print(f'Create UL socket for {dev}.')
+
+t_fills = []
+for dev, port in zip(devices, ports):
+    t = threading.Thread(target=fill_tcp_conn_addr, args=(dev, port, ))
+    t.start()
+    t_fills.append(t)
+
+for t in t_fills:
+    t.join()
     
 # Transmit data from receive socket to server DL port to let server know addr first
 
