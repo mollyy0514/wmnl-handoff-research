@@ -316,12 +316,13 @@ def fill_tcp_conn_addr(s1, s2, device):
 # Accept incoming connections
 t_fills = []
 for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
-    t = threading.Thread(target=fill_tcp_conn_addr, args=(s1, s2, dev, ))
-    t.start()
-    t_fills.append(t)
+    fill_tcp_conn_addr(s1, s2, dev)
+    # t = threading.Thread(target=fill_tcp_conn_addr, args=(s1, s2, dev, ))
+    # t.start()
+    # t_fills.append(t)
 
-for t in t_fills:
-    t.join()
+# for t in t_fills:
+#     t.join()
 
 # Start subprocess of tcpdump
 now = dt.datetime.today()
