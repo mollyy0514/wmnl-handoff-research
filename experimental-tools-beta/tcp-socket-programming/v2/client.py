@@ -82,28 +82,61 @@ HOST = '140.112.20.183' # Lab 249
 stop_threads = False
 
 # Function define
-def give_server_DL_addr():
+# def give_server_DL_addr():
     
-    for s, port in zip(rx_sockets, ports):
-        outdata = 'hello'
-        for i in range(10):
-            s.sendto(outdata.encode(), (HOST, port[1]))
+#     for s, port in zip(rx_sockets, ports):
+#         outdata = 'hello'
+#         for i in range(10):
+#             s.sendto(outdata.encode(), (HOST, port[1]))
+
+# def receive(s, dev):
+
+#     global stop_threads
+#     print(f"wait for indata to {dev} from server...")
+
+#     seq = 1
+#     prev_receive = 1
+#     time_slot = 1
+
+#     while not stop_threads:
+#         try:
+
+#             indata, addr = s.recvfrom(1024)
+
+#             try:
+#                 start_time
+#             except NameError:
+#                 start_time = time.time()
+
+#             if len(indata) != length_packet:
+#                 print("packet with strange length: ", len(indata))
+
+#             seq = int(indata.hex()[32:40], 16)
+#             ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
+
+#             # Show information
+#             if time.time()-start_time > time_slot:
+#                 print(f"{dev} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
+#                 time_slot += 1
+#                 prev_receive = seq
+
+#         except Exception as inst:
+#             print("Error: ", inst)
+#             stop_threads = True
 
 def receive(s, dev):
-
     global stop_threads
     print(f"wait for indata to {dev} from server...")
-
     seq = 1
     prev_receive = 1
     time_slot = 1
 
     while not stop_threads:
         try:
+            indata = s.recv(1024)
 
-            indata, addr = s.recvfrom(1024)
-
-            try: start_time
+            try:
+                start_time
             except NameError:
                 start_time = time.time()
 
@@ -151,8 +184,11 @@ def transmit(sockets):
             redundant = os.urandom(length_packet-4*5)
             outdata = euler.to_bytes(4, 'big') + pi.to_bytes(4, 'big') + datetimedec.to_bytes(4, 'big') + microsec.to_bytes(4, 'big') + seq.to_bytes(4, 'big') + redundant
             
-            for s, port in zip(sockets, ports):     
-                s.sendto(outdata, (HOST, port[0]))
+            # for s, port in zip(sockets, ports):     
+            #     s.sendto(outdata, (HOST, port[0]))
+            for s in sockets:
+                s.send(outdata)  # Send data over the connection
+            
             seq += 1
         
             if time.time()-start_time > time_slot:
@@ -168,26 +204,46 @@ def transmit(sockets):
     print("transmit", seq, "packets")
 
 os.system("echo wmnlab | sudo -S su")
+
 # Create DL receive and UL transmit multi-client sockets
+
+# rx_sockets = []
+# tx_sockets = []
+# for dev, port in zip(devices, ports):
+#     s1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#     s1.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (dev+'\0').encode())
+#     rx_sockets.append(s1)
+#     s2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#     s2.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (dev+'\0').encode())
+#     tx_sockets.append(s2)
+#     print(f'Create DL socket for {dev}.')
+#     print(f'Create UL socket for {dev}.')
+
 rx_sockets = []
 tx_sockets = []
 for dev, port in zip(devices, ports):
-    s1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s1.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (dev+'\0').encode())
+    s1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # s1.setsockopt(socket.IPPROTO_TCP, TCP_CONGESTION, cong)
+    s1.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (dev+'\0').encode())  # 綁定特定網路介面
+    s1.connect((HOST, port[1]))  # 連線到指定的主機和埠
     rx_sockets.append(s1)
-    s2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s2.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (dev+'\0').encode())
+    
+    s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # s2.setsockopt(socket.IPPROTO_TCP, TCP_CONGESTION, cong)
+    s2.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (dev+'\0').encode())  # 綁定特定網路介面
+    s2.connect((HOST, port[0]))  # 連線到指定的主機和埠
     tx_sockets.append(s2)
+    
     print(f'Create DL socket for {dev}.')
     print(f'Create UL socket for {dev}.')
     
 # Transmit data from receive socket to server DL port to let server know addr first
 
-while True:
-    give_server_DL_addr()
-    # x = input('Continue? (y/n) ')
-    # if x == 'n':
-    break
+# while True:
+#     give_server_DL_addr()
+#     # x = input('Continue? (y/n) ')
+#     # if x == 'n':
+#     break
 
 # Start subprocess of tcpdump
 now = dt.datetime.today()

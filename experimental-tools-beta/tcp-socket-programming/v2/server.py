@@ -280,11 +280,15 @@ tx_sockets = []
 
 for dev, port in zip(devices, ports):
     s1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # server_socket
+    # s1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    # s1.setsockopt(socket.IPPROTO_TCP, TCP_CONGESTION, cong)
     s1.bind((HOST, port[0]))
     s1.listen(1)  # Listen for incoming connections
     rx_sockets.append(s1)
     
     s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # server_socket
+    # s2.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    # s2.setsockopt(socket.IPPROTO_TCP, TCP_CONGESTION, cong)
     s2.bind((HOST, port[1]))
     s2.listen(1)  # Listen for incoming connections
     tx_sockets.append(s2)
