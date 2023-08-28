@@ -339,6 +339,12 @@ def xml_to_csv_rrc(fin, fout):
         "dl-CarrierFreq-r10",
         ###########################
 
+        ## ueCapabilityInformation
+        "ueCapabilityInformation",
+        "SupportedBandEUTRA",
+        "bandEUTRA",
+        ###########################
+
         ])+'\n')
 
     #For each dm_log_packet, we will check that whether strings in type_list are shown in it.
@@ -449,6 +455,12 @@ def xml_to_csv_rrc(fin, fout):
         "dl-CarrierFreq-r10",
         ###########################
 
+        ## ueCapabilityInformation
+        "\"ueCapabilityInformation\"",
+        "\"SupportedBandEUTRA\"",
+        "bandEUTRA",
+        ###########################
+
         ]
 
     l = f.readline()
@@ -480,7 +492,6 @@ def xml_to_csv_rrc(fin, fout):
                 MCC = soup.find(key="MCC").get_text()
                 # MNC_d = soup.find(key="MNC Digit").get_text()
                 MNC = soup.find(key="MNC").get_text()                
-                # f2.write(",".join([timestamp, type_id, PCI,'','', DL_f, UL_f, Cell_identity, TAC, Band_ID, MCC, MNC] )+'\n')
                 f2.write(",".join([timestamp, type_id, PCI,'','', DL_f, UL_f, DL_BW, UL_BW, Cell_identity, TAC, Band_ID, MCC, MNC] )+'\n')
                 l = f.readline()
                 continue
@@ -711,14 +722,18 @@ def xml_to_csv_rrc(fin, fout):
                     
                     l = f.readline()
                 l = f.readline()
-                f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ['']*7 + type_code)+'\n')
+                f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ['']*9 + type_code)+'\n')
         else:
             print(l,"Error! Invalid data content.")
-            delete = True
+            # delete = True
             break 
     
     f2.close()
     f.close()
+    
+    if delete:
+        os.system(f"rm {f_out}")
+
 
 def xml_to_csv_ml1(fin, fout):
     f = open(fin, encoding="utf-8")

@@ -90,14 +90,14 @@ udp_addr = {}
 
 # Function define
 
-def fill_udp_addr(s, device):
+# def fill_udp_addr(s, device):
     
-    while True:
-        indata, addr = s.recvfrom(1024)
-        if indata.decode() == 'hello':
-            print(device, addr)
-            break
-    udp_addr[s] = addr 
+#     while True:
+#         indata, addr = s.recvfrom(1024)
+#         if indata.decode() == 'hello':
+#             print(device, addr)
+#             break
+#     udp_addr[s] = addr 
 
 def receive(s, dev, port):
 
@@ -133,6 +133,35 @@ def receive(s, dev, port):
         except Exception as inst:
             print("Error: ", inst)
             stop_threads = True
+
+def receive(conn, dev, port):
+    global stop_threads
+    print(f"wait for indata from {dev} at {port}...")
+
+    seq = 1
+    prev_receive = 1
+    time_slot = 1
+
+    while not stop_threads:
+        try:
+            conn, addr = conn.accept()  # Accept incoming connection
+            print("Connection from:", addr)
+            
+            while True:
+                indata = conn.recv(1024)  # Receive data from connection
+                if not indata:
+                    break
+
+                # Process received data here
+                # ...
+
+                seq += 1
+                print(f"Received data from {dev}:{port}")
+
+        except Exception as inst:
+            print("Error: ", inst)
+            stop_threads = True
+
 
 def transmit(sockets):
 
@@ -181,29 +210,47 @@ def transmit(sockets):
 
 os.system("echo wmnlab | sudo -S su")
 # Set up UL receive /  DL transmit sockets for multiple clients
+# rx_sockets = []
+# tx_sockets = []
+# for dev, port in zip(devices, ports):
+#     s1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#     s1.bind((HOST, port[0]))
+#     rx_sockets.append(s1)
+#     s2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#     s2.bind((HOST, port[1]))
+#     tx_sockets.append(s2)
+#     print(f'Create socket at {HOST}:{port[0]} for UL...')
+#     print(f'Create socket at {HOST}:{port[1]} for DL...')
+
 rx_sockets = []
 tx_sockets = []
+
 for dev, port in zip(devices, ports):
-    s1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s1.bind((HOST, port[0]))
+    s1.listen(1)  # Listen for incoming connections
     rx_sockets.append(s1)
-    s2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    
+    s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s2.bind((HOST, port[1]))
+    s2.listen(1)  # Listen for incoming connections
     tx_sockets.append(s2)
+
     print(f'Create socket at {HOST}:{port[0]} for UL...')
     print(f'Create socket at {HOST}:{port[1]} for DL...')
 
 # Get client addr with server DL port first
-t_fills = []
-for s, dev in zip(tx_sockets, devices):
-    t = threading.Thread(target=fill_udp_addr, args=(s, dev, ))
-    t.start()
-    t_fills.append(t)
+# t_fills = []
+# for s, dev in zip(tx_sockets, devices):
+#     t = threading.Thread(target=fill_udp_addr, args=(s, dev, ))
+#     t.start()
+#     t_fills.append(t)
 
-print('Wait for filling up client address first...')
-for t in t_fills:
-    t.join()
-print('Successful get udp addr!')
+# print('Wait for filling up client address first...')
+# for t in t_fills:
+#     t.join()
+# print('Successful get udp addr!')
+print('Create socket done!')
 
 # Start subprocess of tcpdump
 now = dt.datetime.today()
