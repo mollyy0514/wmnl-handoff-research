@@ -99,41 +99,41 @@ stop_threads = False
 #             break
 #     udp_addr[s] = addr 
 
-def receive(s, dev, port):
+# def receive(s, dev, port):
 
-    global stop_threads
-    print(f"wait for indata from {dev} at {port}...")
+#     global stop_threads
+#     print(f"wait for indata from {dev} at {port}...")
 
-    seq = 1
-    prev_receive = 1
-    time_slot = 1
+#     seq = 1
+#     prev_receive = 1
+#     time_slot = 1
 
-    while not stop_threads:
-        try:
-            #receive data, update client's addresses (after receiving, server know where to transmit)
-            indata, addr = s.recvfrom(1024)
-            # udp_addr[s] = addr 
+#     while not stop_threads:
+#         try:
+#             #receive data, update client's addresses (after receiving, server know where to transmit)
+#             indata, addr = s.recvfrom(1024)
+#             # udp_addr[s] = addr 
 
-            try:
-                start_time
-            except NameError:
-                start_time = time.time()
+#             try:
+#                 start_time
+#             except NameError:
+#                 start_time = time.time()
 
-            if len(indata) != length_packet:
-                print("packet with strange length: ", len(indata))
+#             if len(indata) != length_packet:
+#                 print("packet with strange length: ", len(indata))
 
-            seq = int(indata.hex()[32:40], 16)
-            ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
+#             seq = int(indata.hex()[32:40], 16)
+#             ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
 
-            # Show information
-            if time.time()-start_time > time_slot:
-                print(f"{dev}:{port} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
-                time_slot += 1
-                prev_receive = seq
+#             # Show information
+#             if time.time()-start_time > time_slot:
+#                 print(f"{dev}:{port} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
+#                 time_slot += 1
+#                 prev_receive = seq
 
-        except Exception as inst:
-            print("Error: ", inst)
-            stop_threads = True
+#         except Exception as inst:
+#             print("Error: ", inst)
+#             stop_threads = True
 
 def receive(conn, dev, port):
     global stop_threads
@@ -169,8 +169,53 @@ def receive(conn, dev, port):
             stop_threads = True
 
 
-def transmit(sockets):
+# def transmit(sockets):
 
+#     global stop_threads
+#     print("start transmission: ")
+    
+#     seq = 1
+#     prev_transmit = 0
+    
+#     start_time = time.time()
+#     next_transmit_time = start_time + sleeptime
+    
+#     time_slot = 1
+    
+#     while time.time() - start_time < total_time and not stop_threads:
+#         try:
+#             t = time.time()
+#             while t < next_transmit_time:
+#                 t = time.time()
+#             next_transmit_time = next_transmit_time + sleeptime
+
+#             euler = 271828
+#             pi = 31415926
+#             datetimedec = int(t)
+#             microsec = int((t - int(t))*1000000)
+
+#             redundant = os.urandom(length_packet-4*5)
+#             outdata = euler.to_bytes(4, 'big') + pi.to_bytes(4, 'big') + datetimedec.to_bytes(4, 'big') + microsec.to_bytes(4, 'big') + seq.to_bytes(4, 'big') + redundant
+            
+#             for s in sockets:
+#                 if s in udp_addr.keys():
+#                     s.sendto(outdata, udp_addr[s])
+#             seq += 1
+        
+#             if time.time()-start_time > time_slot:
+#                 print("[%d-%d]"%(time_slot-1, time_slot), "transmit", seq-prev_transmit)
+#                 time_slot += 1
+#                 prev_transmit = seq
+
+#         except Exception as e:
+#             print(e)
+#             stop_threads = True
+#     stop_threads = True
+#     print("---transmission timeout---")
+#     print("transmit", seq, "packets")
+
+
+def transmit(connections):
     global stop_threads
     print("start transmission: ")
     
@@ -188,25 +233,24 @@ def transmit(sockets):
             while t < next_transmit_time:
                 t = time.time()
             next_transmit_time = next_transmit_time + sleeptime
-
+            
             euler = 271828
             pi = 31415926
             datetimedec = int(t)
             microsec = int((t - int(t))*1000000)
-
+            
             redundant = os.urandom(length_packet-4*5)
             outdata = euler.to_bytes(4, 'big') + pi.to_bytes(4, 'big') + datetimedec.to_bytes(4, 'big') + microsec.to_bytes(4, 'big') + seq.to_bytes(4, 'big') + redundant
             
-            for s in sockets:
-                if s in udp_addr.keys():
-                    s.sendto(outdata, udp_addr[s])
+            for conn in connections:
+                conn.send(outdata)  # Send data over the connection
             seq += 1
-        
-            if time.time()-start_time > time_slot:
-                print("[%d-%d]"%(time_slot-1, time_slot), "transmit", seq-prev_transmit)
+            
+            if time.time() - start_time > time_slot:
+                print("[%d-%d]" % (time_slot-1, time_slot), "transmit", seq-prev_transmit)
                 time_slot += 1
                 prev_transmit = seq
-
+            
         except Exception as e:
             print(e)
             stop_threads = True
@@ -214,8 +258,11 @@ def transmit(sockets):
     print("---transmission timeout---")
     print("transmit", seq, "packets")
 
+
 os.system("echo wmnlab | sudo -S su")
+
 # Set up UL receive /  DL transmit sockets for multiple clients
+
 # rx_sockets = []
 # tx_sockets = []
 # for dev, port in zip(devices, ports):
@@ -248,23 +295,29 @@ for dev, port in zip(devices, ports):
 print('等待客戶端連線...')
 
 tcp_addr = {}
+rx_connections = []
+tx_connections = []
 
-def fill_tcp_conn_addr(s, device):
-    conn, addr = s.accept()  # client_socket, client_address
+def fill_tcp_conn_addr(s1, s2, device):
+    conn, addr = s1.accept()  # client_socket 1, client_address 1
     print('Connection from:', addr)
-    tcp_addr[s] = addr
-
-# Accept incoming connection
+    tcp_addr[s1] = addr
+    rx_connections.append((conn, addr))
+    
+    conn, addr = s2.accept()  # client_socket 2, client_address 2
+    print('Connection from:', addr)
+    tcp_addr[s2] = addr
+    tx_connections.append((conn, addr))
+    
+# Accept incoming connections
 t_fills = []
 for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
-    for s in [s1, s2]
-        t = threading.Thread(target=fill_tcp_conn_addr, args=(s, dev, ))
-        t.start()
-        t_fills.append(t)
+    t = threading.Thread(target=fill_tcp_conn_addr, args=(s1, s2, dev, ))
+    t.start()
+    t_fills.append(t)
 
 for t in t_fills:
     t.join()
-
 
 # Start subprocess of tcpdump
 now = dt.datetime.today()
@@ -283,13 +336,20 @@ time.sleep(1)
 # Create and start UL receive multi-thread
 
 rx_threads = []
-for s, dev, port in zip(rx_sockets, devices, ports):
-    t_rx = threading.Thread(target = receive, args=(s, dev, port[0]), daemon=True)
+# for s, dev, port in zip(rx_sockets, devices, ports):
+#     t_rx = threading.Thread(target = receive, args=(s, dev, port[0]), daemon=True)
+#     rx_threads.append(t_rx)
+#     t_rx.start()
+
+for conn, dev, port in zip(rx_connections, devices, ports):
+    t_rx = threading.Thread(target = receive, args=(conn, dev, port[0]), daemon=True)
     rx_threads.append(t_rx)
     t_rx.start()
 
 # Start DL transmission multipleprocessing
-p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
+# p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
+p_tx = multiprocessing.Process(target=transmit, args=(tx_connections,), daemon=True)
+
 # start = input('Start transmission? (y/n) ')
 # if start != 'y':
 #     sys.exit()
