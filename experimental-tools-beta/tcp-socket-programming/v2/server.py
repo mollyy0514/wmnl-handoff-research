@@ -86,7 +86,7 @@ HOST = '0.0.0.0' # 140.112.20.183
 
 #=================global variables=======================
 stop_threads = False
-udp_addr = {}
+# udp_addr = {}
 
 # Function define
 
@@ -114,7 +114,8 @@ def receive(s, dev, port):
             indata, addr = s.recvfrom(1024)
             # udp_addr[s] = addr 
 
-            try: start_time
+            try:
+                start_time
             except NameError:
                 start_time = time.time()
 
@@ -144,19 +145,24 @@ def receive(conn, dev, port):
 
     while not stop_threads:
         try:
-            conn, addr = conn.accept()  # Accept incoming connection
-            print("Connection from:", addr)
-            
-            while True:
-                indata = conn.recv(1024)  # Receive data from connection
-                if not indata:
-                    break
+            indata = conn.recv(1024)  # Receive data from connection
 
-                # Process received data here
-                # ...
+            try:
+                start_time
+            except NameError:
+                start_time = time.time()
 
-                seq += 1
-                print(f"Received data from {dev}:{port}")
+            if len(indata) != length_packet:
+                print("packet with strange length: ", len(indata))
+
+            seq = int(indata.hex()[32:40], 16)
+            ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
+
+            # Show information
+            if time.time()-start_time > time_slot:
+                print(f"{dev}:{port} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
+                time_slot += 1
+                prev_receive = seq
 
         except Exception as inst:
             print("Error: ", inst)
@@ -226,12 +232,12 @@ rx_sockets = []
 tx_sockets = []
 
 for dev, port in zip(devices, ports):
-    s1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # server_socket
     s1.bind((HOST, port[0]))
     s1.listen(1)  # Listen for incoming connections
     rx_sockets.append(s1)
     
-    s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # server_socket
     s2.bind((HOST, port[1]))
     s2.listen(1)  # Listen for incoming connections
     tx_sockets.append(s2)
@@ -239,18 +245,26 @@ for dev, port in zip(devices, ports):
     print(f'Create socket at {HOST}:{port[0]} for UL...')
     print(f'Create socket at {HOST}:{port[1]} for DL...')
 
-# Get client addr with server DL port first
-# t_fills = []
-# for s, dev in zip(tx_sockets, devices):
-#     t = threading.Thread(target=fill_udp_addr, args=(s, dev, ))
-#     t.start()
-#     t_fills.append(t)
+print('等待客戶端連線...')
 
-# print('Wait for filling up client address first...')
-# for t in t_fills:
-#     t.join()
-# print('Successful get udp addr!')
-print('Create socket done!')
+tcp_addr = {}
+
+def fill_tcp_conn_addr(s, device):
+    conn, addr = s.accept()  # client_socket, client_address
+    print('Connection from:', addr)
+    tcp_addr[s] = addr
+
+# Accept incoming connection
+t_fills = []
+for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
+    for s in [s1, s2]
+        t = threading.Thread(target=fill_tcp_conn_addr, args=(s, dev, ))
+        t.start()
+        t_fills.append(t)
+
+for t in t_fills:
+    t.join()
+
 
 # Start subprocess of tcpdump
 now = dt.datetime.today()
