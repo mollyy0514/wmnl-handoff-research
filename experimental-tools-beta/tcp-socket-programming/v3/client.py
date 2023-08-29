@@ -256,8 +256,11 @@ for s, dev in zip(rx_sockets, devices):
     t_rx.start()
 
 # Create and start UL transmission multiprocess
-p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
-p_tx.start()
+# p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
+# p_tx.start()
+
+t_tx = threading.Thread(target=transmit, args=(tx_sockets,), daemon=True)
+t_tx.start()
 
 
 try:
@@ -270,8 +273,8 @@ except KeyboardInterrupt:
     stop_threads = True
 
     # Kill transmit process
-    p_tx.terminate()
-    time.sleep(1)
+    # p_tx.terminate()
+    # time.sleep(1)
 
     # Kill tcpdump process
     kill_traffic_capture()

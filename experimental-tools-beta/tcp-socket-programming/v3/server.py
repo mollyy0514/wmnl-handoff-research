@@ -178,20 +178,29 @@ tcp_addr = {}
 rx_connections = []
 tx_connections = []
 
-def accept_connection(s1, s2, device):
-    conn, addr = s1.accept()  # client_socket 1, client_address 1
-    print('Connection established with:', device, addr)
-    tcp_addr[s1] = addr
-    rx_connections.append((conn, addr))
+# def accept_connection(s1, s2, device):
+    # conn, addr = s1.accept()  # client_socket 1, client_address 1
+    # print('Connection established with:', device, addr)
+    # tcp_addr[s1] = addr
+    # rx_connections.append(conn)
     
-    conn, addr = s2.accept()  # client_socket 2, client_address 2
-    print('Connection established with:', device, addr)
-    tcp_addr[s2] = addr
-    tx_connections.append((conn, addr))
+    # conn, addr = s2.accept()  # client_socket 2, client_address 2
+    # print('Connection established with:', device, addr)
+    # tcp_addr[s2] = addr
+    # tx_connections.append(conn)
     
 # Accept incoming connections
 for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
-    accept_connection(s1, s2, dev)
+    # accept_connection(s1, s2, dev)
+    conn, addr = s1.accept()  # client_socket 1, client_address 1
+    print('Connection established with:', dev, addr)
+    tcp_addr[s1] = addr
+    rx_connections.append(conn)
+    
+    conn, addr = s2.accept()  # client_socket 2, client_address 2
+    print('Connection established with:', dev, addr)
+    tcp_addr[s2] = addr
+    tx_connections.append(conn)
 
 print("Successfully establish all connections!")
 
@@ -207,6 +216,9 @@ def receive(conn, dev, port):
 
     while not stop_threads:
         try:
+            
+            print('hello1 *****************************')
+            
             indata = conn.recv(1024)  # Receive data from connection
 
             try:
@@ -284,14 +296,24 @@ for conn, dev, port in zip(rx_connections, devices, ports):
     rx_threads.append(t_rx)
     t_rx.start()
 
+print('hello2 *****************************')
+
 # Start DL transmission multipleprocessing
 # p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
-p_tx = multiprocessing.Process(target=transmit, args=(tx_connections,), daemon=True)
+# p_tx = multiprocessing.Process(target=transmit, args=(tx_connections,), daemon=True)
+
+t_tx = threading.Thread(target=transmit, args=(tx_connections,), daemon=True)
+
+print('hello3 *****************************')
 
 # start = input('Start transmission? (y/n) ')
 # if start != 'y':
 #     sys.exit()
-p_tx.start()
+t_tx.start()
+
+time.sleep(5)
+
+print('hello4 *****************************')
 
 
 try:
@@ -304,7 +326,7 @@ except KeyboardInterrupt:
     stop_threads = True
     
     # Kill transmit process
-    p_tx.terminate()
+    # t_tx.terminate()
     time.sleep(1)
 
     # Kill tcpdump process
