@@ -228,17 +228,15 @@ def receive(conn, dev, port):
 
             # if len(indata) != length_packet:
             #     print("packet with strange length: ", len(indata))
-            
-            print(indata.decode())
 
-            # seq = int(indata.hex()[32:40], 16)
-            # ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
+            seq = int(indata.hex()[32:40], 16)
+            ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
 
-            # # Show information
-            # if time.time()-start_time > time_slot:
-            #     print(f"{dev}:{port} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
-            #     time_slot += 1
-            #     prev_receive = seq
+            # Show information
+            if time.time()-start_time > time_slot:
+                print(f"{dev}:{port} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
+                time_slot += 1
+                prev_receive = seq
 
         except Exception as inst:
             print("Error: ", inst)
