@@ -181,10 +181,10 @@ def fill_tcp_conn_addr(s1, s2, device):
     tcp_addr[s1] = addr
     rx_connections.append((conn, addr))
     
-    conn, addr = s2.accept()  # client_socket 2, client_address 2
-    print('Connection from:', addr)
-    tcp_addr[s2] = addr
-    tx_connections.append((conn, addr))
+    # conn, addr = s2.accept()  # client_socket 2, client_address 2
+    # print('Connection from:', addr)
+    # tcp_addr[s2] = addr
+    # tx_connections.append((conn, addr))
     
 # Accept incoming connections
 t_fills = []
@@ -194,6 +194,8 @@ for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
     fill_tcp_conn_addr(s1, s2, dev)
     # t = threading.Thread(target=fill_tcp_conn_addr, args=(s1, s2, dev, ))
     # t_fills.append(t)
+
+print("successful!!")
 
 # print(t_fills)
 

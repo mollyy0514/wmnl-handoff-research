@@ -200,3 +200,4 @@ for dev, port in zip(devices, ports):
 #     print('Successfully closed.')
 #     sys.exit()
 
+
