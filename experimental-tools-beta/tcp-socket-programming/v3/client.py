@@ -148,7 +148,6 @@ rx_sockets = []
 tx_sockets = []
 
 def connection_setup(dev, port):
-    print(dev, port)
     s1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # s1.setsockopt(socket.IPPROTO_TCP, TCP_CONGESTION, cong)
     s1.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (dev+'\0').encode())  # 綁定特定網路介面
@@ -162,8 +161,8 @@ def connection_setup(dev, port):
     s2.connect((HOST, port[1]))  # 連線到指定的主機和埠
     tx_sockets.append(s2)
     
-    print(f'Create UL socket for {dev} at {port[0]}.')
-    print(f'Create DL socket for {dev} at {port[1]}.')
+    print(f'Create UL socket for {dev} at {HOST}:{port[0]}.')
+    print(f'Create DL socket for {dev} at {HOST}:{port[1]}.')
 
 for dev, port in zip(devices, ports):
     connection_setup(dev, port)
