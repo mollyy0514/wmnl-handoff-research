@@ -286,11 +286,11 @@ def transmit(connections):
     print("transmit", seq, "packets")
 
 # Create and start UL receiving multi-thread
-# rx_threads = []
-# for conn, dev, port in zip(rx_connections, devices, ports):
-#     t_rx = threading.Thread(target = receive, args=(conn, dev, port[0]), daemon=True)
-#     rx_threads.append(t_rx)
-#     t_rx.start()
+rx_threads = []
+for conn, dev, port in zip(rx_connections, devices, ports):
+    t_rx = threading.Thread(target = receive, args=(conn, dev, port[0]), daemon=True)
+    rx_threads.append(t_rx)
+    t_rx.start()
 
 # Create adn start DL transmission multi-processing
 # p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)

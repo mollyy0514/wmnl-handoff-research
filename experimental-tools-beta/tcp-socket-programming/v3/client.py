@@ -257,8 +257,8 @@ for s, dev in zip(rx_sockets, devices):
 # p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
 # p_tx.start()
 
-# t_tx = threading.Thread(target=transmit, args=(tx_sockets,), daemon=True)
-# t_tx.start()
+t_tx = threading.Thread(target=transmit, args=(tx_sockets,), daemon=True)
+t_tx.start()
 
 # ===================== wait for experiment end =====================
 
