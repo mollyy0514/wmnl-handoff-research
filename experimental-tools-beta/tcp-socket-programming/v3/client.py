@@ -203,6 +203,8 @@ def receive(s, dev):
 
 def transmit(sockets):
 
+    
+    print('hello1 **********************************')
     global stop_threads
     print("start transmission: ")
     
@@ -215,6 +217,7 @@ def transmit(sockets):
     time_slot = 1
     
     while time.time() - start_time < total_time and not stop_threads:
+        print('hello2 **********************************')
         try:
             t = time.time()
             while t < next_transmit_time:
@@ -232,9 +235,12 @@ def transmit(sockets):
             for s in sockets:
                 s.send(outdata)  # Send data over the connection
             
+            print('hello3 **********************************')
+            
             seq += 1
         
             if time.time()-start_time > time_slot:
+                print('hello4 **********************************')
                 print("[%d-%d]"%(time_slot-1, time_slot), "transmit", seq-prev_transmit)
                 time_slot += 1
                 prev_transmit = seq
@@ -247,11 +253,11 @@ def transmit(sockets):
     print("transmit", seq, "packets")
 
 # Create and start DL receiving multi-thread
-# rx_threads = []
-# for s, dev in zip(rx_sockets, devices):
-#     t_rx = threading.Thread(target=receive, args=(s, dev, ), daemon=True)
-#     rx_threads.append(t_rx)
-#     t_rx.start()
+rx_threads = []
+for s, dev in zip(rx_sockets, devices):
+    t_rx = threading.Thread(target=receive, args=(s, dev, ), daemon=True)
+    rx_threads.append(t_rx)
+    t_rx.start()
 
 # Create and start UL transmission multi-processing
 # p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
