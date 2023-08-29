@@ -217,8 +217,6 @@ def receive(conn, dev, port):
     while not stop_threads:
         try:
             
-            # print('hello1 *****************************')
-            
             indata = conn.recv(65535)  # Receive data from connection
 
             try:
