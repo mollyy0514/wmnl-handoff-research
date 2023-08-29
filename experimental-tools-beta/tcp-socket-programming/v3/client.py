@@ -148,6 +148,7 @@ rx_sockets = []
 tx_sockets = []
 
 def connection_setup(dev, port):
+    print(dev, port)
     s1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # s1.setsockopt(socket.IPPROTO_TCP, TCP_CONGESTION, cong)
     s1.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (dev+'\0').encode())  # 綁定特定網路介面
