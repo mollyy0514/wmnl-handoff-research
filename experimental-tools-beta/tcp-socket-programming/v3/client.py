@@ -85,8 +85,8 @@ print(devices)
 print(ports)
 print("bitrate:", bitrate)
 
-# os.system("echo wmnlab | sudo -S su")
-os.system("echo 00000000 | sudo -S su")
+os.system("echo wmnlab | sudo -S su")
+# os.system("echo 00000000 | sudo -S su")
 
 
 # ===================== Simple Socket =====================
@@ -236,7 +236,6 @@ def transmit(sockets):
             seq += 1
         
             if time.time()-start_time > time_slot:
-                # print('hello4 **********************************')
                 print("[%d-%d]"%(time_slot-1, time_slot), "transmit", seq-prev_transmit)
                 time_slot += 1
                 prev_transmit = seq
