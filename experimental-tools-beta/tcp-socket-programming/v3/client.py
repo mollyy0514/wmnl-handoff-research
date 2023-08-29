@@ -172,6 +172,8 @@ print(t_fills)
 
 for t in t_fills:
     t.start()
+
+for t in t_fills:
     t.join()
 
 
