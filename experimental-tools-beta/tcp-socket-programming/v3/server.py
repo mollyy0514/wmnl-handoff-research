@@ -14,266 +14,139 @@ import signal
 from device_to_port import device_to_port
 
 
-#=================argument parsing======================
-parser = argparse.ArgumentParser()  
-parser.add_argument("-n", "--number_client", type=int,
-                    help="number of client", default=1)
-parser.add_argument("-d", "--devices", type=str, nargs='+',   # input list of devices sep by 'space'
-                    help="list of devices", default=["unam"])
-parser.add_argument("-p", "--ports", type=str, nargs='+',     # input list of port numbers sep by 'space'
-                    help="ports to bind")
-parser.add_argument("-b", "--bitrate", type=str,
-                    help="target bitrate in bits/sec (0 for unlimited)", default="1M")
-parser.add_argument("-l", "--length", type=str,
-                    help="length of buffer to read or write in bytes (packet size)", default="250")
-parser.add_argument("-t", "--time", type=int,
-                    help="time in seconds to transmit for (default 1 hour = 3600 secs)", default=3600)
-args = parser.parse_args()
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-n", "--number_client", type=int,
+                        help="number of client", default=1)
+    parser.add_argument("-d", "--devices", type=str, nargs='+',
+                        help="list of devices", default=["unam"])
+    parser.add_argument("-p", "--ports", type=str, nargs='+',
+                        help="ports to bind")
+    parser.add_argument("-b", "--bitrate", type=str,
+                        help="target bitrate in bits/sec (0 for unlimited)", default="1M")
+    parser.add_argument("-l", "--length", type=str,
+                        help="length of buffer to read or write in bytes (packet size)", default="250")
+    parser.add_argument("-t", "--time", type=int,
+                        help="time in seconds to transmit for (default 1 hour = 3600 secs)", default=3600)
+    return parser.parse_args()
 
-# Get argument devices
-devices = []
-for dev in args.devices:
-    if '-' in dev:
-        pmodel = dev[:2]
-        start = int(dev[2:4])
-        stop = int(dev[5:7]) + 1
-        for i in range(start, stop):
-            _dev = "{}{:02d}".format(pmodel, i)
-            devices.append(_dev)
-        continue
-    devices.append(dev)
-
-# Get the corresponding ports with devices
-ports = []
-if not args.ports:
-    for device in devices:
-        # default uplink port and downlink port for each device
-        ports.append((device_to_port[device][0], device_to_port[device][1]))  
-else:
-    for port in args.ports:
-        if '-' in port:
-            start = int(port[:port.find('-')])
-            stop = int(port[port.find('-') + 1:]) + 1
+def create_device_list(devices):
+    device_list = []
+    for dev in devices:
+        if '-' in dev:
+            pmodel = dev[:2]
+            start = int(dev[2:4])
+            stop = int(dev[5:7]) + 1
             for i in range(start, stop):
-                ports.append(i)
+                _dev = "{}{:02d}".format(pmodel, i)
+                device_list.append(_dev)
             continue
-        ports.append(int(port))
+        device_list.append(dev)
+    return device_list
 
-print(devices)
-print(ports)
+def create_port_list(args, devices):
+    if not args.ports:
+        return [(device_to_port[device][0], device_to_port[device][1]) for device in devices]
+    else:
+        port_list = []
+        for port in args.ports:
+            if '-' in port:
+                start = int(port[:port.find('-')])
+                stop = int(port[port.find('-') + 1:]) + 1
+                port_list.extend(list(range(start, stop)))
+            else:
+                port_list.append(int(port))
+        return port_list
+
+
+# ===================== Main Process =====================
+
+args = parse_arguments()
+
+devices = create_device_list(args.devices)
+ports = create_port_list(args, devices)
 
 length_packet = int(args.length)
 
 if args.bitrate[-1] == 'k':
-    bandwidth = int(args.bitrate[:-1]) * 1e3
+    bitrate = int(args.bitrate[:-1]) * 1e3
 elif args.bitrate[-1] == 'M':
-    bandwidth = int(args.bitrate[:-1]) * 1e6
+    bitrate = int(args.bitrate[:-1]) * 1e6
 else:
-    bandwidth = int(args.bitrate)
-
-print("bitrate:", bandwidth)
+    bitrate = int(args.bitrate)
 
 total_time = args.time
-
 number_client = args.number_client
 
-expected_packet_per_sec = bandwidth / (length_packet << 3)
+expected_packet_per_sec = bitrate / (length_packet << 3)
 sleeptime = 1.0 / expected_packet_per_sec
 
+print(devices)
+print(ports)
+print("bitrate:", bitrate)
 
-#=================other variables========================
-HOST = '0.0.0.0' # 140.112.20.183
+# os.system("echo wmnlab | sudo -S su")
+os.system("echo 00000000 | sudo -S su")
 
-#=================global variables=======================
+
+# ===================== Simple Socket =====================
+
+# # 設定伺服器的主機和埠
+# HOST = '127.0.0.1'
+# PORT = 12345
+
+# # 建立TCP伺服器
+# server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# server_socket.bind((HOST, PORT))
+# server_socket.listen(1)
+
+# print('等待客戶端連線...')
+# client_socket, client_address = server_socket.accept()
+# print('已連線至:', client_address)
+
+# while True:
+#     data = client_socket.recv(1024)
+#     if not data:
+#         break
+#     print('收到來自客戶端的訊息:', data.decode())
+#     response = input('請輸入要回傳的訊息: ')
+#     client_socket.sendall(response.encode())
+
+# client_socket.close()
+# server_socket.close()
+
+# ===================== Parameters =====================
+HOST = '0.0.0.0'
+pcap_path = '/Users/jackbedford/temp'  # '/home/wmnlab/temp'
+
+# ===================== Global Variables =====================
 stop_threads = False
-# udp_addr = {}
+tcpproc_list = []
 
-# Function define
+now = dt.datetime.today()
+current_datetime = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.second]]
+current_datetime = [x.zfill(2) for x in current_datetime]  # zero-padding to two digit
+current_datetime = '-'.join(current_datetime[:3]) + '_' + '-'.join(current_datetime[3:])
 
-# def fill_udp_addr(s, device):
-    
-#     while True:
-#         indata, addr = s.recvfrom(1024)
-#         if indata.decode() == 'hello':
-#             print(device, addr)
-#             break
-#     udp_addr[s] = addr 
+print(current_datetime)
 
-# def receive(s, dev, port):
+def capture_traffic(devices, ports, pcap_path, current_datetime):
+    for device, port in zip(devices, ports):
+        pcap = os.path.join(pcap_path, f"server_pcap_BL_{device}_{port[0]}_{port[1]}_{current_datetime}_sock.pcap")
+        # tcpproc = subprocess.Popen([f"tcpdump -i any port '({port[0]} or {port[1]})' -w {pcap}"], shell=True, preexec_fn=os.setpgrp)
+        tcpproc = subprocess.Popen([f"sudo tcpdump -i any port '({port[0]} or {port[1]})' -w {pcap}"], shell=True, preexec_fn=os.setpgrp)
+        tcpproc_list.append(tcpproc)
+    time.sleep(1)
 
-#     global stop_threads
-#     print(f"wait for indata from {dev} at {port}...")
+def kill_traffic_capture():
+    print('Killing tcpdump process...')
+    for tcpproc in tcpproc_list:
+        # os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
+        os.system(f"sudo kill -TERM -{tcpproc.pid}")
+    time.sleep(1)
 
-#     seq = 1
-#     prev_receive = 1
-#     time_slot = 1
+# capture_traffic(devices, ports, pcap_path, current_datetime)
 
-#     while not stop_threads:
-#         try:
-#             #receive data, update client's addresses (after receiving, server know where to transmit)
-#             indata, addr = s.recvfrom(1024)
-#             # udp_addr[s] = addr 
-
-#             try:
-#                 start_time
-#             except NameError:
-#                 start_time = time.time()
-
-#             if len(indata) != length_packet:
-#                 print("packet with strange length: ", len(indata))
-
-#             seq = int(indata.hex()[32:40], 16)
-#             ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
-
-#             # Show information
-#             if time.time()-start_time > time_slot:
-#                 print(f"{dev}:{port} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
-#                 time_slot += 1
-#                 prev_receive = seq
-
-#         except Exception as inst:
-#             print("Error: ", inst)
-#             stop_threads = True
-
-def receive(conn, dev, port):
-    global stop_threads
-    print(f"wait for indata from {dev} at {port}...")
-
-    seq = 1
-    prev_receive = 1
-    time_slot = 1
-
-    while not stop_threads:
-        try:
-            indata = conn.recv(1024)  # Receive data from connection
-
-            try:
-                start_time
-            except NameError:
-                start_time = time.time()
-
-            if len(indata) != length_packet:
-                print("packet with strange length: ", len(indata))
-
-            seq = int(indata.hex()[32:40], 16)
-            ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
-
-            # Show information
-            if time.time()-start_time > time_slot:
-                print(f"{dev}:{port} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
-                time_slot += 1
-                prev_receive = seq
-
-        except Exception as inst:
-            print("Error: ", inst)
-            stop_threads = True
-
-
-# def transmit(sockets):
-
-#     global stop_threads
-#     print("start transmission: ")
-    
-#     seq = 1
-#     prev_transmit = 0
-    
-#     start_time = time.time()
-#     next_transmit_time = start_time + sleeptime
-    
-#     time_slot = 1
-    
-#     while time.time() - start_time < total_time and not stop_threads:
-#         try:
-#             t = time.time()
-#             while t < next_transmit_time:
-#                 t = time.time()
-#             next_transmit_time = next_transmit_time + sleeptime
-
-#             euler = 271828
-#             pi = 31415926
-#             datetimedec = int(t)
-#             microsec = int((t - int(t))*1000000)
-
-#             redundant = os.urandom(length_packet-4*5)
-#             outdata = euler.to_bytes(4, 'big') + pi.to_bytes(4, 'big') + datetimedec.to_bytes(4, 'big') + microsec.to_bytes(4, 'big') + seq.to_bytes(4, 'big') + redundant
-            
-#             for s in sockets:
-#                 if s in udp_addr.keys():
-#                     s.sendto(outdata, udp_addr[s])
-#             seq += 1
-        
-#             if time.time()-start_time > time_slot:
-#                 print("[%d-%d]"%(time_slot-1, time_slot), "transmit", seq-prev_transmit)
-#                 time_slot += 1
-#                 prev_transmit = seq
-
-#         except Exception as e:
-#             print(e)
-#             stop_threads = True
-#     stop_threads = True
-#     print("---transmission timeout---")
-#     print("transmit", seq, "packets")
-
-
-def transmit(connections):
-    global stop_threads
-    print("start transmission: ")
-    
-    seq = 1
-    prev_transmit = 0
-    
-    start_time = time.time()
-    next_transmit_time = start_time + sleeptime
-    
-    time_slot = 1
-    
-    while time.time() - start_time < total_time and not stop_threads:
-        try:
-            t = time.time()
-            while t < next_transmit_time:
-                t = time.time()
-            next_transmit_time = next_transmit_time + sleeptime
-            
-            euler = 271828
-            pi = 31415926
-            datetimedec = int(t)
-            microsec = int((t - int(t))*1000000)
-            
-            redundant = os.urandom(length_packet-4*5)
-            outdata = euler.to_bytes(4, 'big') + pi.to_bytes(4, 'big') + datetimedec.to_bytes(4, 'big') + microsec.to_bytes(4, 'big') + seq.to_bytes(4, 'big') + redundant
-            
-            for conn in connections:
-                conn.send(outdata)  # Send data over the connection
-            seq += 1
-            
-            if time.time() - start_time > time_slot:
-                print("[%d-%d]" % (time_slot-1, time_slot), "transmit", seq-prev_transmit)
-                time_slot += 1
-                prev_transmit = seq
-            
-        except Exception as e:
-            print(e)
-            stop_threads = True
-    stop_threads = True
-    print("---transmission timeout---")
-    print("transmit", seq, "packets")
-
-
-os.system("echo wmnlab | sudo -S su")
-
-# Set up UL receive /  DL transmit sockets for multiple clients
-
-# rx_sockets = []
-# tx_sockets = []
-# for dev, port in zip(devices, ports):
-#     s1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-#     s1.bind((HOST, port[0]))
-#     rx_sockets.append(s1)
-#     s2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-#     s2.bind((HOST, port[1]))
-#     tx_sockets.append(s2)
-#     print(f'Create socket at {HOST}:{port[0]} for UL...')
-#     print(f'Create socket at {HOST}:{port[1]} for DL...')
 
 rx_sockets = []
 tx_sockets = []
@@ -328,61 +201,24 @@ print(t_fills)
 for t in t_fills:
     t.join()
 
-# Start subprocess of tcpdump
-now = dt.datetime.today()
-n = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.second]]
-n = [x.zfill(2) for x in n]  # zero-padding to two digit
-n = '-'.join(n[:3]) + '_' + '-'.join(n[3:])
-pcap_path = '/home/wmnlab/temp'
 
-tcpproc_list = []
-for device, port in zip(devices, ports):
-    pcap = os.path.join(pcap_path, f"server_pcap_BL_{device}_{port[0]}_{port[1]}_{n}_sock.pcap")
-    tcpproc =  subprocess.Popen([f"tcpdump -i any port '({port[0]} or {port[1]})' -w {pcap}"], shell=True, preexec_fn = os.setpgrp)
-    tcpproc_list.append(tcpproc)    
-time.sleep(1)
 
-# Create and start UL receive multi-thread
 
-rx_threads = []
-# for s, dev, port in zip(rx_sockets, devices, ports):
-#     t_rx = threading.Thread(target = receive, args=(s, dev, port[0]), daemon=True)
-#     rx_threads.append(t_rx)
-#     t_rx.start()
 
-for conn, dev, port in zip(rx_connections, devices, ports):
-    t_rx = threading.Thread(target = receive, args=(conn, dev, port[0]), daemon=True)
-    rx_threads.append(t_rx)
-    t_rx.start()
 
-# Start DL transmission multipleprocessing
-# p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
-p_tx = multiprocessing.Process(target=transmit, args=(tx_connections,), daemon=True)
 
-# start = input('Start transmission? (y/n) ')
-# if start != 'y':
+
+
+
+
+# try:
+#     while True:
+#         time.sleep(10)
+        
+# except KeyboardInterrupt:
+#     stop_threads = True
+#     kill_traffic_capture()
+    
+#     print('Successfully closed.')
 #     sys.exit()
-p_tx.start()
 
-# Main process waiting...
-try:
-    
-    while True:
-        time.sleep(10)
-
-except KeyboardInterrupt:
-
-    stop_threads = True
-    
-    # Kill transmit process
-    p_tx.terminate()
-    time.sleep(1)
-
-    # Kill tcpdump process
-    print('Killing tcpdump process...')
-    for tcpproc in tcpproc_list:
-        os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
-    
-    time.sleep(3)
-    print('Successfully closed.')
-    sys.exit()
