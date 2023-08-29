@@ -116,15 +116,9 @@ pcap_path = '/Users/jackbedford/temp'  # '/home/wmnlab/temp'
 
 # ===================== Global Variables =====================
 stop_threads = False
+
+# ===================== tcpdump =====================
 tcpproc_list = []
-
-
-now = dt.datetime.today()
-current_datetime = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.second]]
-current_datetime = [x.zfill(2) for x in current_datetime]  # zero-padding to two digit
-current_datetime = '-'.join(current_datetime[:3]) + '_' + '-'.join(current_datetime[3:])
-
-print(current_datetime)
 
 def capture_traffic(devices, ports, pcap_path, current_datetime):
     for device, port in zip(devices, ports):
@@ -140,9 +134,16 @@ def kill_traffic_capture():
         # os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
         os.system(f"sudo kill -TERM -{tcpproc.pid}")
     time.sleep(1)
+    
+now = dt.datetime.today()
+current_datetime = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.second]]
+current_datetime = [x.zfill(2) for x in current_datetime]  # zero-padding to two digit
+current_datetime = '-'.join(current_datetime[:3]) + '_' + '-'.join(current_datetime[3:])
+print(current_datetime)
 
 # capture_traffic(devices, ports, pcap_path, current_datetime)
 
+# ===================== socket =====================
 
 rx_sockets = []
 tx_sockets = []
@@ -162,18 +163,11 @@ def connection_setup(dev, port):
     s2.connect((HOST, port[1]))  # 連線到指定的主機和埠
     tx_sockets.append(s2)
     
-    print(f'Create UL socket for {dev}:{port[0]}.')
-    print(f'Create DL socket for {dev}:{port[1]}.')
+    print(f'Create UL socket for {dev} at {port[0]}.')
+    print(f'Create DL socket for {dev} at {port[1]}.')
 
-t_fills = []
 for dev, port in zip(devices, ports):
     connection_setup(dev, port)
-    # t = threading.Thread(target=connection_setup, args=(dev, port, ))
-    # t_fills.append(t)
-    # t.start()
-
-# for t in t_fills:
-#     t.join()
 
 
 

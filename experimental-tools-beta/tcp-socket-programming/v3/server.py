@@ -121,14 +121,10 @@ pcap_path = '/Users/jackbedford/temp'  # '/home/wmnlab/temp'
 
 # ===================== Global Variables =====================
 stop_threads = False
+
+# ===================== tcpdump =====================
+
 tcpproc_list = []
-
-now = dt.datetime.today()
-current_datetime = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.second]]
-current_datetime = [x.zfill(2) for x in current_datetime]  # zero-padding to two digit
-current_datetime = '-'.join(current_datetime[:3]) + '_' + '-'.join(current_datetime[3:])
-
-print(current_datetime)
 
 def capture_traffic(devices, ports, pcap_path, current_datetime):
     for device, port in zip(devices, ports):
@@ -145,8 +141,15 @@ def kill_traffic_capture():
         os.system(f"sudo kill -TERM -{tcpproc.pid}")
     time.sleep(1)
 
+now = dt.datetime.today()
+current_datetime = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.second]]
+current_datetime = [x.zfill(2) for x in current_datetime]  # zero-padding to two digit
+current_datetime = '-'.join(current_datetime[:3]) + '_' + '-'.join(current_datetime[3:])
+print(current_datetime)
+
 # capture_traffic(devices, ports, pcap_path, current_datetime)
 
+# ===================== socket =====================
 
 rx_sockets = []
 tx_sockets = []
@@ -177,25 +180,18 @@ tx_connections = []
 
 def accept_connection(s1, s2, device):
     conn, addr = s1.accept()  # client_socket 1, client_address 1
-    print('Connection from:', device, addr)
+    print('Connection established with:', device, addr)
     tcp_addr[s1] = addr
     rx_connections.append((conn, addr))
     
     conn, addr = s2.accept()  # client_socket 2, client_address 2
-    print('Connection from:', device, addr)
+    print('Connection established with:', device, addr)
     tcp_addr[s2] = addr
     tx_connections.append((conn, addr))
     
 # Accept incoming connections
-t_fills = []
 for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
     accept_connection(s1, s2, dev)
-    # t = threading.Thread(target=accept_connection, args=(s1, s2, dev, ))
-    # t_fills.append(t)
-    # t.start()
-
-# for t in t_fills:
-#     t.join()
 
 print("successful!!")
 
