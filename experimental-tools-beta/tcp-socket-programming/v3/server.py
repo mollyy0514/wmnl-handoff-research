@@ -176,15 +176,19 @@ rx_connections = []
 tx_connections = []
 
 def fill_tcp_conn_addr(s1, s2, device):
+    print('hello0')
     conn, addr = s1.accept()  # client_socket 1, client_address 1
+    print('hello1')
     print('Connection from:', addr)
     tcp_addr[s1] = addr
     rx_connections.append((conn, addr))
+    print('hello2')
     
-    # conn, addr = s2.accept()  # client_socket 2, client_address 2
-    # print('Connection from:', addr)
-    # tcp_addr[s2] = addr
-    # tx_connections.append((conn, addr))
+    conn, addr = s2.accept()  # client_socket 2, client_address 2
+    print('Connection from:', addr)
+    tcp_addr[s2] = addr
+    tx_connections.append((conn, addr))
+    print('hello3')
     
 # Accept incoming connections
 t_fills = []
