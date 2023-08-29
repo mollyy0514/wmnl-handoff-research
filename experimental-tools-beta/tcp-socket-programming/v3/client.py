@@ -227,12 +227,14 @@ def transmit(sockets):
             microsec = int((t - int(t))*1000000)
 
             redundant = os.urandom(length_packet-4*5)
-            outdata = euler.to_bytes(4, 'big') + pi.to_bytes(4, 'big') + datetimedec.to_bytes(4, 'big') + microsec.to_bytes(4, 'big') + seq.to_bytes(4, 'big') + redundant
+            # outdata = euler.to_bytes(4, 'big') + pi.to_bytes(4, 'big') + datetimedec.to_bytes(4, 'big') + microsec.to_bytes(4, 'big') + seq.to_bytes(4, 'big') + redundant
+            
+            outdata = 'hello world!'
             
             # for s, port in zip(sockets, ports):     
             #     s.sendto(outdata, (HOST, port[0]))
             for s in sockets:
-                s.send(outdata)  # Send data over the connection
+                s.sendall(outdata.encode())  # Send data over the connection
             
             seq += 1
         
