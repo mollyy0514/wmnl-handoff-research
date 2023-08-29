@@ -91,23 +91,23 @@ os.system("echo 00000000 | sudo -S su")
 
 # ===================== Simple Socket =====================
 
-# # 設定伺服器的主機和埠
-# HOST = '127.0.0.1'
-# PORT = 12345
+# 設定伺服器的主機和埠
+HOST = '127.0.0.1'
+PORT = 12345
 
-# # 建立TCP客戶端
-# client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# client_socket.connect((HOST, PORT))
+# 建立TCP客戶端
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket.connect((HOST, PORT))
 
-# while True:
-#     message = input('請輸入訊息 (或輸入 "exit" 離開): ')
-#     if message == 'exit':
-#         break
-#     client_socket.sendall(message.encode())
-#     data = client_socket.recv(1024)
-#     print('收到伺服器的回應:', data.decode())
+while True:
+    message = input('請輸入訊息 (或輸入 "exit" 離開): ')
+    if message == 'exit':
+        break
+    client_socket.sendall(message.encode())
+    data = client_socket.recv(1024)
+    print('收到伺服器的回應:', data.decode())
 
-# client_socket.close()
+client_socket.close()
 
 
 # ===================== Parameters =====================
@@ -152,13 +152,13 @@ def connection_setup(dev, port):
     s1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # s1.setsockopt(socket.IPPROTO_TCP, TCP_CONGESTION, cong)
     s1.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (dev+'\0').encode())  # 綁定特定網路介面
-    s1.connect((HOST, port[0]))  # 連線到指定的主機和埠
+    s1.connect((HOST, port[1]))  # 連線到指定的主機和埠
     rx_sockets.append(s1)
     
     s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # s2.setsockopt(socket.IPPROTO_TCP, TCP_CONGESTION, cong)
     s2.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (dev+'\0').encode())  # 綁定特定網路介面
-    s2.connect((HOST, port[1]))  # 連線到指定的主機和埠
+    s2.connect((HOST, port[0]))  # 連線到指定的主機和埠
     tx_sockets.append(s2)
     
     print(f'Create UL socket for {dev} at {HOST}:{port[0]}.')
@@ -166,6 +166,14 @@ def connection_setup(dev, port):
 
 for dev, port in zip(devices, ports):
     connection_setup(dev, port)
+    
+    
+# try:
+#     while True:
+#         time.sleep(10)
+# except KeyboardInterrupt:
+#     stop_threads = True
+#     for s1, s2 in zip()
     
 # ===================== transmit & receive =====================
 
