@@ -189,10 +189,10 @@ def accept_connection(s1, s2, device):
 # Accept incoming connections
 t_fills = []
 for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
-    # accept_connection(s1, s2, dev)
-    t = threading.Thread(target=accept_connection, args=(s1, s2, dev, ))
-    t_fills.append(t)
-    t.start()
+    accept_connection(s1, s2, dev)
+    # t = threading.Thread(target=accept_connection, args=(s1, s2, dev, ))
+    # t_fills.append(t)
+    # t.start()
 
 # for t in t_fills:
 #     t.join()
