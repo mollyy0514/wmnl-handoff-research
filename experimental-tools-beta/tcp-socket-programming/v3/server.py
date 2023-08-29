@@ -296,8 +296,8 @@ for conn, dev, port in zip(rx_connections, devices, ports):
 # p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
 # p_tx = multiprocessing.Process(target=transmit, args=(tx_connections,), daemon=True)
 
-t_tx = threading.Thread(target=transmit, args=(tx_connections,), daemon=True)
-t_tx.start()
+# t_tx = threading.Thread(target=transmit, args=(tx_connections,), daemon=True)
+# t_tx.start()
 
 
 # start = input('Start transmission? (y/n) ')

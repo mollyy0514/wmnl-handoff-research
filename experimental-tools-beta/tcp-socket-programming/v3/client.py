@@ -247,11 +247,11 @@ def transmit(sockets):
     print("transmit", seq, "packets")
 
 # Create and start DL receiving multi-thread
-rx_threads = []
-for s, dev in zip(rx_sockets, devices):
-    t_rx = threading.Thread(target=receive, args=(s, dev, ), daemon=True)
-    rx_threads.append(t_rx)
-    t_rx.start()
+# rx_threads = []
+# for s, dev in zip(rx_sockets, devices):
+#     t_rx = threading.Thread(target=receive, args=(s, dev, ), daemon=True)
+#     rx_threads.append(t_rx)
+#     t_rx.start()
 
 # Create and start UL transmission multi-processing
 # p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
