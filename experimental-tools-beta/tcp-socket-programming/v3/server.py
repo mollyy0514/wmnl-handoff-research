@@ -153,6 +153,7 @@ current_datetime = '-'.join(current_datetime[:3]) + '_' + '-'.join(current_datet
 rx_sockets = []
 tx_sockets = []
 
+# Setup connections
 for dev, port in zip(devices, ports):
     s1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # server_socket
     # s1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -194,7 +195,124 @@ for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
 
 print("Successfully establish all connections!")
 
+# ===================== transmit & receive =====================
 
+def receive(conn, dev, port):
+    global stop_threads
+    print(f"wait for indata from {dev} at {port}...")
+
+    seq = 1
+    prev_receive = 1
+    time_slot = 1
+
+    while not stop_threads:
+        try:
+            indata = conn.recv(1024)  # Receive data from connection
+
+            try:
+                start_time
+            except NameError:
+                start_time = time.time()
+
+            if len(indata) != length_packet:
+                print("packet with strange length: ", len(indata))
+
+            seq = int(indata.hex()[32:40], 16)
+            ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
+
+            # Show information
+            if time.time()-start_time > time_slot:
+                print(f"{dev}:{port} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
+                time_slot += 1
+                prev_receive = seq
+
+        except Exception as inst:
+            print("Error: ", inst)
+            stop_threads = True
+
+def transmit(connections):
+    global stop_threads
+    print("start transmission: ")
+    
+    seq = 1
+    prev_transmit = 0
+    
+    start_time = time.time()
+    next_transmit_time = start_time + sleeptime
+    
+    time_slot = 1
+    
+    while time.time() - start_time < total_time and not stop_threads:
+        try:
+            t = time.time()
+            while t < next_transmit_time:
+                t = time.time()
+            next_transmit_time = next_transmit_time + sleeptime
+            
+            euler = 271828
+            pi = 31415926
+            datetimedec = int(t)
+            microsec = int((t - int(t))*1000000)
+            
+            redundant = os.urandom(length_packet-4*5)
+            outdata = euler.to_bytes(4, 'big') + pi.to_bytes(4, 'big') + datetimedec.to_bytes(4, 'big') + microsec.to_bytes(4, 'big') + seq.to_bytes(4, 'big') + redundant
+            
+            for conn in connections:
+                conn.send(outdata)  # Send data over the connection
+            seq += 1
+            
+            if time.time() - start_time > time_slot:
+                print("[%d-%d]" % (time_slot-1, time_slot), "transmit", seq-prev_transmit)
+                time_slot += 1
+                prev_transmit = seq
+            
+        except Exception as e:
+            print(e)
+            stop_threads = True
+    stop_threads = True
+    print("---transmission timeout---")
+    print("transmit", seq, "packets")
+
+rx_threads = []
+# for s, dev, port in zip(rx_sockets, devices, ports):
+#     t_rx = threading.Thread(target = receive, args=(s, dev, port[0]), daemon=True)
+#     rx_threads.append(t_rx)
+#     t_rx.start()
+
+for conn, dev, port in zip(rx_connections, devices, ports):
+    t_rx = threading.Thread(target = receive, args=(conn, dev, port[0]), daemon=True)
+    rx_threads.append(t_rx)
+    t_rx.start()
+
+# Start DL transmission multipleprocessing
+# p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
+p_tx = multiprocessing.Process(target=transmit, args=(tx_connections,), daemon=True)
+
+# start = input('Start transmission? (y/n) ')
+# if start != 'y':
+#     sys.exit()
+p_tx.start()
+
+
+try:
+    
+    while True:
+        time.sleep(10)
+
+except KeyboardInterrupt:
+
+    stop_threads = True
+    
+    # Kill transmit process
+    p_tx.terminate()
+    time.sleep(1)
+
+    # Kill tcpdump process
+    kill_traffic_capture()
+    
+    time.sleep(3)
+    print('Successfully closed.')
+    sys.exit()
 
 
 
