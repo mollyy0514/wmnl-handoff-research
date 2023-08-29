@@ -175,40 +175,29 @@ tcp_addr = {}
 rx_connections = []
 tx_connections = []
 
-def fill_tcp_conn_addr(s1, s2, device):
-    # print('hello0')
+def accept_connection(s1, s2, device):
     conn, addr = s1.accept()  # client_socket 1, client_address 1
-    # print('hello1')
-    print('Connection from:', addr)
+    print('Connection from:', device, addr)
     tcp_addr[s1] = addr
     rx_connections.append((conn, addr))
-    # print('hello2')
     
     conn, addr = s2.accept()  # client_socket 2, client_address 2
-    print('Connection from:', addr)
+    print('Connection from:', device, addr)
     tcp_addr[s2] = addr
     tx_connections.append((conn, addr))
-    # print('hello3')
     
 # Accept incoming connections
 t_fills = []
-print(rx_sockets)
-print(tx_sockets)
 for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
-    # fill_tcp_conn_addr(s1, s2, dev)
-    t = threading.Thread(target=fill_tcp_conn_addr, args=(s1, s2, dev, ))
-    t.start()
+    # accept_connection(s1, s2, dev)
+    t = threading.Thread(target=accept_connection, args=(s1, s2, dev, ))
     t_fills.append(t)
-
-print("successful!!")
-
-# print(t_fills)
-
-# for t in t_fills:
-#     t.start()
+    t.start()
 
 # for t in t_fills:
 #     t.join()
+
+print("successful!!")
 
 
 

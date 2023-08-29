@@ -150,20 +150,16 @@ tx_sockets = []
 def connection_setup(dev, port):
     print(dev, port)
     s1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # print('hello1')
     # s1.setsockopt(socket.IPPROTO_TCP, TCP_CONGESTION, cong)
     s1.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (dev+'\0').encode())  # 綁定特定網路介面
-    # print('hello2')
     print((HOST, port[0]))
     s1.connect((HOST, port[0]))  # 連線到指定的主機和埠
-    # print('hello3')
     rx_sockets.append(s1)
     
     s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # s2.setsockopt(socket.IPPROTO_TCP, TCP_CONGESTION, cong)
     s2.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (dev+'\0').encode())  # 綁定特定網路介面
     s2.connect((HOST, port[1]))  # 連線到指定的主機和埠
-    # print('hello4')
     tx_sockets.append(s2)
     
     print(f'Create UL socket for {dev}:{port[0]}.')
@@ -173,13 +169,8 @@ t_fills = []
 for dev, port in zip(devices, ports):
     # connection_setup(dev, port)
     t = threading.Thread(target=connection_setup, args=(dev, port, ))
-    t.start()
     t_fills.append(t)
-    
-# print(t_fills)
-
-# for t in t_fills:
-#     t.start()
+    t.start()
 
 # for t in t_fills:
 #     t.join()
