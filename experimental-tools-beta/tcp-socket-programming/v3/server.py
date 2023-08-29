@@ -192,7 +192,7 @@ def accept_connection(s1, s2, device):
 for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
     accept_connection(s1, s2, dev)
 
-print("successful!!")
+print("Successfully establish all connections!")
 
 
 
