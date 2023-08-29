@@ -178,15 +178,15 @@ def receive(s, dev):
 
     while not stop_threads:
         try:
-            indata = s.recv(1024)
+            indata = s.recv(65535)
 
             try:
                 start_time
             except NameError:
                 start_time = time.time()
 
-            if len(indata) != length_packet:
-                print("packet with strange length: ", len(indata))
+            # if len(indata) != length_packet:
+            #     print("packet with strange length: ", len(indata))
 
             seq = int(indata.hex()[32:40], 16)
             ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
