@@ -254,11 +254,11 @@ for s, dev in zip(rx_sockets, devices):
     t_rx.start()
 
 # Create and start UL transmission multi-processing
-p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
-p_tx.start()
+# p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
+# p_tx.start()
 
-t_tx = threading.Thread(target=transmit, args=(tx_sockets,), daemon=True)
-t_tx.start()
+# t_tx = threading.Thread(target=transmit, args=(tx_sockets,), daemon=True)
+# t_tx.start()
 
 # ===================== wait for experiment end =====================
 
