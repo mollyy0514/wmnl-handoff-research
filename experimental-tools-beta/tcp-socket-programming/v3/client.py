@@ -158,23 +158,24 @@ def connection_setup(dev, port):
     # s2.setsockopt(socket.IPPROTO_TCP, TCP_CONGESTION, cong)
     s2.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (dev+'\0').encode())  # 綁定特定網路介面
     s2.connect((HOST, port[1]))  # 連線到指定的主機和埠
-    # tx_sockets.append(s2)
+    tx_sockets.append(s2)
     
     print(f'Create UL socket for {dev}:{port[0]}.')
     print(f'Create DL socket for {dev}:{port[1]}.')
 
 t_fills = []
 for dev, port in zip(devices, ports):
-    t = threading.Thread(target=connection_setup, args=(dev, port, ))
-    t_fills.append(t)
+    connection_setup(dev, port)
+    # t = threading.Thread(target=connection_setup, args=(dev, port, ))
+    # t_fills.append(t)
     
-print(t_fills)
+# print(t_fills)
 
-for t in t_fills:
-    t.start()
+# for t in t_fills:
+#     t.start()
 
-for t in t_fills:
-    t.join()
+# for t in t_fills:
+#     t.join()
 
 
 
