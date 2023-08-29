@@ -169,134 +169,134 @@ for dev, port in zip(devices, ports):
     
 # ===================== transmit & receive =====================
 
-def receive(s, dev):
-    global stop_threads
-    print(f"wait for indata to {dev} from server...")
-    seq = 1
-    prev_receive = 1
-    time_slot = 1
+# def receive(s, dev):
+#     global stop_threads
+#     print(f"wait for indata to {dev} from server...")
+#     seq = 1
+#     prev_receive = 1
+#     time_slot = 1
 
-    while not stop_threads:
-        try:
-            indata = s.recv(1024)
+#     while not stop_threads:
+#         try:
+#             indata = s.recv(1024)
 
-            try:
-                start_time
-            except NameError:
-                start_time = time.time()
+#             try:
+#                 start_time
+#             except NameError:
+#                 start_time = time.time()
 
-            if len(indata) != length_packet:
-                print("packet with strange length: ", len(indata))
+#             if len(indata) != length_packet:
+#                 print("packet with strange length: ", len(indata))
 
-            seq = int(indata.hex()[32:40], 16)
-            ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
+#             seq = int(indata.hex()[32:40], 16)
+#             ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
 
-            # Show information
-            if time.time()-start_time > time_slot:
-                print(f"{dev} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
-                time_slot += 1
-                prev_receive = seq
+#             # Show information
+#             if time.time()-start_time > time_slot:
+#                 print(f"{dev} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
+#                 time_slot += 1
+#                 prev_receive = seq
 
-        except Exception as inst:
-            print("Error: ", inst)
-            stop_threads = True
+#         except Exception as inst:
+#             print("Error: ", inst)
+#             stop_threads = True
 
-def transmit(sockets):
+# def transmit(sockets):
 
-    global stop_threads
-    print("start transmission: ")
+#     global stop_threads
+#     print("start transmission: ")
     
-    seq = 1
-    prev_transmit = 0
+#     seq = 1
+#     prev_transmit = 0
     
-    start_time = time.time()
-    next_transmit_time = start_time + sleeptime
+#     start_time = time.time()
+#     next_transmit_time = start_time + sleeptime
     
-    time_slot = 1
+#     time_slot = 1
     
-    while time.time() - start_time < total_time and not stop_threads:
-        try:
-            t = time.time()
-            while t < next_transmit_time:
-                t = time.time()
-            next_transmit_time = next_transmit_time + sleeptime
+#     while time.time() - start_time < total_time and not stop_threads:
+#         try:
+#             t = time.time()
+#             while t < next_transmit_time:
+#                 t = time.time()
+#             next_transmit_time = next_transmit_time + sleeptime
 
-            euler = 271828
-            pi = 31415926
-            datetimedec = int(t)
-            microsec = int((t - int(t))*1000000)
+#             euler = 271828
+#             pi = 31415926
+#             datetimedec = int(t)
+#             microsec = int((t - int(t))*1000000)
 
-            redundant = os.urandom(length_packet-4*5)
-            outdata = euler.to_bytes(4, 'big') + pi.to_bytes(4, 'big') + datetimedec.to_bytes(4, 'big') + microsec.to_bytes(4, 'big') + seq.to_bytes(4, 'big') + redundant
+#             redundant = os.urandom(length_packet-4*5)
+#             outdata = euler.to_bytes(4, 'big') + pi.to_bytes(4, 'big') + datetimedec.to_bytes(4, 'big') + microsec.to_bytes(4, 'big') + seq.to_bytes(4, 'big') + redundant
             
-            # for s, port in zip(sockets, ports):     
-            #     s.sendto(outdata, (HOST, port[0]))
-            for s in sockets:
-                s.send(outdata)  # Send data over the connection
+#             # for s, port in zip(sockets, ports):     
+#             #     s.sendto(outdata, (HOST, port[0]))
+#             for s in sockets:
+#                 s.send(outdata)  # Send data over the connection
             
-            seq += 1
+#             seq += 1
         
-            if time.time()-start_time > time_slot:
-                print("[%d-%d]"%(time_slot-1, time_slot), "transmit", seq-prev_transmit)
-                time_slot += 1
-                prev_transmit = seq
+#             if time.time()-start_time > time_slot:
+#                 print("[%d-%d]"%(time_slot-1, time_slot), "transmit", seq-prev_transmit)
+#                 time_slot += 1
+#                 prev_transmit = seq
 
-        except Exception as e:
-            print(e)
-            stop_threads = True
-    stop_threads = True
-    print("---transmission timeout---")
-    print("transmit", seq, "packets")
+#         except Exception as e:
+#             print(e)
+#             stop_threads = True
+#     stop_threads = True
+#     print("---transmission timeout---")
+#     print("transmit", seq, "packets")
 
-# Create and start DL receive multi-thread
-rx_threads = []
-for s, dev in zip(rx_sockets, devices):
-    t_rx = threading.Thread(target=receive, args=(s, dev, ), daemon=True)
-    rx_threads.append(t_rx)
-    t_rx.start()
+# # Create and start DL receive multi-thread
+# rx_threads = []
+# for s, dev in zip(rx_sockets, devices):
+#     t_rx = threading.Thread(target=receive, args=(s, dev, ), daemon=True)
+#     rx_threads.append(t_rx)
+#     t_rx.start()
 
-# Create and start UL transmission multiprocess
-# p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
-# p_tx.start()
+# # Create and start UL transmission multiprocess
+# # p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
+# # p_tx.start()
 
-t_tx = threading.Thread(target=transmit, args=(tx_sockets,), daemon=True)
-t_tx.start()
-
-
-try:
-
-    while True:
-        time.sleep(10)
-
-except KeyboardInterrupt:
-
-    stop_threads = True
-
-    # Kill transmit process
-    # p_tx.terminate()
-    # time.sleep(1)
-
-    # Kill tcpdump process
-    kill_traffic_capture()
-
-    time.sleep(3)
-    print('Successfully closed.')
-    sys.exit()
-
-
-
-
+# t_tx = threading.Thread(target=transmit, args=(tx_sockets,), daemon=True)
+# t_tx.start()
 
 
 # try:
+
 #     while True:
 #         time.sleep(10)
-        
+
 # except KeyboardInterrupt:
+
 #     stop_threads = True
+
+#     # Kill transmit process
+#     # p_tx.terminate()
+#     # time.sleep(1)
+
+#     # Kill tcpdump process
 #     kill_traffic_capture()
-    
+
+#     time.sleep(3)
 #     print('Successfully closed.')
 #     sys.exit()
+
+
+
+
+
+
+# # try:
+# #     while True:
+# #         time.sleep(10)
+        
+# # except KeyboardInterrupt:
+# #     stop_threads = True
+# #     kill_traffic_capture()
+    
+# #     print('Successfully closed.')
+# #     sys.exit()
 
 
