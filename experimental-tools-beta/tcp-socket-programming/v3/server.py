@@ -204,6 +204,21 @@ for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
 
 print("Successfully establish all connections!")
 
+try:
+    while True:
+        time.sleep(10)
+        
+except KeyboardInterrupt:
+    stop_threads = True
+    
+    for s1, s2 in zip(rx_connections, tx_connections):
+        s1.close()
+        s2.close()
+        
+    for s1, s2 in zip(rx_sockets, tx_sockets):
+        s1.close()
+        s2.close()
+
 # ===================== transmit & receive =====================
 
 # def receive(conn, dev, port):
