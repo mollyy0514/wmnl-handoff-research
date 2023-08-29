@@ -192,15 +192,6 @@ def accept_connection(s1, s2, device):
 # Accept incoming connections
 for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
     accept_connection(s1, s2, dev)
-    # conn, addr = s1.accept()  # client_socket 1, client_address 1
-    # print('Connection established with:', dev, addr)
-    # tcp_addr[s1] = addr
-    # rx_connections.append(conn)
-    
-    # conn, addr = s2.accept()  # client_socket 2, client_address 2
-    # print('Connection established with:', dev, addr)
-    # tcp_addr[s2] = addr
-    # tx_connections.append(conn)
 
 print("Successfully establish all connections!")
 
