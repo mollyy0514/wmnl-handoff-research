@@ -150,9 +150,12 @@ tx_sockets = []
 def connection_setup(dev, port):
     print(dev, port)
     s1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    print('hello1')
     # s1.setsockopt(socket.IPPROTO_TCP, TCP_CONGESTION, cong)
     s1.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (dev+'\0').encode())  # 綁定特定網路介面
+    print('hello2')
     s1.connect((HOST, port[0]))  # 連線到指定的主機和埠
+    print('hello3')
     rx_sockets.append(s1)
     
     # s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
