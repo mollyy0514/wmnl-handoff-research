@@ -166,12 +166,12 @@ def connection_setup(dev, port):
 t_fills = []
 for dev, port in zip(devices, ports):
     t = threading.Thread(target=connection_setup, args=(dev, port, ))
-    t.start()
     t_fills.append(t)
     
 print(t_fills)
 
 for t in t_fills:
+    t.start()
     t.join()
 
 
