@@ -146,7 +146,7 @@ current_datetime = [str(x) for x in [now.year, now.month, now.day, now.hour, now
 current_datetime = [x.zfill(2) for x in current_datetime]  # zero-padding to two digit
 current_datetime = '-'.join(current_datetime[:3]) + '_' + '-'.join(current_datetime[3:])
 
-# capture_traffic(devices, ports, pcap_path, current_datetime)
+capture_traffic(devices, ports, pcap_path, current_datetime)
 
 # ===================== socket =====================
 
