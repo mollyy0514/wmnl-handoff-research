@@ -222,9 +222,9 @@ def receive(conn, dev, port):
             indata = conn.recv(65535)  # Receive data from connection
 
             try:
-                start_time
+                rx_start_time
             except NameError:
-                start_time = time.time()
+                rx_start_time = time.time()
 
             # if len(indata) != length_packet:
             #     print("packet with strange length: ", len(indata))
@@ -233,7 +233,7 @@ def receive(conn, dev, port):
             ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
 
             # Show information
-            if time.time()-start_time > time_slot:
+            if time.time()-rx_start_time > time_slot:
                 print(f"{dev}:{port} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
                 time_slot += 1
                 prev_receive = seq
