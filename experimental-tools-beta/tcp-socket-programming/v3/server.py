@@ -285,59 +285,26 @@ def transmit(connections):
     print("---transmission timeout---")
     print("transmit", seq, "packets")
 
+# Create and start UL receiving multi-thread
 rx_threads = []
-# for s, dev, port in zip(rx_sockets, devices, ports):
-#     t_rx = threading.Thread(target = receive, args=(s, dev, port[0]), daemon=True)
-#     rx_threads.append(t_rx)
-#     t_rx.start()
-
 for conn, dev, port in zip(rx_connections, devices, ports):
     t_rx = threading.Thread(target = receive, args=(conn, dev, port[0]), daemon=True)
     rx_threads.append(t_rx)
     t_rx.start()
 
-print('hello2 *****************************')
-
-# Start DL transmission multipleprocessing
+# Create adn start DL transmission multi-processing
 # p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
 # p_tx = multiprocessing.Process(target=transmit, args=(tx_connections,), daemon=True)
 
-t_tx = threading.Thread(target=transmit, args=(tx_connections,), daemon=True)
+# t_tx = threading.Thread(target=transmit, args=(tx_connections,), daemon=True)
+# t_tx.start()
 
-print('hello3 *****************************')
 
 # start = input('Start transmission? (y/n) ')
 # if start != 'y':
 #     sys.exit()
-t_tx.start()
 
-time.sleep(5)
-
-print('hello4 *****************************')
-
-
-# try:
-    
-#     while True:
-#         time.sleep(10)
-
-# except KeyboardInterrupt:
-
-#     stop_threads = True
-    
-#     # Kill transmit process
-#     # t_tx.terminate()
-#     time.sleep(1)
-
-#     # Kill tcpdump process
-#     kill_traffic_capture()
-    
-#     time.sleep(3)
-#     print('Successfully closed.')
-#     sys.exit()
-
-
-
+# ===================== wait for experiment end =====================
 
 try:
     while True:
@@ -346,6 +313,11 @@ try:
 except KeyboardInterrupt:
     stop_threads = True
     
+    # Kill transmit process
+    # t_tx.terminate()
+    # time.sleep(1)
+    
+    # Close sockets
     for s1, s2 in zip(rx_connections, tx_connections):
         s1.close()
         s2.close()
@@ -353,8 +325,10 @@ except KeyboardInterrupt:
     for s1, s2 in zip(rx_sockets, tx_sockets):
         s1.close()
         s2.close()
-
-
-
-
-
+        
+    # Kill tcpdump process
+    kill_traffic_capture()
+    
+    time.sleep(1)
+    print('Successfully closed.')
+    sys.exit()
