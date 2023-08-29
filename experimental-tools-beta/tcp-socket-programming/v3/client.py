@@ -58,7 +58,6 @@ def create_port_list(args, devices):
                 port_list.append(int(port))
         return port_list
 
-
 # ===================== Main Process =====================
 
 args = parse_arguments()
@@ -87,7 +86,6 @@ print("bitrate:", bitrate)
 
 os.system("echo wmnlab | sudo -S su")
 # os.system("echo 00000000 | sudo -S su")
-
 
 # ===================== Simple Socket =====================
 
