@@ -160,8 +160,8 @@ def connection_setup(dev, port):
     s2.connect((HOST, port[1]))  # 連線到指定的主機和埠
     tx_sockets.append(s2)
     
-    print(f'Create UL socket for {dev}.')
-    print(f'Create DL socket for {dev}.')
+    print(f'Create UL socket for {dev}:{port[0]}.')
+    print(f'Create DL socket for {dev}:{port[1]}.')
 
 t_fills = []
 for dev, port in zip(devices, ports):
