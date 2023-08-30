@@ -256,9 +256,12 @@ def receive(conn, dev, port):
             #         break
             # except:
             #     pass
-
+            
+        except ValueError as inst:
+            print("ValueError:", inst)
+            
         except Exception as inst:
-            print("Error: ", inst)
+            print("Error:", inst)
             stop_threads = True
 
 def transmit(connections):
@@ -296,9 +299,12 @@ def transmit(connections):
                 print("[%d-%d]" % (time_slot-1, time_slot), "transmit", seq-prev_transmit)
                 time_slot += 1
                 prev_transmit = seq
+        
+        except ValueError as inst:
+            print("ValueError:", inst)
             
         except Exception as inst:
-            print("Error: ", inst)
+            print("Error:", inst)
             stop_threads = True
             
     stop_threads = True

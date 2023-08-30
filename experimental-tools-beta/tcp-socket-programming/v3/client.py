@@ -211,6 +211,9 @@ def receive(s, dev):
                 time_slot += 1
                 prev_receive = seq
 
+        except ValueError as inst:
+            print("ValueError:", inst)
+            
         except Exception as inst:
             print("Error:", inst)
             stop_threads = True
@@ -252,6 +255,9 @@ def transmit(sockets):
                 time_slot += 1
                 prev_transmit = seq
 
+        except ValueError as inst:
+            print("ValueError:", inst)
+            
         except Exception as inst:
             print("Error:", inst)
             stop_threads = True
