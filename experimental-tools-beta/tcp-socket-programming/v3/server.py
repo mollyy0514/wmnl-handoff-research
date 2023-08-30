@@ -177,23 +177,40 @@ rx_connections = []
 tx_connections = []
 
 def accept_connection(s1, s2, device):
-    conn, addr = s1.accept()  # client_socket 1, client_address 1
-    print('Connection established with:', device, addr)
-    tcp_addr[s1] = addr
-    rx_connections.append(conn)
+    conn1, addr1 = s1.accept()  # client_socket 1, client_address 1
+    print('Connection established with:', device, addr1)
+    tcp_addr[s1] = addr1
+    rx_connections.append(conn1)
     
-    conn, addr = s2.accept()  # client_socket 2, client_address 2
-    print('Connection established with:', device, addr)
-    tcp_addr[s2] = addr
-    tx_connections.append(conn)
+    conn2, addr2 = s2.accept()  # client_socket 2, client_address 2
+    print('Connection established with:', device, addr2)
+    tcp_addr[s2] = addr2
+    tx_connections.append(conn2)
+    
+    while True:
+        print("wait for starting...", addr1)
+        try:
+            indata = conn1.recv(65535)
+            if indata.decode() == 'START':
+                print("START")
+                break
+            else:
+                print("WTF", indata)
+                break
+        except Exception as inst:
+            print("Error: ", inst)
     
 # Accept incoming connections
 act_threads = []
 for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
-    accept_connection(s1, s2, dev)
-    t = threading.Thread(target=accept_connection, args=(s1, s2, dev, ), daemon=True)
+    # accept_connection(s1, s2, dev)
+    # t = threading.Thread(target=accept_connection, args=(s1, s2, dev, ), daemon=True)
+    t = threading.Thread(target=accept_connection, args=(s1, s2, dev, ))
     act_threads.append(t)
     t.start()
+
+# for t in act_threads:
+#     t.join()
 
 # print("Successfully establish all connections!")
 
