@@ -321,7 +321,8 @@ t_tx.start()
 # ===================== wait for experiment end =====================
 
 try:
-    while not stop_threads:
+    # while not stop_threads:
+    while True:
         time.sleep(3)
         
 except KeyboardInterrupt:
