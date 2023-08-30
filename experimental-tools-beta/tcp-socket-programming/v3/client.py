@@ -278,11 +278,16 @@ t_tx.start()
 # ===================== wait for experiment end =====================
 
 try:
-    while True:
-        time.sleep(10)
+    while not stop_threads:
+        time.sleep(3)
         
 except KeyboardInterrupt:
     stop_threads = True
+    
+    for i in range(10):
+        for s1, s2 in zip(tx_sockets, rx_sockets):
+            # s1.sendall('STOP'.encode())
+            s2.sendall('STOP'.encode())
     
     # Kill transmit process
     # p_tx.terminate()

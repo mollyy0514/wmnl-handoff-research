@@ -144,7 +144,7 @@ for dev, port in zip(devices, ports):
     print(f'Create socket at {HOST}:{port[0]} for UL...')
     print(f'Create socket at {HOST}:{port[1]} for DL...')
 
-print('等待客戶端連線...')
+print('Waiting for connections...')
 
 tcp_addr = {}
 rx_connections = []
@@ -249,6 +249,11 @@ def receive(conn, dev, port):
                 print(f"{dev}:{port} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
                 time_slot += 1
                 prev_receive = seq
+            
+            if indata.decode()[:4] == 'STOP':
+                stop_threads = True
+                print(f"{dev} STOP")
+                break
 
         except Exception as inst:
             print("Error: ", inst)
@@ -314,8 +319,8 @@ t_tx.start()
 # ===================== wait for experiment end =====================
 
 try:
-    while True:
-        time.sleep(10)
+    while not stop_threads:
+        time.sleep(3)
         
 except KeyboardInterrupt:
     stop_threads = True
