@@ -139,22 +139,22 @@ def connection_setup(dev, port):
 for dev, port in zip(devices, ports):
     connection_setup(dev, port)
 
-try:
-    x = input("Press Enter to start...")
-    for i in range(10):
-        for s1, s2 in zip(rx_sockets, tx_sockets):
-            # s1.sendall('START'.encode())
-            s2.sendall('START'.encode())
+# try:
+#     x = input("Press Enter to start...")
+#     for i in range(10):
+#         for s1, s2 in zip(rx_sockets, tx_sockets):
+#             # s1.sendall('START'.encode())
+#             s2.sendall('START'.encode())
             
-except Exception as inst:
-    print("Error:", inst)
-    print("Sockets closed")
-    for s1, s2 in zip(tx_sockets, rx_sockets):
-        s1.close()
-        s2.close()
-    sys.exit() 
+# except Exception as inst:
+#     print("Error:", inst)
+#     print("Sockets closed")
+#     for s1, s2 in zip(tx_sockets, rx_sockets):
+#         s1.close()
+#         s2.close()
+#     sys.exit() 
 
-time.sleep(1)
+# time.sleep(1)
 
 # ===================== traffic capture =====================
 tcpproc_list = []

@@ -167,29 +167,29 @@ for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
 
 print("Successfully establish all connections!")
 
-for conn, dev in zip(rx_connections, devices):
-    while True:
-        try:
-            indata = conn.recv(65535)
-            if indata.decode()[:5] == 'START':
-                print(f"{dev} START")
-                break
-            else:
-                print("WTF?????", indata)
-                break
+# for conn, dev in zip(rx_connections, devices):
+#     while True:
+#         try:
+#             indata = conn.recv(65535)
+#             if indata.decode()[:5] == 'START':
+#                 print(f"{dev} START")
+#                 break
+#             else:
+#                 print("WTF?????", indata)
+#                 break
             
-        except Exception as inst:
-            print("Error:", inst)
-            print("Sockets closed")
-            for s1, s2 in zip(rx_connections, tx_connections):
-                s1.close()
-                s2.close()
-            for s1, s2 in zip(rx_sockets, tx_sockets):
-                s1.close()
-                s2.close()
-            sys.exit()
+#         except Exception as inst:
+#             print("Error:", inst)
+#             print("Sockets closed")
+#             for s1, s2 in zip(rx_connections, tx_connections):
+#                 s1.close()
+#                 s2.close()
+#             for s1, s2 in zip(rx_sockets, tx_sockets):
+#                 s1.close()
+#                 s2.close()
+#             sys.exit()
 
-time.sleep(1)
+# time.sleep(1)
 
 # ===================== traffic capture =====================
 
@@ -249,13 +249,13 @@ def receive(conn, dev, port):
                 time_slot += 1
                 prev_receive = seq
             
-            try:
-                if indata.decode()[:4] == 'STOP':
-                    stop_threads = True
-                    print(f"{dev} STOP")
-                    break
-            except:
-                pass
+            # try:
+            #     if indata.decode()[:4] == 'STOP':
+            #         stop_threads = True
+            #         print(f"{dev} STOP")
+            #         break
+            # except:
+            #     pass
 
         except Exception as inst:
             print("Error: ", inst)
