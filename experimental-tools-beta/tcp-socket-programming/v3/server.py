@@ -188,8 +188,12 @@ def accept_connection(s1, s2, device):
     tx_connections.append(conn)
     
 # Accept incoming connections
+act_threads = []
 for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
     accept_connection(s1, s2, dev)
+    t = threading.Thread(target=accept_connection, args=(s1, s2, dev, ), daemon=True)
+    act_threads.append(t)
+    t.start()
 
 # print("Successfully establish all connections!")
 
@@ -197,7 +201,7 @@ for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
 
 def receive(conn, dev, port):
     global stop_threads
-    print(f"wait for indata from {dev} at {port}...")
+    print(f"wait for indata from {dev} at 0.0.0.0:{port}...")
 
     seq = 1
     prev_receive = 1
@@ -275,14 +279,14 @@ def transmit(connections):
 # Create and start Uplink receiving multi-thread
 rx_threads = []
 for conn, dev, port in zip(rx_connections, devices, ports):
-    t_rx = threading.Thread(target = receive, args=(conn, dev, port[0]), daemon=True)
+    t_rx = threading.Thread(target = receive, args=(conn, dev, port[0], ), daemon=True)
     rx_threads.append(t_rx)
     t_rx.start()
 
 # Create adn start Downlink transmission multi-processing
-# p_tx = multiprocessing.Process(target=transmit, args=(tx_connections,), daemon=True)
+# p_tx = multiprocessing.Process(target=transmit, args=(tx_connections), daemon=True)
 # p_tx.start()
-t_tx = threading.Thread(target=transmit, args=(tx_connections,), daemon=True)
+t_tx = threading.Thread(target=transmit, args=(tx_connections, ), daemon=True)
 t_tx.start()
 
 # ===================== wait for experiment end =====================
@@ -308,8 +312,8 @@ except KeyboardInterrupt:
         s2.close()
         
     # Kill tcpdump process
-    kill_traffic_capture()
-    time.sleep(1)
+    # kill_traffic_capture()
+    # time.sleep(1)
     
     print('Successfully closed.')
     sys.exit()

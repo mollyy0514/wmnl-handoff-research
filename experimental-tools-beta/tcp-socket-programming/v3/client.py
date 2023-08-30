@@ -285,8 +285,8 @@ except KeyboardInterrupt:
         s2.close()
     
     # Kill tcpdump process
-    kill_traffic_capture()
-    time.sleep(1)
+    # kill_traffic_capture()
+    # time.sleep(1)
     
     print('Successfully closed.')
     sys.exit()
