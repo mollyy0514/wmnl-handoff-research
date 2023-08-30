@@ -130,7 +130,7 @@ def kill_traffic_capture():
     print('Killing tcpdump process...')
     for tcpproc in tcpproc_list:
         # os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
-        os.system(f"sudo kill -TERM -{tcpproc.pid}")
+        os.system(f"sudo kill -15 {tcpproc.pid}")
     time.sleep(1)
     
 now = dt.datetime.today()
