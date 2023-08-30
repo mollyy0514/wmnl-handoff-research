@@ -138,9 +138,9 @@ current_datetime = [str(x) for x in [now.year, now.month, now.day, now.hour, now
 current_datetime = [x.zfill(2) for x in current_datetime]  # zero-padding to two digit
 current_datetime = '-'.join(current_datetime[:3]) + '_' + '-'.join(current_datetime[3:])
 
-capture_traffic(devices, ports, pcap_path, current_datetime)
+# capture_traffic(devices, ports, pcap_path, current_datetime)
 
-# ===================== socket =====================
+# ===================== setup socket =====================
 
 rx_sockets = []
 tx_sockets = []
@@ -164,6 +164,14 @@ def connection_setup(dev, port):
 
 for dev, port in zip(devices, ports):
     connection_setup(dev, port)
+
+# try:
+#     x = input("Press Enter to start.\n")
+#     for s1, s2 in zip(rx_sockets, tx_sockets):
+#         s1.sendall('START'.encode())
+#         s2.sendall('START'.encode())
+# except Exception as inst:
+#     print("Error:", inst)
     
 # ===================== transmit & receive =====================
 
@@ -272,9 +280,9 @@ except KeyboardInterrupt:
     # time.sleep(1)
     
     # Close sockets
-    # for s1, s2 in zip(tx_sockets, rx_sockets):
-    #     s1.close()
-    #     s2.close()
+    for s1, s2 in zip(tx_sockets, rx_sockets):
+        s1.close()
+        s2.close()
     
     # Kill tcpdump process
     kill_traffic_capture()
