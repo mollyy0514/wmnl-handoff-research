@@ -166,7 +166,7 @@ for dev, port in zip(devices, ports):
     connection_setup(dev, port)
 
 try:
-    x = input("Press Enter to start.\n")
+    x = input("Press Enter to start.")
     for i in range(10):
         for s1, s2 in zip(rx_sockets, tx_sockets):
             # s1.sendall('START'.encode())
