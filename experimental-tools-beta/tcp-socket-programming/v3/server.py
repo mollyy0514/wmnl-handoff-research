@@ -286,11 +286,6 @@ for conn, dev, port in zip(rx_connections, devices, ports):
 t_tx = threading.Thread(target=transmit, args=(tx_connections,), daemon=True)
 t_tx.start()
 
-
-# start = input('Start transmission? (y/n) ')
-# if start != 'y':
-#     sys.exit()
-
 # ===================== wait for experiment end =====================
 
 try:
