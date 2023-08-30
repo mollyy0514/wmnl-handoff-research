@@ -109,13 +109,12 @@ print("bitrate:", bitrate)
 HOST = '140.112.20.183'  # Lab 249
 pcap_path = '/home/wmnlab/temp'
 
-os.system("echo wmnlab | sudo -S su")
-# os.system("echo 00000000 | sudo -S su")
-
 # ===================== Global Variables =====================
 stop_threads = False
 
 # ===================== setup socket =====================
+
+os.system("echo wmnlab | sudo -S su")
 
 rx_sockets = []
 tx_sockets = []
