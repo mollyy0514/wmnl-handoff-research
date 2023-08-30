@@ -84,9 +84,6 @@ print(devices)
 print(ports)
 print("bitrate:", bitrate)
 
-# os.system("echo wmnlab | sudo -S su")
-os.system("echo 00000000 | sudo -S su")
-
 # ===================== Simple Socket =====================
 
 # # 設定伺服器的主機和埠
@@ -116,6 +113,9 @@ os.system("echo 00000000 | sudo -S su")
 # ===================== Parameters =====================
 HOST = '0.0.0.0'
 pcap_path = '/Users/jackbedford/temp'  # '/home/wmnlab/temp'
+
+# os.system("echo wmnlab | sudo -S su")
+os.system("echo 00000000 | sudo -S su")
 
 # ===================== Global Variables =====================
 stop_threads = False
@@ -216,7 +216,7 @@ current_datetime = [str(x) for x in [now.year, now.month, now.day, now.hour, now
 current_datetime = [x.zfill(2) for x in current_datetime]  # zero-padding to two digit
 current_datetime = '-'.join(current_datetime[:3]) + '_' + '-'.join(current_datetime[3:])
 
-# capture_traffic(devices, ports, pcap_path, current_datetime)
+capture_traffic(devices, ports, pcap_path, current_datetime)
 
 # ===================== transmit & receive =====================
 
@@ -250,10 +250,13 @@ def receive(conn, dev, port):
                 time_slot += 1
                 prev_receive = seq
             
-            if indata.decode()[:4] == 'STOP':
-                stop_threads = True
-                print(f"{dev} STOP")
-                break
+            try:
+                if indata.decode()[:4] == 'STOP':
+                    stop_threads = True
+                    print(f"{dev} STOP")
+                    break
+            except:
+                pass
 
         except Exception as inst:
             print("Error: ", inst)
@@ -339,8 +342,27 @@ except KeyboardInterrupt:
         s2.close()
         
     # Kill tcpdump process
-    # kill_traffic_capture()
-    # time.sleep(1)
+    kill_traffic_capture()
+    time.sleep(1)
     
     print('Successfully closed.')
     sys.exit()
+
+# Kill transmit process
+# p_tx.terminate()
+# time.sleep(1)
+
+# Close sockets
+for s1, s2 in zip(rx_connections, tx_connections):
+    s1.close()
+    s2.close()
+    
+for s1, s2 in zip(rx_sockets, tx_sockets):
+    s1.close()
+    s2.close()
+    
+# Kill tcpdump process
+kill_traffic_capture()
+time.sleep(1)
+
+print('Successfully closed.')

@@ -84,9 +84,6 @@ print(devices)
 print(ports)
 print("bitrate:", bitrate)
 
-os.system("echo wmnlab | sudo -S su")
-# os.system("echo 00000000 | sudo -S su")
-
 # ===================== Simple Socket =====================
 
 # # 設定伺服器的主機和埠
@@ -111,6 +108,9 @@ os.system("echo wmnlab | sudo -S su")
 # ===================== Parameters =====================
 HOST = '140.112.20.183'  # Lab 249
 pcap_path = '/home/wmnlab/temp'
+
+os.system("echo wmnlab | sudo -S su")
+# os.system("echo 00000000 | sudo -S su")
 
 # ===================== Global Variables =====================
 stop_threads = False
@@ -164,16 +164,16 @@ tcpproc_list = []
 def capture_traffic(devices, ports, pcap_path, current_datetime):
     for device, port in zip(devices, ports):
         pcap = os.path.join(pcap_path, f"client_pcap_BL_{device}_{port[0]}_{port[1]}_{current_datetime}_sock.pcap")
-        # tcpproc = subprocess.Popen([f"tcpdump -i any port '({port[0]} or {port[1]})' -w {pcap}"], shell=True, preexec_fn=os.setpgrp)
-        tcpproc = subprocess.Popen([f"sudo tcpdump -i any port '({port[0]} or {port[1]})' -w {pcap}"], shell=True, preexec_fn=os.setpgrp)
+        tcpproc = subprocess.Popen([f"tcpdump -i any port '({port[0]} or {port[1]})' -w {pcap}"], shell=True, preexec_fn=os.setpgrp)
+        # tcpproc = subprocess.Popen([f"sudo tcpdump -i any port '({port[0]} or {port[1]})' -w {pcap}"], shell=True, preexec_fn=os.setpgrp)
         tcpproc_list.append(tcpproc)
     time.sleep(1)
 
 def kill_traffic_capture():
     print('Killing tcpdump process...')
     for tcpproc in tcpproc_list:
-        # os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
-        os.system(f"sudo kill -15 {tcpproc.pid}")
+        os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
+        # os.system(f"sudo kill -15 {tcpproc.pid}")
     time.sleep(1)
     
 now = dt.datetime.today()
@@ -181,7 +181,7 @@ current_datetime = [str(x) for x in [now.year, now.month, now.day, now.hour, now
 current_datetime = [x.zfill(2) for x in current_datetime]  # zero-padding to two digit
 current_datetime = '-'.join(current_datetime[:3]) + '_' + '-'.join(current_datetime[3:])
 
-# capture_traffic(devices, ports, pcap_path, current_datetime)
+capture_traffic(devices, ports, pcap_path, current_datetime)
     
 # ===================== transmit & receive =====================
 
@@ -299,8 +299,8 @@ except KeyboardInterrupt:
         s2.close()
     
     # Kill tcpdump process
-    # kill_traffic_capture()
-    # time.sleep(1)
+    kill_traffic_capture()
+    time.sleep(1)
     
     print('Successfully closed.')
     sys.exit()
