@@ -110,7 +110,7 @@ os.system("echo wmnlab | sudo -S su")
 
 # ===================== Parameters =====================
 HOST = '140.112.20.183'  # Lab 249
-pcap_path = '/Users/jackbedford/temp'  # '/home/wmnlab/temp'
+pcap_path = '/home/wmnlab/temp'
 
 # ===================== Global Variables =====================
 stop_threads = False
@@ -272,9 +272,9 @@ except KeyboardInterrupt:
     # time.sleep(1)
     
     # Close sockets
-    for s1, s2 in zip(tx_sockets, rx_sockets):
-        s1.close()
-        s2.close()
+    # for s1, s2 in zip(tx_sockets, rx_sockets):
+    #     s1.close()
+    #     s2.close()
     
     # Kill tcpdump process
     kill_traffic_capture()

@@ -299,13 +299,13 @@ except KeyboardInterrupt:
     # time.sleep(1)
     
     # Close sockets
-    for s1, s2 in zip(rx_connections, tx_connections):
-        s1.close()
-        s2.close()
+    # for s1, s2 in zip(rx_connections, tx_connections):
+    #     s1.close()
+    #     s2.close()
         
-    for s1, s2 in zip(rx_sockets, tx_sockets):
-        s1.close()
-        s2.close()
+    # for s1, s2 in zip(rx_sockets, tx_sockets):
+    #     s1.close()
+    #     s2.close()
         
     # Kill tcpdump process
     kill_traffic_capture()
