@@ -286,6 +286,22 @@ t_tx.start()
 try:
     while not stop_threads:
         time.sleep(3)
+    
+    # Kill transmit process
+    # p_tx.terminate()
+    # time.sleep(1)
+    
+    # Close sockets
+    for s1, s2 in zip(tx_sockets, rx_sockets):
+        s1.close()
+        s2.close()
+    
+    # Kill tcpdump process
+    kill_traffic_capture()
+    time.sleep(1)
+    
+    print('Successfully closed.')
+    sys.exit()
         
 except KeyboardInterrupt:
     stop_threads = True
