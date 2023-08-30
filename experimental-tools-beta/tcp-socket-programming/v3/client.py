@@ -181,7 +181,7 @@ current_datetime = '-'.join(current_datetime[:3]) + '_' + '-'.join(current_datet
 
 def receive(s, dev):
     global stop_threads
-    print(f"wait for indata to {dev} from server...")
+    print(f"Waiting for indata to {dev} from server...")
     seq = 1
     prev_receive = 1
     time_slot = 1
