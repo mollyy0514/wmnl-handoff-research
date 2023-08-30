@@ -220,7 +220,6 @@ for device, port in zip(devices, ports):
 time.sleep(1)
 
 # Create and start UL receive multi-thread
-
 rx_threads = []
 for s, dev, port in zip(rx_sockets, devices, ports):
     t_rx = threading.Thread(target = receive, args=(s, dev, port[0]), daemon=True)
@@ -229,9 +228,6 @@ for s, dev, port in zip(rx_sockets, devices, ports):
 
 # Start DL transmission multipleprocessing
 p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
-# start = input('Start transmission? (y/n) ')
-# if start != 'y':
-#     sys.exit()
 p_tx.start()
 
 # Main process waiting...
