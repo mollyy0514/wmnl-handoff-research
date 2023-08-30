@@ -165,15 +165,15 @@ def connection_setup(dev, port):
 for dev, port in zip(devices, ports):
     connection_setup(dev, port)
 
-# try:
-#     x = input("Press Enter to start.\n")
-#     for i in range(10):
-#         for s1, s2 in zip(rx_sockets, tx_sockets):
-#             # s1.sendall('START'.encode())
-#             s2.sendall('START'.encode())
-#         time.sleep(0.1)
-# except Exception as inst:
-#     print("Error:", inst)
+try:
+    x = input("Press Enter to start.\n")
+    for i in range(10):
+        for s1, s2 in zip(rx_sockets, tx_sockets):
+            # s1.sendall('START'.encode())
+            s2.sendall('START'.encode())
+        # time.sleep(0.1)
+except Exception as inst:
+    print("Error:", inst)
     
 # ===================== transmit & receive =====================
 

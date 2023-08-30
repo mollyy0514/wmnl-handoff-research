@@ -203,18 +203,18 @@ print("Successfully establish all connections!")
 
 conn1 = rx_connections[0]
 
-# while True:
-#     # print("wait for starting...", addr1)
-#     try:
-#         indata = conn1.recv(65535)
-#         if indata.decode() == 'START':
-#             print("START")
-#             break
-#         else:
-#             print("WTF", indata)
-#             break
-#     except Exception as inst:
-#         print("Error:", inst)
+while True:
+    # print("wait for starting...", addr1)
+    try:
+        indata = conn1.recv(65535)
+        if indata.decode() == 'START':
+            print("START")
+            break
+        else:
+            print("WTF", indata)
+            break
+    except Exception as inst:
+        print("Error:", inst)
 
 # ===================== transmit & receive =====================
 
