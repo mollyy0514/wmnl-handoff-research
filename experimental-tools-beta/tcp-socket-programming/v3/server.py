@@ -348,6 +348,7 @@ except KeyboardInterrupt:
     print('Successfully closed.')
     sys.exit()
 
+### if end without KeyboardInterrupt (ctrl-C, ctrl-Z)
 # Kill transmit process
 # p_tx.terminate()
 # time.sleep(1)
