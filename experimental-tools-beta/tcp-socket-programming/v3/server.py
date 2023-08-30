@@ -251,13 +251,13 @@ def receive(conn, dev, port):
                 time_slot += 1
                 prev_receive = seq
             
-            try:
-                if indata.decode()[:4] == 'STOP':
-                    stop_threads = True
-                    print(f"{dev} STOP")
-                    break
-            except:
-                pass
+            # try:
+            #     if indata.decode()[:4] == 'STOP':
+            #         stop_threads = True
+            #         print(f"{dev} STOP")
+            #         break
+            # except:
+            #     pass
 
         except SocketError as inst:
             print("SocketError:", inst)
