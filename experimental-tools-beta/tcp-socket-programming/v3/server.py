@@ -216,6 +216,8 @@ while True:
     except Exception as inst:
         print("Error:", inst)
 
+time.sleep(1)
+
 # ===================== transmit & receive =====================
 
 def receive(conn, dev, port):

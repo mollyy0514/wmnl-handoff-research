@@ -174,6 +174,8 @@ try:
         # time.sleep(0.1)
 except Exception as inst:
     print("Error:", inst)
+
+time.sleep(1)
     
 # ===================== transmit & receive =====================
 
