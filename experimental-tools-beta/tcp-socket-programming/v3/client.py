@@ -153,8 +153,7 @@ except Exception as inst:
     for s1, s2 in zip(tx_sockets, rx_sockets):
         s1.close()
         s2.close()
-    sys.exit()
-    
+    sys.exit() 
 
 time.sleep(1)
 
