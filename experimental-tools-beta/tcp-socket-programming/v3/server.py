@@ -12,6 +12,8 @@ import argparse
 import subprocess
 import signal
 from device_to_port import device_to_port
+from socket import error as SocketError
+import errno
 
 
 def parse_arguments():
@@ -256,7 +258,13 @@ def receive(conn, dev, port):
             #         break
             # except:
             #     pass
-            
+
+        except SocketError as inst:
+            print("SocketError:", inst)
+            if inst.errno != errno.ECONNRESET:
+                # The error is NOT a ConnectionResetError
+                stop_threads = True
+    
         except ValueError as inst:
             print("ValueError:", inst)
             stop_threads = True
@@ -301,6 +309,12 @@ def transmit(connections):
                 time_slot += 1
                 prev_transmit = seq
         
+        except SocketError as inst:
+            print("SocketError:", inst)
+            if inst.errno != errno.ECONNRESET:
+                # The error is NOT a ConnectionResetError
+                stop_threads = True
+                
         except ValueError as inst:
             print("ValueError:", inst)
             stop_threads = True
