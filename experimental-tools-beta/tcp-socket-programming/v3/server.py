@@ -201,7 +201,7 @@ for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
 
 print("Successfully establish all connections!")
 
-# conn1 = rx_connections[0]
+conn1 = rx_connections[0]
 
 # while True:
 #     # print("wait for starting...", addr1)
@@ -214,7 +214,7 @@ print("Successfully establish all connections!")
 #             print("WTF", indata)
 #             break
 #     except Exception as inst:
-#         print("Error: ", inst)
+#         print("Error:", inst)
 
 # ===================== transmit & receive =====================
 
@@ -280,7 +280,7 @@ def transmit(connections):
             outdata = euler.to_bytes(4, 'big') + pi.to_bytes(4, 'big') + datetimedec.to_bytes(4, 'big') + microsec.to_bytes(4, 'big') + seq.to_bytes(4, 'big') + redundant
             
             for conn in connections:
-                conn.send(outdata)  # Send data over the connection
+                conn.sendall(outdata)  # Send data over the connection
             seq += 1
             
             if time.time() - start_time > time_slot:

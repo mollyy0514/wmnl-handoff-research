@@ -238,7 +238,7 @@ def transmit(sockets):
             outdata = euler.to_bytes(4, 'big') + pi.to_bytes(4, 'big') + datetimedec.to_bytes(4, 'big') + microsec.to_bytes(4, 'big') + seq.to_bytes(4, 'big') + redundant
             
             for s in sockets:
-                s.send(outdata)  # Send data over the connection
+                s.sendall(outdata)  # Send data over the connection
             
             
             seq += 1
