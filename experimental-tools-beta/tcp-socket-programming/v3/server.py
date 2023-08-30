@@ -201,20 +201,18 @@ for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
 
 print("Successfully establish all connections!")
 
-conn1 = rx_connections[0]
-
-while True:
-    # print("wait for starting...", addr1)
-    try:
-        indata = conn1.recv(65535)
-        if indata.decode() == 'START':
-            print("START")
-            break
-        else:
-            print("WTF", indata)
-            break
-    except Exception as inst:
-        print("Error:", inst)
+for conn, dev in zip(rx_connections, devices):
+    while True:
+        try:
+            indata = conn.recv(65535)
+            if indata.decode()[:5] == 'START':
+                print(f"{dev} START")
+                break
+            else:
+                print("WTF?????", indata)
+                break
+        except Exception as inst:
+            print("Error:", inst)
 
 time.sleep(1)
 
