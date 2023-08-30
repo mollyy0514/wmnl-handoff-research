@@ -178,8 +178,17 @@ for conn, dev in zip(rx_connections, devices):
             else:
                 print("WTF?????", indata)
                 break
+            
         except Exception as inst:
             print("Error:", inst)
+            print("Sockets closed")
+            for s1, s2 in zip(rx_connections, tx_connections):
+                s1.close()
+                s2.close()
+            for s1, s2 in zip(rx_sockets, tx_sockets):
+                s1.close()
+                s2.close()
+            sys.exit()
 
 time.sleep(1)
 
@@ -236,7 +245,7 @@ def receive(conn, dev, port):
             ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
 
             # Show information
-            if time.time()-rx_start_time > time_slot:
+            if time.time() - rx_start_time > time_slot:
                 print(f"{dev}:{port} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
                 time_slot += 1
                 prev_receive = seq
@@ -247,7 +256,7 @@ def receive(conn, dev, port):
 
 def transmit(connections):
     global stop_threads
-    print("start transmission: ")
+    print("Start transmission:")
     
     seq = 1
     prev_transmit = 0
@@ -281,9 +290,10 @@ def transmit(connections):
                 time_slot += 1
                 prev_transmit = seq
             
-        except Exception as e:
-            print(e)
+        except Exception as inst:
+            print("Error: ", inst)
             stop_threads = True
+            
     stop_threads = True
     print("---transmission timeout---")
     print("transmit", seq, "packets")
@@ -291,14 +301,14 @@ def transmit(connections):
 # Create and start Uplink receiving multi-thread
 rx_threads = []
 for conn, dev, port in zip(rx_connections, devices, ports):
-    t_rx = threading.Thread(target = receive, args=(conn, dev, port[0], ), daemon=True)
+    t_rx = threading.Thread(target = receive, args=(conn, dev, port[0],), daemon=True)
     rx_threads.append(t_rx)
     t_rx.start()
 
 # Create adn start Downlink transmission multi-processing
-# p_tx = multiprocessing.Process(target=transmit, args=(tx_connections), daemon=True)
+# p_tx = multiprocessing.Process(target=transmit, args=(tx_connections,), daemon=True)
 # p_tx.start()
-t_tx = threading.Thread(target=transmit, args=(tx_connections, ), daemon=True)
+t_tx = threading.Thread(target=transmit, args=(tx_connections,), daemon=True)
 t_tx.start()
 
 # ===================== wait for experiment end =====================

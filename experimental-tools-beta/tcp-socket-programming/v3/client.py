@@ -141,14 +141,20 @@ for dev, port in zip(devices, ports):
     connection_setup(dev, port)
 
 try:
-    x = input("Press Enter to start.")
+    x = input("Press Enter to start...")
     for i in range(10):
         for s1, s2 in zip(rx_sockets, tx_sockets):
             # s1.sendall('START'.encode())
             s2.sendall('START'.encode())
-        # time.sleep(0.1)
+            
 except Exception as inst:
     print("Error:", inst)
+    print("Sockets closed")
+    for s1, s2 in zip(tx_sockets, rx_sockets):
+        s1.close()
+        s2.close()
+    sys.exit()
+    
 
 time.sleep(1)
 
@@ -202,19 +208,19 @@ def receive(s, dev):
             ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
 
             # Show information
-            if time.time()-rx_start_time > time_slot:
+            if time.time() - rx_start_time > time_slot:
                 print(f"{dev} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
                 time_slot += 1
                 prev_receive = seq
 
         except Exception as inst:
-            print("Error: ", inst)
+            print("Error:", inst)
             stop_threads = True
 
 def transmit(sockets):
 
     global stop_threads
-    print("start transmission: ")
+    print("Start transmission:")
     
     seq = 1
     prev_transmit = 0
@@ -241,18 +247,17 @@ def transmit(sockets):
             
             for s in sockets:
                 s.sendall(outdata)  # Send data over the connection
-            
-            
             seq += 1
         
-            if time.time()-start_time > time_slot:
+            if time.time() - start_time > time_slot:
                 print("[%d-%d]"%(time_slot-1, time_slot), "transmit", seq-prev_transmit)
                 time_slot += 1
                 prev_transmit = seq
 
-        except Exception as e:
-            print(e)
+        except Exception as inst:
+            print("Error:", inst)
             stop_threads = True
+
     stop_threads = True
     print("---transmission timeout---")
     print("transmit", seq, "packets")
@@ -260,7 +265,7 @@ def transmit(sockets):
 # Create and start Downlink receiving multi-thread
 rx_threads = []
 for s, dev in zip(rx_sockets, devices):
-    t_rx = threading.Thread(target=receive, args=(s, dev, ), daemon=True)
+    t_rx = threading.Thread(target=receive, args=(s, dev,), daemon=True)
     rx_threads.append(t_rx)
     t_rx.start()
 
