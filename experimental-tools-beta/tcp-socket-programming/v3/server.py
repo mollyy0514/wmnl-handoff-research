@@ -187,27 +187,27 @@ def accept_connection(s1, s2, device):
     tcp_addr[s2] = addr2
     tx_connections.append(conn2)
     
-    while True:
-        print("wait for starting...", addr1)
-        try:
-            indata = conn1.recv(65535)
-            if indata.decode() == 'START':
-                print("START")
-                break
-            else:
-                print("WTF", indata)
-                break
-        except Exception as inst:
-            print("Error: ", inst)
+    # while True:
+    #     print("wait for starting...", addr1)
+    #     try:
+    #         indata = conn1.recv(65535)
+    #         if indata.decode() == 'START':
+    #             print("START")
+    #             break
+    #         else:
+    #             print("WTF", indata)
+    #             break
+    #     except Exception as inst:
+    #         print("Error: ", inst)
     
 # Accept incoming connections
 act_threads = []
 for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
-    # accept_connection(s1, s2, dev)
+    accept_connection(s1, s2, dev)
     # t = threading.Thread(target=accept_connection, args=(s1, s2, dev, ), daemon=True)
-    t = threading.Thread(target=accept_connection, args=(s1, s2, dev, ))
-    act_threads.append(t)
-    t.start()
+    # t = threading.Thread(target=accept_connection, args=(s1, s2, dev, ))
+    # act_threads.append(t)
+    # t.start()
 
 # for t in act_threads:
 #     t.join()
