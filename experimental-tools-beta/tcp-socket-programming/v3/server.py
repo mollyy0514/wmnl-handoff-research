@@ -342,49 +342,33 @@ t_tx.start()
 
 # ===================== wait for experiment end =====================
 
+def cleanup_and_exit():
+    # Kill transmit process
+    # p_tx.terminate()
+    # time.sleep(1)
+
+    # Close sockets
+    for s1, s2 in zip(rx_connections, tx_connections):
+        s1.close()
+        s2.close()
+
+    for s1, s2 in zip(rx_sockets, tx_sockets):
+        s1.close()
+        s2.close()
+
+    # Kill tcpdump process
+    kill_traffic_capture()
+
+    print('Successfully closed.')
+    sys.exit()
+
 try:
     while not stop_threads:
         time.sleep(3)
     
-    ### End without KeyboardInterrupt (ctrl-C, ctrl-Z)
-    # Kill transmit process
-    # p_tx.terminate()
-    # time.sleep(1)
-
-    # Close sockets
-    for s1, s2 in zip(rx_connections, tx_connections):
-        s1.close()
-        s2.close()
-        
-    for s1, s2 in zip(rx_sockets, tx_sockets):
-        s1.close()
-        s2.close()
-        
-    # Kill tcpdump process
-    kill_traffic_capture()
-    time.sleep(1)
-
-    print('Successfully closed.')
+    # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
+    cleanup_and_exit()
         
 except KeyboardInterrupt:
     stop_threads = True
-    
-    # Kill transmit process
-    # p_tx.terminate()
-    # time.sleep(1)
-    
-    # Close sockets
-    for s1, s2 in zip(rx_connections, tx_connections):
-        s1.close()
-        s2.close()
-        
-    for s1, s2 in zip(rx_sockets, tx_sockets):
-        s1.close()
-        s2.close()
-        
-    # Kill tcpdump process
-    kill_traffic_capture()
-    time.sleep(1)
-    
-    print('Successfully closed.')
-    sys.exit()
+    cleanup_and_exit()

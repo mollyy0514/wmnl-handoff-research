@@ -297,10 +297,7 @@ t_tx.start()
 
 # ===================== wait for experiment end =====================
 
-try:
-    while not stop_threads:
-        time.sleep(3)
-    
+def cleanup_and_exit():
     # Kill transmit process
     # p_tx.terminate()
     # time.sleep(1)
@@ -312,10 +309,16 @@ try:
     
     # Kill tcpdump process
     kill_traffic_capture()
-    time.sleep(1)
     
     print('Successfully closed.')
     sys.exit()
+
+try:
+    while not stop_threads:
+        time.sleep(3)
+    
+    # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
+    cleanup_and_exit()
         
 except KeyboardInterrupt:
     stop_threads = True
@@ -325,18 +328,4 @@ except KeyboardInterrupt:
     #         # s1.sendall('STOP'.encode())
     #         s2.sendall('STOP'.encode())
     
-    # Kill transmit process
-    # p_tx.terminate()
-    # time.sleep(1)
-    
-    # Close sockets
-    for s1, s2 in zip(tx_sockets, rx_sockets):
-        s1.close()
-        s2.close()
-    
-    # Kill tcpdump process
-    kill_traffic_capture()
-    time.sleep(1)
-    
-    print('Successfully closed.')
-    sys.exit()
+    cleanup_and_exit()
