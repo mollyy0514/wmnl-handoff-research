@@ -371,6 +371,8 @@ while not stop_threads:
         stop_threads = True
         cleanup_and_exit()
 
+
+print("hello ****************************************")
 # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
 cleanup_and_exit()
 

@@ -328,8 +328,9 @@ while not stop_threads:
         
         cleanup_and_exit()
 
+print("hello ****************************************")
 # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
-    cleanup_and_exit()
+cleanup_and_exit()
 
 # try:
 #     while not stop_threads:
