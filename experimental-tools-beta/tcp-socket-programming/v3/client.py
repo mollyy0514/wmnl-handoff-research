@@ -313,6 +313,7 @@ def cleanup_and_exit():
     print('Successfully closed.')
     sys.exit()
 
+time.sleep(1)
 while not stop_threads:
     try:
         time.sleep(3)
