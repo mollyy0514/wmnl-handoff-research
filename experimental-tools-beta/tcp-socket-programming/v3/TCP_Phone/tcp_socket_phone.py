@@ -48,7 +48,7 @@ total_time = args.time
 expected_packet_per_sec = bitrate / (length_packet << 3)
 sleeptime = 1.0 / expected_packet_per_sec
 
-print(device)
+print(f'---{device}----')
 print(ports)
 print("bitrate:", bitrate)
 
