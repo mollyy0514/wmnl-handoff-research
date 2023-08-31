@@ -107,6 +107,7 @@ for device, port, serial in zip(devices, ports, serials):
 
 
 print('hello1 ********************************')
+time.sleep(1)
 # try:
 
 #     while True:
