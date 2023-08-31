@@ -92,27 +92,34 @@ pcap_path = '/home/wmnlab/temp'
 
 # ===================== start experiment =====================
 
+# for device, port, serial in zip(devices, ports, serials):
+#     su_cmd = 'cd sdcard/TDP_Phone && python3 tcp_socket_phone.py ' + \
+#             f'-H {HOST} -d {device} -p {port[0]} {port[1]} -b {bitrate} -l {length_packet} -t {total_time}'
+#     adb_cmd = f"su -c '{su_cmd}'"
+#     p = subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True, preexec_fn = os.setpgrp)
+
 for device, port, serial in zip(devices, ports, serials):
-    su_cmd = 'cd sdcard/TDP_Phone && python3 tcp_socket_phone.py ' + \
-            f'-H {HOST} -d {device} -p {port[0]} {port[1]} -b {bitrate} -l {length_packet} -t {total_time}'
+    su_cmd = 'cd sdcard/TDP_Phone && python3 tcp_socket_phone.py'
     adb_cmd = f"su -c '{su_cmd}'"
     p = subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True, preexec_fn = os.setpgrp)
 
 # ===================== wait for experiment end =====================
 
-try:
 
-    while True:
-        time.sleep(1)
-        print('Alive...')
+print('hello1 ********************************')
+# try:
 
-except KeyboardInterrupt:
+#     while True:
+#         time.sleep(1)
+#         print('Alive...')
+
+# except KeyboardInterrupt:
     
-    su_cmd = 'pkill -2 python3'
-    adb_cmd = f"su -c '{su_cmd}'"
-    for serial in serials:
-        subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True)
+#     su_cmd = 'pkill -2 python3'
+#     adb_cmd = f"su -c '{su_cmd}'"
+#     for serial in serials:
+#         subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True)
     
-    time.sleep(5)
-    print('Closed main Process.')
-    sys.exit()
+#     time.sleep(5)
+#     print('Closed main Process.')
+#     sys.exit()
