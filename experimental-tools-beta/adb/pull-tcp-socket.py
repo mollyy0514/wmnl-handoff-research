@@ -83,9 +83,10 @@ sleeptime = 1.0 / expected_packet_per_sec
 
 print(devices)
 print(serials)
-print(ports)
-print("bitrate:", bitrate)
+# print(ports)
+# print("bitrate:", bitrate)
 
-# ===================== Parameters =====================
-HOST = '140.112.20.183'  # Lab 249
-pcap_path = '/home/wmnlab/temp'
+for device, port, serial in zip(devices, ports, serials):
+    su_cmd = 'rm -rf sdcard/TCP_Phone/ && cp -r sdcard/wmnl-handoff-research/experimental-tools-beta/tcp-socket-programming/v3/TCP_Phone sdcard/'
+    adb_cmd = f"su -c '{su_cmd}'"
+    p = subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True, preexec_fn = os.setpgrp)
