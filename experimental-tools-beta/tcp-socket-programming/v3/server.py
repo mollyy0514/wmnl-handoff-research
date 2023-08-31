@@ -362,13 +362,13 @@ def cleanup_and_exit():
     print('Successfully closed.')
     sys.exit()
 
-try:
-    while not stop_threads:
+while not stop_threads:
+    try:
         time.sleep(3)
-    
-    # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
-    cleanup_and_exit()
         
-except KeyboardInterrupt:
-    stop_threads = True
-    cleanup_and_exit()
+    except KeyboardInterrupt:
+        stop_threads = True
+        cleanup_and_exit()
+
+# End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
+cleanup_and_exit()
