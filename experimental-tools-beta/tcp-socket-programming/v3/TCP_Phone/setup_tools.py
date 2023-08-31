@@ -13,7 +13,7 @@ device = args.device
 
 serial = device_to_serial[device]
 
-su_cmd = 'cd sdcard/UDP_Phone && cp ./tools/* /bin && chmod +x /bin/*'
+su_cmd = 'cd sdcard/TCP_Phone && cp ./tools/* /bin && chmod +x /bin/*'
 adb_cmd = f"su -c '{su_cmd}'"
 p = subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True, preexec_fn = os.setpgrp)
 time.sleep(1)
