@@ -313,19 +313,36 @@ def cleanup_and_exit():
     print('Successfully closed.')
     sys.exit()
 
-while not stop_threads:
-    try:
-        time.sleep(3)
+# while not stop_threads:
+#     try:
+#         time.sleep(3)
         
-    except KeyboardInterrupt:
-        stop_threads = True
+#     except KeyboardInterrupt:
+#         stop_threads = True
         
-        # for i in range(10):
-        #     for s1, s2 in zip(tx_sockets, rx_sockets):
-        #         # s1.sendall('STOP'.encode())
-        #         s2.sendall('STOP'.encode())
+#         # for i in range(10):
+#         #     for s1, s2 in zip(tx_sockets, rx_sockets):
+#         #         # s1.sendall('STOP'.encode())
+#         #         s2.sendall('STOP'.encode())
         
-        # cleanup_and_exit()
+#         # cleanup_and_exit()
 
-# End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
+# # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
+#     cleanup_and_exit()
+
+try:
+    while not stop_threads:
+        time.sleep(3)
+    
+    # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
+    cleanup_and_exit()
+        
+except KeyboardInterrupt:
+    stop_threads = True
+    
+    # for i in range(10):
+    #     for s1, s2 in zip(tx_sockets, rx_sockets):
+    #         # s1.sendall('STOP'.encode())
+    #         s2.sendall('STOP'.encode())
+    
     cleanup_and_exit()
