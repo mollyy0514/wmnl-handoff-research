@@ -325,13 +325,10 @@ while not stop_threads:
         #     for s1, s2 in zip(tx_sockets, rx_sockets):
         #         # s1.sendall('STOP'.encode())
         #         s2.sendall('STOP'.encode())
-        
-        # cleanup_and_exit()
-
 
 # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
-print("---End Of File---")
 cleanup_and_exit()
+print("---End Of File---")
 
 # try:
 #     while not stop_threads:

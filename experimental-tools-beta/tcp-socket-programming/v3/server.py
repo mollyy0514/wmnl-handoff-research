@@ -369,11 +369,10 @@ while not stop_threads:
         
     except KeyboardInterrupt:
         stop_threads = True
-        # cleanup_and_exit()
 
 # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
-print("---End Of File---")
 cleanup_and_exit()
+print("---End Of File---")
 
 # try:
 #     while not stop_threads:
