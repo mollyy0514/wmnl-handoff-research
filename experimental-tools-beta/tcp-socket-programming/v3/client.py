@@ -325,7 +325,7 @@ while not stop_threads:
         #         # s1.sendall('STOP'.encode())
         #         s2.sendall('STOP'.encode())
         
-        cleanup_and_exit()
+        # cleanup_and_exit()
 
 # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
     cleanup_and_exit()

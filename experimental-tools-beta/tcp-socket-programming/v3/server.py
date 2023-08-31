@@ -368,7 +368,7 @@ while not stop_threads:
         
     except KeyboardInterrupt:
         stop_threads = True
-        cleanup_and_exit()
+        # cleanup_and_exit()
 
 # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
 cleanup_and_exit()
