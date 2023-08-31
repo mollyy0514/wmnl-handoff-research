@@ -99,7 +99,7 @@ pcap_path = '/home/wmnlab/temp'
 #     p = subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True, preexec_fn = os.setpgrp)
 
 for device, port, serial in zip(devices, ports, serials):
-    su_cmd = 'cd sdcard/TDP_Phone && python3 tcp_socket_phone.py'
+    su_cmd = 'cd sdcard/TCP_Phone && python3 tcp_socket_phone.py'
     adb_cmd = f"su -c '{su_cmd}'"
     p = subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True, preexec_fn = os.setpgrp)
 
