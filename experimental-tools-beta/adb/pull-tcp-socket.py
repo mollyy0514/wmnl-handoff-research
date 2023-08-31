@@ -90,3 +90,5 @@ for device, port, serial in zip(devices, ports, serials):
     su_cmd = 'rm -rf sdcard/TCP_Phone/ && cp -r sdcard/wmnl-handoff-research/experimental-tools-beta/tcp-socket-programming/v3/TCP_Phone sdcard/'
     adb_cmd = f"su -c '{su_cmd}'"
     p = subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True, preexec_fn = os.setpgrp)
+
+print('---End Of File---')
