@@ -313,7 +313,7 @@ def cleanup_and_exit():
     print('Successfully closed.')
     sys.exit()
 
-# time.sleep(1)
+time.sleep(3)
 while not stop_threads:
     try:
         time.sleep(3)
@@ -326,10 +326,11 @@ while not stop_threads:
         #         # s1.sendall('STOP'.encode())
         #         s2.sendall('STOP'.encode())
         
-        cleanup_and_exit()
+        # cleanup_and_exit()
 
-print("hello ****************************************")
+
 # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
+print("---End Of File---")
 cleanup_and_exit()
 
 # try:
