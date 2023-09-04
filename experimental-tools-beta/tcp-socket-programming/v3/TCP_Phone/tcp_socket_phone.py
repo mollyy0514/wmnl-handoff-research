@@ -52,6 +52,15 @@ print(f'---{device}----')
 print(ports)
 print("bitrate:", bitrate)
 
+
+try:
+    x = input("Press Enter to start...")
+except Exception as inst:
+    print("Error:", inst)
+    sys.exit()
+
+print(f'---{device} End!---')
+
 # ===================== Parameters =====================
 # HOST = '140.112.20.183'  # Lab 249
 # pcap_path = '/home/wmnlab/temp'
