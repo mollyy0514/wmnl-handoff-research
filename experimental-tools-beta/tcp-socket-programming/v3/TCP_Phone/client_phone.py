@@ -107,6 +107,13 @@ for device, port, serial in zip(devices, ports, serials):
 
 
 print('hello1 ********************************')
+
+try:
+    x = input("Press Enter to start...")
+except Exception as inst:
+    print("Error:", inst)
+    sys.exit()
+
 time.sleep(1)
 
 # try:
