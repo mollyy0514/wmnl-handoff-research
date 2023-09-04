@@ -90,7 +90,7 @@ for device, info in zip(devices, devices_info):
     su_cmd = 'rm -rf sdcard/TCP_Phone/ && cp -r sdcard/wmnl-handoff-research/experimental-tools-beta/tcp-socket-programming/v3/TCP_Phone/ sdcard/'
     adb_cmd = f"su -c '{su_cmd}'"
     device.shell(su_cmd)
-    print(info[2], 'Updating TCP_Phone!')
+    print(info[2], 'Update TCP_Phone!')
     print("-----------------------------------")
 
 print('---End Of File---')
