@@ -68,7 +68,7 @@ for device, info in zip(devices, devices_info):
     
     # test tools
     print("-----------------------------------")
-    print(info[2], device.shell("su -c 'iperf3m --version'"))
+    print(info[2], 'iperf3m', device.shell("su -c 'iperf3m --version'"))
     print("-----------------------------------")
     # print(device.shell("su -c 'iperf3 --version'"))
     # print("-----------------------------------")
@@ -89,6 +89,7 @@ for device, info in zip(devices, devices_info):
     
     su_cmd = 'rm -rf sdcard/TCP_Phone/ && cp -r sdcard/wmnl-handoff-research/experimental-tools-beta/tcp-socket-programming/v3/TCP_Phone/ sdcard/'
     adb_cmd = f"su -c '{su_cmd}'"
-    print(device.shell(su_cmd))
+    device.shell(su_cmd)
+    print(info[2], 'Update TCP_Phone:')
 
 print('---End Of File---')
