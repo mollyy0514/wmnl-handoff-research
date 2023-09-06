@@ -47,7 +47,9 @@ for (( x=0; x < $NUMIDS; x++ )); do
             ;;
         "R5CRA1ET22M") DEV="sm07"
             ;;
-        "R5CRA2EGJ5X") DEV="sm08"
+        "R5CRA1D23QK") DEV="sm08"
+            ;;
+        "R5CRA2EGJ5X") DEV="sm09"
             ;;
         "73e11a9f") DEV="xm00"
             ;;

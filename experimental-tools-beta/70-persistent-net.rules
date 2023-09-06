@@ -13,7 +13,8 @@ SUBSYSTEM=="net", ACTION=="add", ATTRS{idVendor}=="04e8", ATTRS{idProduct}=="686
 SUBSYSTEM=="net", ACTION=="add", ATTRS{idVendor}=="04e8", ATTRS{idProduct}=="6860", ATTRS{serial}=="R5CRA1GBLAZ", NAME="sm05"
 SUBSYSTEM=="net", ACTION=="add", ATTRS{serial}=="R5CRA1ESYWM", NAME="sm06"
 SUBSYSTEM=="net", ACTION=="add", ATTRS{serial}=="R5CRA1ET22M", NAME="sm07"
-SUBSYSTEM=="net", ACTION=="add", ATTRS{serial}=="R5CRA2EGJ5X", NAME="sm08"
+SUBSYSTEM=="net", ACTION=="add", ATTRS{serial}=="R5CRA1D23QK", NAME="sm08"
+SUBSYSTEM=="net", ACTION=="add", ATTRS{serial}=="R5CRA2EGJ5X", NAME="sm09"
 
 // Xiaomi-10T 5G
 SUBSYSTEM=="net", ACTION=="add", ATTRS{serial}=="73e11a9f", NAME="xm00"
