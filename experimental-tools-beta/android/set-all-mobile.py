@@ -61,10 +61,10 @@ for device, info in zip(devices, devices_info):
     print(info[2], device.shell("su -c 'cd /sdcard/wmnl-handoff-research && /data/git pull'"))
     for tool in tools:
         if info[2][:2] == "sm":
-            device.shell("su -c 'cp sdcard/wmnl-handoff-research/experimental-tools-beta/android/sm-script/termux-tools/{} /bin/'".format(tool))
+            device.shell("su -c 'cp /sdcard/wmnl-handoff-research/experimental-tools-beta/android/sm-script/termux-tools/{} /bin'".format(tool))
             device.shell("su -c 'chmod +x /bin/{}'".format(tool))
         elif info[2][2] == "xm":
-            device.shell("su -c 'cp sdcard/wmnl-handoff-research/experimental-tools-beta/android/xm-script/termux-tools/{} /sbin/'".format(tool))
+            device.shell("su -c 'cp /sdcard/wmnl-handoff-research/experimental-tools-beta/android/xm-script/termux-tools/{} /sbin'".format(tool))
             device.shell("su -c 'chmod +x /sbin/{}'".format(tool))
     
     # test tools
@@ -88,7 +88,7 @@ for device, info in zip(devices, devices_info):
     # print(device.shell("su -c 'iperf3m -s'"))
     # print("-----------------------------------")
     
-    su_cmd = 'rm -rf sdcard/TCP_Phone/ && cp -r sdcard/wmnl-handoff-research/experimental-tools-beta/tcp-socket-programming/v3/TCP_Phone/ sdcard/'
+    su_cmd = 'rm -rf /sdcard/TCP_Phone && cp -r /sdcard/wmnl-handoff-research/experimental-tools-beta/tcp-socket-programming/v3/TCP_Phone /sdcard'
     adb_cmd = f"su -c '{su_cmd}'"
     device.shell(su_cmd)
     print(info[2], 'Update TCP_Phone!')
