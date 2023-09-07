@@ -106,7 +106,6 @@ print("bitrate:", bitrate)
 
 # client_socket.close()
 
-
 # ===================== Parameters =====================
 HOST = '140.112.20.183'  # Lab 249
 pcap_path = '/home/wmnlab/temp/'
@@ -290,7 +289,7 @@ def transmit(sockets):
     print("---transmission timeout---")
     print("transmit", seq, "packets")
 
-# Create and start Downlink receiving multi-thread
+# Create and start Downlink receiving multi-threading
 rx_threads = []
 for s, dev in zip(rx_sockets, devices):
     t_rx = threading.Thread(target=receive, args=(s, dev,), daemon=True)

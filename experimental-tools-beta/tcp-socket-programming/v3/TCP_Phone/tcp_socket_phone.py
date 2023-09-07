@@ -54,9 +54,29 @@ print(f'---{device}----')
 print(ports)
 print("bitrate:", bitrate)
 
+# ===================== Simple Socket =====================
+
+# # 設定伺服器的主機和埠
+# HOST = '127.0.0.1'
+# PORT = 12345
+
+# # 建立TCP客戶端
+# client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# client_socket.connect((HOST, PORT))
+
+# while True:
+#     message = input('請輸入訊息 (或輸入 "exit" 離開): ')
+#     if message == 'exit':
+#         break
+#     client_socket.sendall(message.encode())
+#     data = client_socket.recv(1024)
+#     print('收到伺服器的回應:', data.decode())
+
+# client_socket.close()
+
 # ===================== Parameters =====================
 # HOST = '140.112.20.183'  # Lab 249
-pcap_path = '/sdcard/TCP_Phone/pcapdir/'
+pcap_path = '/sdcard/TCP_Phone/pcapdir'
 
 # ===================== Global Variables =====================
 stop_threads = False

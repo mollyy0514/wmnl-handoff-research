@@ -335,7 +335,7 @@ def transmit(connections):
     print("---transmission timeout---")
     print("transmit", seq, "packets")
 
-# Create and start Uplink receiving multi-thread
+# Create and start Uplink receiving multi-threading
 rx_threads = []
 for conn, dev, port in zip(rx_connections, devices, ports):
     t_rx = threading.Thread(target = receive, args=(conn, dev, port[0],), daemon=True)
