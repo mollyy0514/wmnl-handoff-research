@@ -60,15 +60,20 @@ tools = ["git", "iperf3m", "iperf3", "python3", "tcpdump", "tmux", "vim"]
 for device, info in zip(devices, devices_info):
     print(info[2], device.shell("su -c 'cd /sdcard/wmnl-handoff-research && /data/git pull'"))
     print("-----------------------------------")
-    for tool in tools:
-        if info[2][:2] == "sm":
-            device.shell("su -c 'mount -o remount,rw /system/bin'")
+    if info[2][:2] == "sm":
+        device.shell("su -c 'mount -o remount,rw /system/bin'")
+        for tool in tools:
             device.shell("su -c 'cp /sdcard/wmnl-handoff-research/experimental-tools-beta/android/sm-script/termux-tools/{} /bin'".format(tool))
             device.shell("su -c 'chmod +x /bin/{}'".format(tool))
-        elif info[2][2] == "xm":
-            # device.shell("su -c 'mount -o remount,rw /system/sbin'")
+        device.shell("su -c 'cp /data/python3 /bin'")
+        device.shell("su -c 'chmod +x /bin/python3'")
+    elif info[2][2] == "xm":
+        # device.shell("su -c 'mount -o remount,rw /system/sbin'")
+        for tool in tools:
             device.shell("su -c 'cp /sdcard/wmnl-handoff-research/experimental-tools-beta/android/xm-script/termux-tools/{} /sbin'".format(tool))
             device.shell("su -c 'chmod +x /sbin/{}'".format(tool))
+        device.shell("su -c 'cp /data/python3 /sbin'")
+        device.shell("su -c 'chmod +x /sbin/python3'")
     
     # test tools
     print(info[2], 'iperf3m:', device.shell("su -c 'iperf3m --version'"))
