@@ -271,6 +271,7 @@ def receive(conn, dev, port):
             stop_threads = True
             
         except Exception as inst:
+            print("receive Hello **********************")
             print("Error:", inst)
             stop_threads = True
 
@@ -325,6 +326,7 @@ def transmit(connections):
             stop_threads = True
             
         except Exception as inst:
+            print("transmint Hello **********************")
             print("Error:", inst)
             stop_threads = True
             
