@@ -327,6 +327,7 @@ while not stop_threads:
         
     except KeyboardInterrupt:
         stop_threads = True
+        time.sleep(1)
         
         # for i in range(10):
         #     for s1, s2 in zip(tx_sockets, rx_sockets):

@@ -377,6 +377,7 @@ while not stop_threads:
         
     except KeyboardInterrupt:
         stop_threads = True
+        time.sleep(1)
 
 # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
 cleanup_and_exit()
