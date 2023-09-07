@@ -187,9 +187,9 @@ capture_traffic(devices, ports, pcap_path, current_datetime)
 def receive(s, dev):
     global stop_threads
     print(f"Waiting for indata to {dev} from server...")
+    
     time_slot = 1
     capture_bytes = 0
-
     while not stop_threads:
         try:
             indata = s.recv(65535)
@@ -209,15 +209,10 @@ def receive(s, dev):
 
             # Show information
             if time.time() - rx_start_time > time_slot:
-                # print(f"{dev} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
-                # print(f"{dev} [{time_slot-1}-{time_slot}]", "received")
-                
                 if capture_bytes <= 1024*1024:
-                    # print(port, "[%d-%d]"%(count-1, count), "%g kbps"%(capture_bytes/1024*8))
-                    print(f"{dev} [{time_slot-1}-{time_slot}]", "received", "%g kbps"%(capture_bytes/1024*8))
+                    print(f"{dev} [{time_slot-1}-{time_slot}]", "receive", "%g Kbps"%(capture_bytes/1024*8))
                 else:
-                    # print(port, "[%d-%d]"%(count-1, count), "%g Mbps" %(capture_bytes/1024/1024*8))
-                    print(f"{dev} [{time_slot-1}-{time_slot}]", "received", "%g Mbps" %(capture_bytes/1024/1024*8))
+                    print(f"{dev} [{time_slot-1}-{time_slot}]", "receive", "%g Mbps" %(capture_bytes/1024/1024*8))
                 time_slot += 1
                 capture_bytes = 0
 
