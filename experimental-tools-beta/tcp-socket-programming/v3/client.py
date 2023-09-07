@@ -203,14 +203,15 @@ def receive(s, dev):
             # if len(indata) != length_packet:
             #     print("packet with strange length: ", len(indata))
 
-            seq = int(indata.hex()[32:40], 16)
-            ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
+            # seq = int(indata.hex()[32:40], 16)
+            # ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
 
             # Show information
             if time.time() - rx_start_time > time_slot:
-                print(f"{dev} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
+                # print(f"{dev} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
+                print(f"{dev} [{time_slot-1}-{time_slot}]", "received")
                 time_slot += 1
-                prev_receive = seq
+                # prev_receive = seq
 
         except SocketError as inst:
             print("SocketError:", inst)
