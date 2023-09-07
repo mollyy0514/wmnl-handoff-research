@@ -9,6 +9,8 @@ import sys
 import argparse
 import subprocess
 import signal
+from socket import error as SocketError
+import errno
 
 
 def parse_arguments():
@@ -52,159 +54,214 @@ print(f'---{device}----')
 print(ports)
 print("bitrate:", bitrate)
 
-
-try:
-    x = input("Press Enter to start...")
-except Exception as inst:
-    print("Error:", inst)
-    sys.exit()
-
-print(f'---{device} End!---')
-
 # ===================== Parameters =====================
 # HOST = '140.112.20.183'  # Lab 249
-# pcap_path = '/home/wmnlab/temp'
+pcap_path = '/sdcard/TCP_Phone/pcapdir/'
 
+# ===================== Global Variables =====================
+stop_threads = False
 
+# ===================== setup socket =====================
 
+# Setup connections
+rx_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# rx_socket.setsockopt(socket.IPPROTO_TCP, TCP_CONGESTION, cong)
+# rx_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (device+'\0').encode())  # 綁定特定網路介面
+rx_socket.connect((HOST, ports[1]))  # 連線到指定的主機和埠
 
+tx_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# tx_socket.setsockopt(socket.IPPROTO_TCP, TCP_CONGESTION, cong)
+# tx_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, (device+'\0').encode())  # 綁定特定網路介面
+tx_socket.connect((HOST, ports[0]))  # 連線到指定的主機和埠
 
-# # Function define
-# def give_server_DL_addr():
-    
-#     outdata = 'hello'
-#     rx_socket.sendto(outdata.encode(), (HOST, ports[1]))
-
-# def receive(s, dev): # s should be rx_socket
-
-#     stop_threads = False
-#     # print(f"wait for indata to {dev} from server...")
-
-#     seq = 1
-#     prev_receive = 1
-#     time_slot = 1
-
-#     while not stop_threads:
-#         try:
-
-#             indata, _ = s.recvfrom(1024)
-
-#             try: start_time
-#             except NameError:
-#                 start_time = time.time()
-
-#             if len(indata) != length_packet:
-#                 print("packet with strange length: ", len(indata))
-
-#             seq = int(indata.hex()[32:40], 16)
-#             ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
-
-#             # # Show information
-#             # if time.time()-start_time > time_slot:
-#             #     print(f"{dev} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
-#             #     time_slot += 1
-#             #     prev_receive = seq
-#         except KeyboardInterrupt:
-#             print('Manually interrupted.')
-#             stop_threads = True
-
-#         except Exception as inst:
-#             print("Error: ", inst)
-#             stop_threads = True
-
-# def transmit(s):
-
-#     stop_threads = False
-#     print("start transmission: ")
-    
-#     seq = 1
-#     prev_transmit = 0
-    
-#     start_time = time.time()
-#     next_transmit_time = start_time + sleeptime
-    
-#     time_slot = 1
-    
-#     while time.time() - start_time < total_time and not stop_threads:
-#         try:
-#             t = time.time()
-#             while t < next_transmit_time:
-#                 t = time.time()
-#             next_transmit_time = next_transmit_time + sleeptime
-
-#             euler = 271828
-#             pi = 31415926
-#             datetimedec = int(t)
-#             microsec = int((t - int(t))*1000000)
-
-#             redundant = os.urandom(length_packet-4*5)
-#             outdata = euler.to_bytes(4, 'big') + pi.to_bytes(4, 'big') + datetimedec.to_bytes(4, 'big') + microsec.to_bytes(4, 'big') + seq.to_bytes(4, 'big') + redundant
-               
-#             s.sendto(outdata, (HOST, ports[0]))
-#             seq += 1
-        
-#             # if time.time()-start_time > time_slot:
-#             #     print("[%d-%d]"%(time_slot-1, time_slot), "transmit", seq-prev_transmit)
-#             #     time_slot += 1
-#             #     prev_transmit = seq
-
-#         except Exception as e:
-#             print(e)
-#             stop_threads = True
-#     stop_threads = True
-#     print("---transmission timeout---")
-#     print("transmit", seq, "packets")
-
-# # Create DL receive and UL transmit multi-client sockets
-# rx_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-# tx_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-# print(f'Create DL socket.')
-# print(f'Create UL socket.')
-
-# # Transmit data from receive socket to server DL port to let server know addr first
+print(f'Create UL socket for {device} at {HOST}:{ports[0]}.')
+print(f'Create DL socket for {device} at {HOST}:{ports[1]}.')
 
 # while True:
-#     give_server_DL_addr()
-#     # x = input('Continue? (y/n) ')
-#     # if x == 'n':
+#     connection_setup(device, ports)
 #     break
 
-# # Start subprocess of tcpdump
-# now = dt.datetime.today()
-# n = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.second]]
-# n = [x.zfill(2) for x in n]  # zero-padding to two digit
-# n = '-'.join(n[:3]) + '_' + '-'.join(n[3:])
-# pcap_path = '/sdcard/UDP_Phone/pcapdir/'
-# if not os.path.isdir(pcap_path):
-#    os.system(f'mkdir {pcap_path}') 
+# try:
+#     x = input("Press Enter to start...")
+# except Exception as inst:
+#     print("Error:", inst)
+#     sys.exit()
 
-
-# pcap = os.path.join(pcap_path, f"client_pcap_BL_{dev}_{ports[0]}_{ports[1]}_{n}_sock.pcap")
-# tcpproc = subprocess.Popen([f"tcpdump -i any port '({ports[0]} or {ports[1]})' -w {pcap}"], shell=True, preexec_fn=os.setpgrp)
-
+# print(f'---{device} End!---')
 # time.sleep(1)
 
-# # Create and start DL receive multipleprocess
-# t_rx = threading.Thread(target=receive, args=(rx_socket, dev, ), daemon=True)
-# t_rx.start()
+# ===================== traffic capture =====================
 
-# # Create and start UL transmission multiprocess
-# t_tx = threading.Thread(target=transmit, args=(tx_socket,), daemon=True)
-# t_tx.start()
+if not os.path.isdir(pcap_path):
+   os.system(f'mkdir {pcap_path}')
 
-# # Main Process waitng...
+now = dt.datetime.today()
+current_datetime = [str(x) for x in [now.year, now.month, now.day, now.hour, now.minute, now.second]]
+current_datetime = [x.zfill(2) for x in current_datetime]  # zero-padding to two digit
+current_datetime = '-'.join(current_datetime[:3]) + '_' + '-'.join(current_datetime[3:])
+
+pcap = os.path.join(pcap_path, f"client_pcap_BL_{device}_{ports[0]}_{ports[1]}_{current_datetime}_sock.pcap")
+tcpproc = subprocess.Popen([f"tcpdump -i any port '({ports[0]} or {ports[1]})' -w {pcap}"], shell=True, preexec_fn=os.setpgrp)
+time.sleep(1)
+
+# ===================== transmit & receive =====================
+
+def receive(s, dev):
+    global stop_threads
+    # print(f"Waiting for indata to {dev} from server...")
+    
+    seq = 1
+    prev_receive = 1
+    time_slot = 1
+
+    while not stop_threads:
+        try:
+            indata = s.recv(65535)
+
+            try:
+                rx_start_time
+            except NameError:
+                rx_start_time = time.time()
+
+            # if len(indata) != length_packet:
+            #     print("packet with strange length: ", len(indata))
+
+            seq = int(indata.hex()[32:40], 16)
+            ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
+
+            # # Show information
+            # if time.time() - rx_start_time > time_slot:
+            #     print(f"{dev} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
+            #     time_slot += 1
+            #     prev_receive = seq
+
+        except SocketError as inst:
+            print("SocketError:", inst)
+            if inst.errno != errno.ECONNRESET:
+                # The error is NOT a ConnectionResetError
+                stop_threads = True
+                
+        except ValueError as inst:
+            print("ValueError:", inst)
+            stop_threads = True
+        
+        except KeyboardInterrupt as inst:
+            print("KeyboardInterrupt:", inst)
+            stop_threads = True
+            
+        except Exception as inst:
+            print("Error:", inst)
+            stop_threads = True
+
+
+def transmit(s):
+
+    global stop_threads
+    print("Start transmission:")
+    
+    seq = 1
+    prev_transmit = 0
+    
+    start_time = time.time()
+    next_transmit_time = start_time + sleeptime
+    
+    time_slot = 1
+    
+    while time.time() - start_time < total_time and not stop_threads:
+        try:
+            t = time.time()
+            while t < next_transmit_time:
+                t = time.time()
+            next_transmit_time = next_transmit_time + sleeptime
+
+            euler = 271828
+            pi = 31415926
+            datetimedec = int(t)
+            microsec = int((t - int(t))*1000000)
+
+            redundant = os.urandom(length_packet-4*5)
+            outdata = euler.to_bytes(4, 'big') + pi.to_bytes(4, 'big') + datetimedec.to_bytes(4, 'big') + microsec.to_bytes(4, 'big') + seq.to_bytes(4, 'big') + redundant
+            
+            s.sendall(outdata)  # Send data over the connection
+            seq += 1
+        
+            # if time.time() - start_time > time_slot:
+            #     print("[%d-%d]"%(time_slot-1, time_slot), "transmit", seq-prev_transmit)
+            #     time_slot += 1
+            #     prev_transmit = seq
+
+        except SocketError as inst:
+            print("SocketError:", inst)
+            if inst.errno != errno.ECONNRESET:
+                # The error is NOT a ConnectionResetError
+                stop_threads = True
+                
+        except ValueError as inst:
+            print("ValueError:", inst)
+            stop_threads = True
+        
+        except KeyboardInterrupt as inst:
+            print("KeyboardInterrupt:", inst)
+            stop_threads = True
+            
+        except Exception as inst:
+            print("Error:", inst)
+            stop_threads = True
+
+    stop_threads = True
+    print("---transmission timeout---")
+    print("transmit", seq, "packets")
+
+# Create and start Downlink receiving thread
+t_rx = threading.Thread(target=receive, args=(rx_socket, device, ), daemon=True)
+t_rx.start()
+
+# Create and start Uplink transmission thread
+t_tx = threading.Thread(target=transmit, args=(tx_socket,), daemon=True)
+t_tx.start()
+
+# ===================== wait for experiment end =====================
+
+def cleanup_and_exit():
+    
+    # Close sockets
+    tx_socket.close()
+    rx_socket.close()
+    
+    # Kill tcpdump process
+    os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
+    
+    print(f'{device} successfully closed.')
+    sys.exit()
+
+time.sleep(3)
+while not stop_threads:
+    try:
+        time.sleep(3)
+        
+    except KeyboardInterrupt:
+        stop_threads = True
+        
+        # for i in range(10):
+        #     # rx_socket.sendall('STOP'.encode())
+        #     tx_socket.sendall('STOP'.encode())
+
+# End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
+cleanup_and_exit()
+print(f"---End Of File ({device})---")
+
 # try:
-
-#     while True:
-#         time.sleep(10)
-
+#     while not stop_threads:
+#         time.sleep(3)
+    
+#     # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
+#     cleanup_and_exit()
+        
 # except KeyboardInterrupt:
-
-#     # Kill tcpdump process
-#     print('Killing tcpdump process...')
-#     os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
-
-#     time.sleep(1)
-#     print(f'{dev} successfully closed.')
-#     sys.exit()
+#     stop_threads = True
+    
+#     for i in range(10):
+#         # rx_socket.sendall('STOP'.encode())
+#         tx_socket.sendall('STOP'.encode())
+    
+#     cleanup_and_exit()

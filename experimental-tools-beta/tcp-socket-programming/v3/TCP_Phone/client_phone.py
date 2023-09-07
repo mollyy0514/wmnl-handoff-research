@@ -92,43 +92,34 @@ pcap_path = '/home/wmnlab/temp'
 
 # ===================== start experiment =====================
 
-# for device, port, serial in zip(devices, ports, serials):
-#     su_cmd = 'cd sdcard/TDP_Phone && python3 tcp_socket_phone.py ' + \
-#             f'-H {HOST} -d {device} -p {port[0]} {port[1]} -b {bitrate} -l {length_packet} -t {total_time}'
-#     adb_cmd = f"su -c '{su_cmd}'"
-#     p = subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True, preexec_fn = os.setpgrp)
-
 for device, port, serial in zip(devices, ports, serials):
-    su_cmd = f'cd sdcard/TCP_Phone && python3 tcp_socket_phone.py -d {device} -p {port[0]} {port[1]}'
+    su_cmd = 'cd sdcard/TDP_Phone && python3 tcp_socket_phone.py ' + \
+            f'-H {HOST} -d {device} -p {port[0]} {port[1]} -b {bitrate} -l {length_packet} -t {total_time}'
     adb_cmd = f"su -c '{su_cmd}'"
     p = subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True, preexec_fn = os.setpgrp)
 
 # ===================== wait for experiment end =====================
 
-
-print('hello1 ********************************')
-
-try:
-    x = input("Press Enter to start...")
-except Exception as inst:
-    print("Error:", inst)
-    sys.exit()
+# try:
+#     x = input("Press Enter to start...")
+# except Exception as inst:
+#     print("Error:", inst)
+#     sys.exit()
 
 time.sleep(1)
 
-# try:
+try:
+    while True:
+        time.sleep(1)
+        print('Alive...')
 
-#     while True:
-#         time.sleep(1)
-#         print('Alive...')
-
-# except KeyboardInterrupt:
+except KeyboardInterrupt:
     
-#     su_cmd = 'pkill -2 python3'
-#     adb_cmd = f"su -c '{su_cmd}'"
-#     for serial in serials:
-#         subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True)
+    su_cmd = 'pkill -2 python3'
+    adb_cmd = f"su -c '{su_cmd}'"
+    for serial in serials:
+        subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True)
     
-#     time.sleep(5)
-#     print('Closed main Process.')
-#     sys.exit()
+    time.sleep(5)
+    print('Main process closed.')
+    sys.exit()

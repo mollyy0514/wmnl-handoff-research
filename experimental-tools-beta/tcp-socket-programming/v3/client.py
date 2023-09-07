@@ -109,7 +109,7 @@ print("bitrate:", bitrate)
 
 # ===================== Parameters =====================
 HOST = '140.112.20.183'  # Lab 249
-pcap_path = '/home/wmnlab/temp'
+pcap_path = '/home/wmnlab/temp/'
 
 # ===================== Global Variables =====================
 stop_threads = False
@@ -222,6 +222,10 @@ def receive(s, dev):
         except ValueError as inst:
             print("ValueError:", inst)
             stop_threads = True
+        
+        except KeyboardInterrupt as inst:
+            print("KeyboardInterrupt:", inst)
+            stop_threads = True
             
         except Exception as inst:
             print("Error:", inst)
@@ -272,6 +276,10 @@ def transmit(sockets):
                 
         except ValueError as inst:
             print("ValueError:", inst)
+            stop_threads = True
+        
+        except KeyboardInterrupt as inst:
+            print("KeyboardInterrupt:", inst)
             stop_threads = True
             
         except Exception as inst:

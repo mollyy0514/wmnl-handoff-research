@@ -268,6 +268,10 @@ def receive(conn, dev, port):
         except ValueError as inst:
             print("ValueError:", inst)
             stop_threads = True
+        
+        except KeyboardInterrupt as inst:
+            print("KeyboardInterrupt:", inst)
+            stop_threads = True
             
         except Exception as inst:
             print("Error:", inst)
@@ -317,6 +321,10 @@ def transmit(connections):
                 
         except ValueError as inst:
             print("ValueError:", inst)
+            stop_threads = True
+        
+        except KeyboardInterrupt as inst:
+            print("KeyboardInterrupt:", inst)
             stop_threads = True
             
         except Exception as inst:
