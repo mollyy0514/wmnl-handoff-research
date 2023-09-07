@@ -209,7 +209,7 @@ def receive(s, dev):
             
             # Show information
             if time.time() - rx_start_time > time_slot:
-                if capture_bytes <= 1024*1024:
+                if capture_bytes <= 1024*1024/8:
                     print(f"{dev} [{time_slot-1}-{time_slot}]", "receive", "%g Kbps"%(capture_bytes/1024*8))
                 else:
                     print(f"{dev} [{time_slot-1}-{time_slot}]", "receive", "%g Mbps"%(capture_bytes/1024/1024*8))
