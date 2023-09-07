@@ -130,10 +130,8 @@ def receive(s, dev):
     global stop_threads
     # print(f"Waiting for indata to {dev} from server...")
     
-    seq = 1
-    prev_receive = 1
     time_slot = 1
-
+    capture_bytes = 0
     while not stop_threads:
         try:
             indata = s.recv(65535)
@@ -143,17 +141,16 @@ def receive(s, dev):
             except NameError:
                 rx_start_time = time.time()
 
-            # if len(indata) != length_packet:
-            #     print("packet with strange length: ", len(indata))
-
-            seq = int(indata.hex()[32:40], 16)
-            ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
-
+            # capture_bytes += len(indata)
+            
             # # Show information
             # if time.time() - rx_start_time > time_slot:
-            #     print(f"{dev} [{time_slot-1}-{time_slot}]", "receive", seq-prev_receive)
+            #     if capture_bytes <= 1024*1024/8:
+            #         print(f"{dev} [{time_slot-1}-{time_slot}]", "receive", "%g Kbps"%(capture_bytes/1024*8))
+            #     else:
+            #         print(f"{dev} [{time_slot-1}-{time_slot}]", "receive", "%g Mbps"%(capture_bytes/1024/1024*8))
             #     time_slot += 1
-            #     prev_receive = seq
+            #     capture_bytes = 0
 
         except SocketError as inst:
             print("SocketError:", inst)
