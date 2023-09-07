@@ -243,6 +243,8 @@ def receive(conn, dev, port):
             # seq = int(indata.hex()[32:40], 16)
             # ts = int(int(indata.hex()[16:24], 16)) + float("0." + str(int(indata.hex()[24:32], 16)))
 
+            capture_bytes += len(indata)
+            
             # Show information
             if time.time() - rx_start_time > time_slot:
                 if capture_bytes <= 1024*1024:
