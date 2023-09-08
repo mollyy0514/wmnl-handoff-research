@@ -121,7 +121,6 @@ except KeyboardInterrupt:
         subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True)
     
     time.sleep(5)
-    print('Main process closed.')
     # sys.exit()
 
 print("---End Of File---")

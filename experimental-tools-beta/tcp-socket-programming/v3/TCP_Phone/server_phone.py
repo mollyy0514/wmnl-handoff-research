@@ -367,7 +367,7 @@ def cleanup_and_exit():
     kill_traffic_capture()
 
     print('Successfully closed.')
-    sys.exit()
+    # sys.exit()
 
 time.sleep(3)
 while not stop_threads:
