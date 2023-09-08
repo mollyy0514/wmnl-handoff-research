@@ -143,8 +143,8 @@ time.sleep(1)
 
 while not all_process_end(procs):
     try:
-        time.sleep(1)
         print('Alive...')
+        time.sleep(1)
 
     except KeyboardInterrupt:
         
