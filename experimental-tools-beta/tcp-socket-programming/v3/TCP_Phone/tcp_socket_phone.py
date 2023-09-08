@@ -136,10 +136,10 @@ def receive(s, dev):
         try:
             indata = s.recv(65535)
 
-            try:
-                rx_start_time
-            except NameError:
-                rx_start_time = time.time()
+            # try:
+            #     rx_start_time
+            # except NameError:
+            #     rx_start_time = time.time()
 
             # capture_bytes += len(indata)
             
