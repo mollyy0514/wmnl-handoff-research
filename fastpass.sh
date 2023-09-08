@@ -9,7 +9,7 @@ elif [ "$1" == "-i" ]; then
 elif [ "$1" == "-u" ]; then
   cd ./jackbedford/wmnl-handoff-research/experimental-tools-beta/udp-socket-programming/v2
 elif [ "$1" == "-t" ]; then
-  cd ./jackbedford/wmnl-handoff-research/experimental-tools-beta/tcp-socket-programming
+  cd ./jackbedford/wmnl-handoff-research/experimental-tools-beta/tcp-socket-programming/v3
 elif [ "$1" == "-q" ]; then
   cd ./jackbedford/wmnl-handoff-research/experimental-tools-beta/quectel
 elif [ "$1" == "-g" ]; then
