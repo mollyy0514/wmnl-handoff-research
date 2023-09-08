@@ -79,12 +79,12 @@ for device, info in zip(devices, devices_info):
     print(info[2], 'iperf3m:', device.shell("su -c 'iperf3m --version'"))
     print("-----------------------------------")
     
-    # UDP_Phone
-    su_cmd = 'rm -rf /sdcard/UDP_Phone && cp -r /sdcard/wmnl-handoff-research/experimental-tools-beta/udp-socket-programming/v2/UDP_Phone /sdcard'
-    adb_cmd = f"su -c '{su_cmd}'"
-    device.shell(su_cmd)
-    print(info[2], 'Update UDP_Phone!')
-    print("-----------------------------------")
+    # # UDP_Phone
+    # su_cmd = 'rm -rf /sdcard/UDP_Phone && cp -r /sdcard/wmnl-handoff-research/experimental-tools-beta/udp-socket-programming/v2/UDP_Phone /sdcard'
+    # adb_cmd = f"su -c '{su_cmd}'"
+    # device.shell(su_cmd)
+    # print(info[2], 'Update UDP_Phone!')
+    # print("-----------------------------------")
     
     # TCP_Phone
     su_cmd = 'rm -rf /sdcard/TCP_Phone && cp -r /sdcard/wmnl-handoff-research/experimental-tools-beta/tcp-socket-programming/v3/TCP_Phone /sdcard'

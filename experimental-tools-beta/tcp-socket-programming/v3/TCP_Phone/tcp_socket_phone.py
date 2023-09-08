@@ -76,7 +76,7 @@ print("bitrate:", f'{args.bitrate}bps')
 
 # ===================== Parameters =====================
 # HOST = '140.112.20.183'  # Lab 249
-pcap_path = '/sdcard/TCP_Phone/pcapdir'
+pcap_path = '/sdcard/pcapdir'
 
 # ===================== Global Variables =====================
 stop_threads = False

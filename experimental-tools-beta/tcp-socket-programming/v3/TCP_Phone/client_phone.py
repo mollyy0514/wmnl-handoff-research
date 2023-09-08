@@ -120,7 +120,7 @@ except KeyboardInterrupt:
     for serial in serials:
         subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True)
     
-    time.sleep(3)
+    time.sleep(5)
     # sys.exit()
 
 print("---End Of File---")
