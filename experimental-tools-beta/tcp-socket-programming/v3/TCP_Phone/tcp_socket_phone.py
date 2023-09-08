@@ -51,8 +51,8 @@ expected_packet_per_sec = bitrate / (length_packet << 3)
 sleeptime = 1.0 / expected_packet_per_sec
 
 print(f'---{device}----')
-print(ports)
-print("bitrate:", bitrate)
+# print(ports)
+print("bitrate:", f'{args.bitrate}bps')
 
 # ===================== Simple Socket =====================
 
@@ -249,7 +249,7 @@ def cleanup_and_exit():
     os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
     
     print(f'{device} successfully closed.')
-    sys.exit()
+    # sys.exit()
 
 time.sleep(3)
 while not stop_threads:

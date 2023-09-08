@@ -84,7 +84,7 @@ sleeptime = 1.0 / expected_packet_per_sec
 
 print(devices)
 print(ports)
-print("bitrate:", bitrate)
+print("bitrate:", f'{args.bitrate}bps')
 
 # ===================== Simple Socket =====================
 

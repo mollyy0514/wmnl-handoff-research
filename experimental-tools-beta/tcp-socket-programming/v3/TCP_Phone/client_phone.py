@@ -84,7 +84,7 @@ sleeptime = 1.0 / expected_packet_per_sec
 print(devices)
 print(serials)
 print(ports)
-print("bitrate:", bitrate)
+print("bitrate:", f'{args.bitrate}bps')
 
 # ===================== Parameters =====================
 HOST = '140.112.20.183'  # Lab 249
@@ -122,4 +122,6 @@ except KeyboardInterrupt:
     
     time.sleep(5)
     print('Main process closed.')
-    sys.exit()
+    # sys.exit()
+
+print("---End Of File---")
