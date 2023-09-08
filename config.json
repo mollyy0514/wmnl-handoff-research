@@ -1,0 +1,423 @@
+{   
+    "BR": {
+        "comment": "Brown Line: 文湖線",
+        "stations": ["動物園", "木柵", "萬芳社區", "萬芳醫院", "辛亥", "麟光", "六張犁", "科技大樓", "大安", "忠孝復興", "南京復興", "中山國中", "松山機場", "大直", "劍南路", "西湖", "港墘", "文德", "內湖", "大湖公園", "葫洲", "東湖", "南港軟體園區", "南港展覽館"],
+        "routes": {
+            "動物園:萬芳醫院": {
+                "stations": ["動物園", "木柵", "萬芳社區", "萬芳醫院"],
+                "dates": {
+                    "2023-03-16": [
+                        {
+                            "name": "Bandlock_Udp_B1_B3_B7_B8_RM500Q",
+                            "trips": 12,
+                            "directions": "RFRFRFRFRFRF",
+                            "period": "evening",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "modem",
+                            "settings": { "qc00": "B1", "qc02": "B7", "qc03": "B8" },
+                            "comment": ""
+                        }
+                    ],
+                    "2023-03-26": [
+                        {
+                            "name": "Bandlock_Udp_All_RM500Q",
+                            "trips": 4,
+                            "directions": "RFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "modem",
+                            "settings": { "qc00": "All", "qc02": "All", "qc03": "All" },
+                            "comment": ""
+                        }
+                    ],
+                    "2023-04-01": [
+                        {
+                            "name": "Bandlock_Udp_B1_B3_B7_B8_RM500Q",
+                            "trips": 6,
+                            "directions": "RFRFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "modem",
+                            "settings": { "qc00": "B1", "qc01": "B3", "qc02": "B7", "qc03": "B8" },
+                            "comment": ""
+                        },
+                        {
+                            "name": "Bandlock_Udp_All_LTE_B1B3_B1B8_RM500Q",
+                            "trips": 4,
+                            "directions": "RFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "modem",
+                            "settings": { "qc00": "B1B3", "qc01": "B1B8", "qc02": "LTE", "qc03": "All" },
+                            "comment": ""
+                        }
+                    ],
+                    "2023-04-10": [
+                        {
+                            "name": "Experiment1",
+                            "trips": 2,
+                            "directions": "RF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "modem",
+                            "settings": { "qc00": "All", "qc01": "All", "qc02": "All", "qc03": "All" },
+                            "comment": ""
+                        },
+                        {
+                            "name": "Experiment2",
+                            "trips": 2,
+                            "directions": "RF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "modem",
+                            "settings": { "qc00": "B1", "qc01": "B3", "qc02": "B7", "qc03": "B8" },
+                            "comment": ""
+                        },
+                        {
+                            "name": "Experiment3",
+                            "trips": 2,
+                            "directions": "RF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "modem",
+                            "settings": { "qc00": "LTE", "qc01": "All", "qc02": "B7B8", "qc03": "B7" },
+                            "comment": ""
+                        }
+                    ],
+                    "2023-04-17": [
+                        {
+                            "name": "Bandlock_Udp_All_LTE_B1B3_B3B7_RM500Q",
+                            "trips": 4,
+                            "directions": "RFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "modem",
+                            "settings": { "qc00": "All", "qc01": "LTE", "qc02": "B1B3", "qc03": "B3B7" },
+                            "comment": ""
+                        },
+                        {
+                            "name": "Bandlock_Udp_All_LTE_B1B7_B7B8_RM500Q",
+                            "trips": 4,
+                            "directions": "RFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "modem",
+                            "settings": { "qc00": "All", "qc01": "LTE", "qc02": "B1B7", "qc03": "B7B8" },
+                            "comment": ""
+                        },
+                        {
+                            "name": "Bandlock_Udp_All_LTE_B1B8_B3B8_RM500Q",
+                            "trips": 4,
+                            "directions": "RFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "modem",
+                            "settings": { "qc00": "All", "qc01": "LTE", "qc02": "B1B8", "qc03": "B3B8" },
+                            "comment": ""
+                        },
+                        {
+                            "name": "Bandlock_Udp_All_LTE_All_LTE_RM500Q",
+                            "trips": 4,
+                            "directions": "FFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "modem",
+                            "settings": { "qc00": "All", "qc01": "LTE", "qc02": "All", "qc03": "LTE" },
+                            "comment": ""
+                        },
+                        {
+                            "name": "Bandlock_Udp_All_LTE_B1_B3_RM500Q",
+                            "trips": 2,
+                            "directions": "RF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "modem",
+                            "settings": { "qc00": "All", "qc01": "LTE", "qc02": "B1", "qc03": "B3" },
+                            "comment": ""
+                        },
+                        {
+                            "name": "Bandlock_Udp_All_LTE_B7_B8_RM500Q",
+                            "trips": 2,
+                            "directions": "RF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "modem",
+                            "settings": { "qc00": "All", "qc01": "LTE", "qc02": "B7", "qc03": "B8" },
+                            "comment": ""
+                        }
+                    ],
+                    "2023-05-04": [
+                        {
+                            "name": "Bandlock_8_Schemes_Phone",
+                            "trips": 6,
+                            "directions": "RFRFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "phone",
+                            "settings": { "sm00": "B3B7B8", "sm01": "B3", "sm02": "B7", "sm03": "B8", "sm04": "B3B7", "sm05": "B3B8", "sm06": "B7B8", "sm07": "LTE" },
+                            "comment": ""
+                        }
+                    ],
+                    "2023-05-07": [
+                        {
+                            "name": "Bandlock_8_Schemes_Phone",
+                            "trips": 7,
+                            "directions": "RFRFRFR",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "phone",
+                            "settings": { "sm00": "B3B7B8", "sm01": "B3", "sm02": "B7", "sm03": "B8", "sm04": "B3B7", "sm05": "B3B8", "sm06": "B7B8", "sm07": "LTE" },
+                            "comment": ""
+                        }
+                    ],
+                    "2023-05-15": [
+                        {
+                            "name": "Bandlock_8_Schemes_Phone",
+                            "trips": 4,
+                            "directions": "RFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "phone",
+                            "settings": { "sm00": "B3B7B8", "sm01": "B3", "sm02": "B7", "sm03": "B8", "sm04": "B3B7", "sm05": "B3B8", "sm06": "B7B8", "sm07": "LTE" },
+                            "comment": ""
+                        }
+                    ],
+                    "2023-05-24": [
+                        {
+                            "name": "Bandlock_8_Schemes_Phone",
+                            "trips": 8,
+                            "directions": "RFRFRFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "phone",
+                            "settings": { "sm00": "B3B7B8", "sm01": "B3", "sm02": "B7", "sm03": "B8", "sm04": "B3B7", "sm05": "B3B8", "sm06": "B7B8", "sm07": "LTE" },
+                            "comment": ""
+                        }
+                    ],
+                    "2023-05-26": [
+                        {
+                            "name": "Bandlock_8_Schemes_Phone",
+                            "trips": 10,
+                            "directions": "RFRFRFRFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "phone",
+                            "settings": { "sm00": "B3B7B8", "sm01": "B3", "sm02": "B7", "sm03": "B8", "sm04": "B3B7", "sm05": "B3B8", "sm06": "B7B8", "sm07": "LTE" },
+                            "comment": ""
+                        }
+                    ],
+                    "2023-06-12": [
+                        {
+                            "name": "Bandlock_8_Schemes_Phone",
+                            "trips": 10,
+                            "directions": "RFRFRFRFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "no",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "phone",
+                            "settings": { "sm00": "B3B7B8", "sm01": "B3", "sm02": "B7", "sm03": "B8", "sm04": "B3B7", "sm05": "B3B8", "sm06": "B7B8", "sm07": "LTE" },
+                            "comment": ""
+                        }
+                    ],
+                    "2023-06-13": [
+                        {
+                            "name": "Bandlock_8_Schemes_Phone",
+                            "trips": 9,
+                            "directions": "FRFRFRFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "no",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "phone",
+                            "settings": { "sm00": "B3B7B8", "sm01": "B3", "sm02": "B7", "sm03": "B8", "sm04": "B3B7", "sm05": "B3B8", "sm06": "B7B8", "sm07": "LTE" },
+                            "comment": "#01 實驗失敗, 因此編號為 #02-#10."
+                        }
+                    ],
+                    "2023-06-15": [
+                        {
+                            "name": "Bandlock_B1_B3_B7_B8_Dupl_Phone",
+                            "trips": 4,
+                            "directions": "RFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "no",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "phone",
+                            "settings": { "sm00": "B1", "sm01": "B1", "sm02": "B3", "sm03": "B3", "sm04": "B7", "sm05": "B7", "sm06": "B8", "sm07": "B8" },
+                            "comment": ""
+                        },
+                        {
+                            "name": "Bandlock_All_B3_B7_B8_Dupl_Phone",
+                            "trips": 4,
+                            "directions": "RFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "no",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "phone",
+                            "settings": { "sm00": "All", "sm01": "All", "sm02": "B3", "sm03": "B3", "sm04": "B7", "sm05": "B7", "sm06": "B8", "sm07": "B8" },
+                            "comment": ""
+                        },
+                        {
+                            "name": "Bandlock_LTE_B3_B7_B8_Dupl_Phone",
+                            "trips": 6,
+                            "directions": "RFRFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "no",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "phone",
+                            "settings": { "sm00": "LTE", "sm01": "LTE", "sm02": "B3", "sm03": "B3", "sm04": "B7", "sm05": "B7", "sm06": "B8", "sm07": "B8" },
+                            "comment": ""
+                        },
+                        {
+                            "name": "Bandlock_LTE_LTEb3_LTEb7_LTEb8_Dupl_Phone",
+                            "trips": 4,
+                            "directions": "RFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "no",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "phone",
+                            "settings": { "sm00": "LTE", "sm01": "LTE", "sm02": "LTEb3", "sm03": "LTEb3", "sm04": "LTEb7", "sm05": "LTEb7", "sm06": "LTEb8", "sm07": "LTEb8" },
+                            "comment": "sm03 #03 沒有 mi2log."
+                        },
+                        {
+                            "name": "Bandlock_LTEb1_LTEb3_LTEb7_LTEb8_Dupl_Phone",
+                            "trips": 4,
+                            "directions": "RFRF",
+                            "period": "afternoon",
+                            "weather": "",
+                            "gps": "no",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "device": "phone",
+                            "settings": { "sm00": "LTEb1", "sm01": "LTEb1", "sm02": "LTEb3", "sm03": "LTEb3", "sm04": "LTEb7", "sm05": "LTEb7", "sm06": "LTEb8", "sm07": "LTEb8" },
+                            "comment": ""
+                        }
+                    ]
+                }
+            },
+            "科技大樓:中山國中": {
+                "stations": ["科技大樓", "大安", "忠孝復興", "南京復興", "中山國中"],
+                "dates": {
+                    "2023-08-21": []
+                }
+            }
+        }
+    },
+    "R": {
+        "comment": "Red Line: 淡水信義線",
+        "stations": [],
+        "branch": ["北投", "新北投"],
+        "routes": {}
+    },
+    "G": {
+        "comment": "Green Line: 松山新店線",
+        "stations": [],
+        "branch": ["七張", "小碧潭"],
+        "routes": {}
+    },
+    "O": {
+        "comment": "Orange Line: 中和新蘆線",
+        "stations-1": [],
+        "stations-2": [],
+        "routes": {}
+    },
+    "BL": {
+        "comment": "Blue Line: 板南線",
+        "stations": [],
+        "routes": {}
+    },
+    "Y": {
+        "comment": "Yellow Line: 環狀線",
+        "stations": [],
+        "routes": {}
+    },
+    "Airport": {
+        "comment": "Taoyuan Airport MRT: 桃園機場捷運",
+        "stations": [],
+        "routes": {}
+    },
+    "Danhai": {
+        "comment": "Danhai LRT: 淡海輕軌",
+        "stations": [],
+        "routes": {}
+    },
+    "Ankeng": {
+        "comment": "Ankeng LRT: 安坑輕軌",
+        "stations": [],
+        "routes": {}
+    },
+    "HSR": {
+        "comment": "HSR: 高鐵",
+        "stations": [],
+        "routes": {}
+    },
+    "TSR": {
+        "comment": "TSR: 台鐵",
+        "stations": [],
+        "routes": {}
+    }
+}
