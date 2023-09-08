@@ -168,30 +168,7 @@ for s1, s2, dev in zip(rx_sockets, tx_sockets, devices):
     accept_connection(s1, s2, dev)
 
 print("Successfully establish all connections!")
-
-# for conn, dev in zip(rx_connections, devices):
-#     while True:
-#         try:
-#             indata = conn.recv(65535)
-#             if indata.decode()[:5] == 'START':
-#                 print(f"{dev} START")
-#                 break
-#             else:
-#                 print("WTF?????", indata)
-#                 break
-            
-#         except Exception as inst:
-#             print("Error:", inst)
-#             print("Sockets closed")
-#             for s1, s2 in zip(rx_connections, tx_connections):
-#                 s1.close()
-#                 s2.close()
-#             for s1, s2 in zip(rx_sockets, tx_sockets):
-#                 s1.close()
-#                 s2.close()
-#             sys.exit()
-
-# time.sleep(1)
+time.sleep(1)
 
 # ===================== traffic capture =====================
 
@@ -380,14 +357,3 @@ while not stop_threads:
 # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
 cleanup_and_exit()
 print("---End Of File---")
-
-# try:
-#     while not stop_threads:
-#         time.sleep(3)
-    
-#     # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
-#     cleanup_and_exit()
-        
-# except KeyboardInterrupt:
-#     stop_threads = True
-#     # cleanup_and_exit()

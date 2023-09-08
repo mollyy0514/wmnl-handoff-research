@@ -97,18 +97,7 @@ tx_socket.connect((HOST, ports[0]))  # 連線到指定的主機和埠
 print(f'Create UL socket for {device} at {HOST}:{ports[0]}.')
 print(f'Create DL socket for {device} at {HOST}:{ports[1]}.')
 
-# while True:
-#     connection_setup(device, ports)
-#     break
-
-# try:
-#     x = input("Press Enter to start...")
-# except Exception as inst:
-#     print("Error:", inst)
-#     sys.exit()
-
-# print(f'---{device} End!---')
-# time.sleep(1)
+time.sleep(1)
 
 # ===================== traffic capture =====================
 
@@ -266,19 +255,3 @@ while not stop_threads:
 # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
 cleanup_and_exit()
 print(f"---End Of File ({device})---")
-
-# try:
-#     while not stop_threads:
-#         time.sleep(3)
-    
-#     # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
-#     cleanup_and_exit()
-        
-# except KeyboardInterrupt:
-#     stop_threads = True
-    
-#     for i in range(10):
-#         # rx_socket.sendall('STOP'.encode())
-#         tx_socket.sendall('STOP'.encode())
-    
-#     cleanup_and_exit()

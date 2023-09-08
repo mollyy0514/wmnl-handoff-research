@@ -115,32 +115,7 @@ for device, port, serial in zip(devices, ports, serials):
 
 # ===================== wait for experiment end =====================
 
-# try:
-#     x = input("Press Enter to start...")
-# except Exception as inst:
-#     print("Error:", inst)
-#     sys.exit()
-
 time.sleep(1)
-
-# try:
-#     while True:
-#         time.sleep(1)
-#         print('Alive...')
-
-# except KeyboardInterrupt:
-    
-#     su_cmd = 'pkill -2 python3'
-#     adb_cmd = f"su -c '{su_cmd}'"
-#     for serial in serials:
-#         subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True)
-    
-#     time.sleep(5)
-#     # sys.exit()
-
-# print("---End Of File---")
-
-
 while not all_process_end(procs):
     try:
         print('Alive...')

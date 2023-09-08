@@ -379,14 +379,3 @@ while not stop_threads:
 # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
 cleanup_and_exit()
 print("---End Of File---")
-
-# try:
-#     while not stop_threads:
-#         time.sleep(3)
-    
-#     # End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
-#     cleanup_and_exit()
-        
-# except KeyboardInterrupt:
-#     stop_threads = True
-#     # cleanup_and_exit()
