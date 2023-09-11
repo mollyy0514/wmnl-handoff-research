@@ -229,24 +229,53 @@ p_tx = multiprocessing.Process(target=transmit, args=(tx_sockets,), daemon=True)
 p_tx.start()
 
 # Main process waiting...
-try:
+# try:
     
-    while True:
-        time.sleep(10)
+#     while True:
+#         time.sleep(10)
 
-except KeyboardInterrupt:
+# except KeyboardInterrupt:
 
-    stop_threads = True
+#     stop_threads = True
     
-    # Kill transmit process
-    p_tx.terminate()
-    time.sleep(1)
+#     # Kill transmit process
+#     p_tx.terminate()
+#     time.sleep(1)
 
-    # Kill tcpdump process
-    print('Killing tcpdump process...')
-    for tcpproc in tcpproc_list:
-        os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
+#     # Kill tcpdump process
+#     print('Killing tcpdump process...')
+#     for tcpproc in tcpproc_list:
+#         os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
     
-    time.sleep(3)
-    print('Successfully closed.')
-    sys.exit()
+#     time.sleep(3)
+#     print('Successfully closed.')
+#     sys.exit()
+
+time.sleep(3)
+while not stop_threads:
+    try:
+        time.sleep(3)
+        
+    except KeyboardInterrupt:
+        stop_threads = True
+        time.sleep(1)
+
+# End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
+
+# Kill transmit process
+p_tx.terminate()
+time.sleep(1)
+
+# Close sockets
+for s1, s2 in zip(tx_sockets, rx_sockets):
+    s1.close()
+    s2.close()
+
+# Kill tcpdump process
+print('Killing tcpdump process...')
+for tcpproc in tcpproc_list:
+    os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
+time.sleep(1)
+
+print('Successfully closed.')
+print("---End Of File---")

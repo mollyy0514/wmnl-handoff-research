@@ -196,17 +196,45 @@ t_tx = threading.Thread(target=transmit, args=(tx_socket,), daemon=True)
 t_tx.start()
 
 # Main Process waitng...
-try:
+# try:
 
-    while True:
-        time.sleep(10)
+#     while True:
+#         time.sleep(10)
 
-except KeyboardInterrupt:
+# except KeyboardInterrupt:
 
+#     # Kill tcpdump process
+#     print('Killing tcpdump process...')
+#     os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
+
+#     time.sleep(1)
+#     print(f'{dev} successfully closed.')
+#     sys.exit()
+
+def cleanup_and_exit():
+    
+    # Close sockets
+    tx_socket.close()
+    rx_socket.close()
+    
     # Kill tcpdump process
-    print('Killing tcpdump process...')
     os.killpg(os.getpgid(tcpproc.pid), signal.SIGTERM)
-
-    time.sleep(1)
+    
     print(f'{dev} successfully closed.')
-    sys.exit()
+    # sys.exit()
+
+time.sleep(3)
+while not stop_threads:
+    try:
+        time.sleep(3)
+        
+    except KeyboardInterrupt:
+        stop_threads = True
+        
+        # for i in range(10):
+        #     # rx_socket.sendall('STOP'.encode())
+        #     tx_socket.sendall('STOP'.encode())
+
+# End without KeyboardInterrupt (Ctrl-C, Ctrl-Z)
+cleanup_and_exit()
+print(f"---End Of File ({dev})---")

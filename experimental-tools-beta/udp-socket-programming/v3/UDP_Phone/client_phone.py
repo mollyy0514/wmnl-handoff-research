@@ -69,25 +69,58 @@ length = args.length
 total_time = args.time
 #=================global variables=======================
 
+def is_alive(p):
+    if p.poll() is None:
+        return True
+    else:
+        return False
+
+def all_process_end(procs):
+    for p in procs:
+        if is_alive(p):
+            return False
+    return True
+
+procs = []
+
 for device, port, serial in zip(devices, ports, serials):
     su_cmd = 'cd sdcard/UDP_Phone && python3 udp_socket_phone.py ' + \
             f'-H {HOST} -d {device} -p {port[0]} {port[1]} -b {bitrate} -l {length} -t {total_time}'
     adb_cmd = f"su -c '{su_cmd}'"
     p = subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True, preexec_fn = os.setpgrp)
+    procs.append(p)
 
-try:
+# try:
 
-    while True:
-        time.sleep(1)
+#     while True:
+#         time.sleep(1)
+#         print('Alive...')
+
+# except KeyboardInterrupt:
+    
+#     su_cmd = 'pkill -2 python3'
+#     adb_cmd = f"su -c '{su_cmd}'"
+#     for serial in serials:
+#         subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True)
+    
+#     time.sleep(5)
+#     print('Closed main Process.')
+#     sys.exit()
+    
+time.sleep(3)
+while not all_process_end(procs):
+    try:
         print('Alive...')
+        time.sleep(1)
 
-except KeyboardInterrupt:
-    
-    su_cmd = 'pkill -2 python3'
-    adb_cmd = f"su -c '{su_cmd}'"
-    for serial in serials:
-        subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True)
-    
-    time.sleep(5)
-    print('Closed main Process.')
-    sys.exit()
+    except KeyboardInterrupt:
+        
+        su_cmd = 'pkill -2 python3'
+        adb_cmd = f"su -c '{su_cmd}'"
+        for serial in serials:
+            subprocess.Popen([f'adb -s {serial} shell "{adb_cmd}"'], shell=True)
+        
+        time.sleep(5)
+        # sys.exit()
+
+print("---End Of File---")
