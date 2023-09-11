@@ -34,7 +34,7 @@ cimon_flag = True
 server_pcap_flag = True
 
 # 設定手機備份資料夾路徑
-client_pcap_phone_folder = "/sdcard/UDP_Phone/pcapdir/"
+client_pcap_phone_folder = "/sdcard/pcapdir/"
 client_pcap_computer_folder = os.path.join(computer_root_folder, target_date, "client_pcap")
 makedir(client_pcap_computer_folder)
 
