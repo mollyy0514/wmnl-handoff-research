@@ -2,6 +2,12 @@
 
 ## 實驗紀錄
 
+### 實驗設定
+- Protocol: [UDP/TCP]
+- Telecom: [CHT/TWM/FET]
+- Length: (default 250 bytes)
+- Bitrate: (default 1 Mbps: 500 pps)
+
 ### --------- Experiment #1 ---------
 
 起迄站：動物園--南港展覽館
@@ -99,13 +105,13 @@ TWM
 - B3 1275
 - B28 9560
 
-## 流程
+### 流程
 1. 每趟實驗前，ntpq -p 或 sudo ntpd -q ntp.server.ip/name，確保時間有週期性/手動同步。
 2. 量測 server/client 之間的時間誤差，自動記錄到 json 檔。
 3. 啟動 MobileInsight。
 4. 先後啟動 socket 或 iPerf 的 server 和 client。
 
-## 模組操作
+### 模組操作
 1. 獨立電源給 Hub 供電
 2. Hub 插上筆電
 3. 模組一一插上 Hub
@@ -115,7 +121,7 @@ TWM
 > - No such device
 > - [cmderror]
 
-## 連線操作
+### 連線操作
 - 連網 ./dial-all.py
 - 斷網 ./disconnect-all.py
 - 確認連線狀態 sudo ./get-modem-connection-status.sh -i `device`
@@ -124,13 +130,6 @@ TWM
 - 重置頻帶設定 ./reset-all-band.py
 - Force Set RAT to LTE & 5G NR: sudo ./qc-at -i `device` -c 'at+qnwprefcfg="mode_pref",LTE:NR5G'
 
-## 實驗設定
-- Proto: [UDP/TCP]
-- PYL Length: (default 250 bytes)
-- Data Rate: (default 1 Mbps; 500 pps)
-- Oper: [CHT/TWM/FET]
-- Description: 
-
-## 時間同步 offset
+### 時間同步 offset
 - behind server by (+)
 - ahead of server by (-) 
