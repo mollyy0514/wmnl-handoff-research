@@ -1,4 +1,92 @@
-# YYYY/MM/DD
+# YYYY-MM-DD
+
+## 實驗紀錄
+
+### --------- Experiment #1 ---------
+
+起迄站：動物園--南港展覽館
+
+| 起站 | 發車時間(HH:MM) | 備註 |
+| --- | --- | --- |
+| 動物園 |  |  |
+| 南港展覽館 |  |  |
+| 動物園 |  |  |
+| 南港展覽館 |  |  |
+| 動物園 |  |  |
+| 南港展覽館 |  |  |
+| 動物園 |  |  |
+| 南港展覽館 |  |  |
+
+   {
+      "name": "Bandlock_9_Schemes_Phone",
+      "description": "",
+      "trips": 2,
+      "directions": "FR",
+      "period": "afternoon",
+      "weather": "",
+      "gps": "yes",
+      "telecom": "CHT",
+      "protocol": "UDP",
+      "length": "250 bytes",
+      "bitrate": "1 Mbps",
+      "device": "phone",
+      "settings": { "sm00": "All", "sm01": "All", "sm02": "B3", "sm03": "B7", "sm04": "B8", "sm05": "B3B7", "sm06": "B3B8", "sm07": "B7B8", "sm08": "LTE" },
+      "comment": ""
+   }
+
+### --------- Experiment #2 ---------
+
+起迄站：
+
+| 起站 | 發車時間(HH:MM) | 備註 |
+| --- | --- | --- |
+|  |  |  |
+|  |  |  |
+
+   {
+      "name": "Bandlock_9_Schemes_Phone",
+      "description": "",
+      "trips": 2,
+      "directions": "FR",
+      "period": "afternoon",
+      "weather": "",
+      "gps": "yes",
+      "telecom": "CHT",
+      "protocol": "UDP",
+      "length": "250 bytes",
+      "bitrate": "1 Mbps",
+      "device": "phone",
+      "settings": {},
+      "comment": ""
+   }
+
+### --------- Experiment #3 ---------
+
+起迄站：
+
+| 起站 | 發車時間(HH:MM) | 備註 |
+| --- | --- | --- |
+|  |  |  |
+|  |  |  |
+
+   {
+      "name": "Bandlock_9_Schemes_Phone",
+      "description": "",
+      "trips": 2,
+      "directions": "FR",
+      "period": "afternoon",
+      "weather": "",
+      "gps": "yes",
+      "telecom": "CHT",
+      "protocol": "UDP",
+      "length": "250 bytes",
+      "bitrate": "1 Mbps",
+      "device": "phone",
+      "settings": {},
+      "comment": ""
+   }
+
+## 實驗操作流程
 
 CHT
 - B1 525
@@ -46,44 +134,3 @@ TWM
 ## 時間同步 offset
 - behind server by (+)
 - ahead of server by (-) 
-
-
-## 實驗紀錄
-
-### --------- Experiment #1 ---------
-- Tools: [socket/iPerf]
-- Proto: [UDP/TCP]
-- Oper: [CHT/TWM/FET]
-- Terminal: [lpt0,1,2,3]
-- Devices: [qc00,01,02; sm00,01,02; xm00,01,02]
-   - qc00 B1
-   - qc01 B3
-   - qc02 B7
-   - qc03 B8
-
-| 起站 | 迄站 | 發車時間(HH:MM) | 備註 |
-| --- | --- | --- | --- |
-| 萬芳醫院 | 動物園 | | |
-| 動物園 | 萬芳醫院 | | |
-
-> 每站車程約 2 分鐘；候車時間約 1-4 分鐘
-
-
-### --------- Experiment #2 ---------
-- Tools: [socket/iPerf]
-- Proto: [UDP/TCP]
-- Oper: [CHT/TWM/FET]
-- Terminal: [lpt0,1,2,3]
-- Devices: [qc00,01,02; sm00,01,02; xm00,01,02]
-   - qc00 B1
-   - qc01 B3
-   - qc02 B7
-   - qc03 B8
-
-| 起站 | 迄站 | 發車時間(HH:MM) | 備註 |
-| --- | --- | --- | --- |
-| 萬芳醫院 | 動物園 | | |
-| 動物園 | 萬芳醫院 | | |
-
-> 每站車程約 2 分鐘；候車時間約 1-4 分鐘
-
