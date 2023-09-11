@@ -115,7 +115,7 @@ for device, port, serial in zip(devices, ports, serials):
 
 # ===================== wait for experiment end =====================
 
-time.sleep(3)
+time.sleep(1)
 while not all_process_end(procs):
     try:
         print('Alive...')

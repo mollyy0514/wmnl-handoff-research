@@ -107,7 +107,7 @@ for device, port, serial in zip(devices, ports, serials):
 #     print('Closed main Process.')
 #     sys.exit()
     
-time.sleep(3)
+time.sleep(1)
 while not all_process_end(procs):
     try:
         print('Alive...')
