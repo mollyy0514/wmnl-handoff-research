@@ -69,7 +69,7 @@ sleeptime = 1.0 / expected_packet_per_sec
 print(ports)
 
 #=================gloabal variables======================
-# ...
+stop_threads = False
 
 # Function define
 def give_server_DL_addr():
@@ -79,7 +79,7 @@ def give_server_DL_addr():
 
 def receive(s, dev): # s should be rx_socket
 
-    stop_threads = False
+    global stop_threads
     # print(f"wait for indata to {dev} from server...")
 
     seq = 1
@@ -116,7 +116,7 @@ def receive(s, dev): # s should be rx_socket
 
 def transmit(s):
 
-    stop_threads = False
+    global stop_threads
     print("start transmission: ")
     
     seq = 1
