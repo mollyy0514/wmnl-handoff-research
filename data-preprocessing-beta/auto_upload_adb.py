@@ -25,7 +25,7 @@ target_date = "2023-08-21"
 
 # TODO: 設定電腦根目錄的資料夾路經
 # computer_root_folder = "/Users/jackbedford/Desktop/MOXA/temp/"
-computer_root_folder = "/home/wmnlab/D/temp/"
+computer_root_folder = "/home/wmnlab/D/phone_temp/"
 
 # TODO: 設定手機和電腦的資料夾路徑
 client_pcap_flag = True
