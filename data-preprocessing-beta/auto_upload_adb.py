@@ -131,7 +131,7 @@ if client_pcap_flag:
                 source_path = os.path.join(client_pcap_phone_folder, filename)
                 destination_path = os.path.join(client_pcap_computer_folder, filename)
                 # 使用 adb 命令將檔案從手機上傳到電腦
-                adb_command = f"adb -s {serial} pull {source_path} {destination_path}"
+                adb_command = f"adb -s {serial} pull -a {source_path} {destination_path}"
                 os.system(adb_command)
             
 # 上傳 time_sync 檔案
@@ -149,7 +149,7 @@ if tsync_flag:
             source_path = os.path.join(tsync_phone_folder, filename)
             destination_path = os.path.join(tsync_computer_folder, filename)
             # 使用 adb 命令將檔案從手機上傳到電腦
-            adb_command = f"adb -s {serial} pull {source_path} {destination_path}"
+            adb_command = f"adb -s {serial} pull -a {source_path} {destination_path}"
             os.system(adb_command)
 
 # 備份 server_pcap 檔案
@@ -180,5 +180,5 @@ if cimon_flag:
                 source_path = os.path.join(cimon_phone_folder, filename)
                 destination_path = os.path.join(cimon_computer_folder, "cimon_" + dev + "_" + filename[6:])
                 # 使用 adb 命令將檔案從手機上傳到電腦
-                adb_command = f"adb -s {serial} pull {source_path} {destination_path}"
+                adb_command = f"adb -s {serial} pull -a {source_path} {destination_path}"
                 os.system(adb_command)
