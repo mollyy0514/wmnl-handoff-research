@@ -10,7 +10,6 @@
                     "2023-03-16": [
                         {
                             "name": "Bandlock_Udp_B1_B3_B7_B8_RM500Q",
-                            "description": "",
                             "trips": 12,
                             "directions": "RFRFRFRFRFRF",
                             "period": "evening",
@@ -18,7 +17,10 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "B1", "qc02": "B7", "qc03": "B8" },
                             "comment": ""
                         }
@@ -26,7 +28,6 @@
                     "2023-03-26": [
                         {
                             "name": "Bandlock_Udp_All_RM500Q",
-                            "description": "",
                             "trips": 4,
                             "directions": "RFRF",
                             "period": "afternoon",
@@ -34,7 +35,10 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "All", "qc02": "All", "qc03": "All" },
                             "comment": ""
                         }
@@ -42,7 +46,6 @@
                     "2023-04-01": [
                         {
                             "name": "Bandlock_Udp_B1_B3_B7_B8_RM500Q",
-                            "description": "",
                             "trips": 6,
                             "directions": "RFRFRF",
                             "period": "afternoon",
@@ -50,13 +53,15 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "B1", "qc01": "B3", "qc02": "B7", "qc03": "B8" },
                             "comment": ""
                         },
                         {
                             "name": "Bandlock_Udp_All_LTE_B1B3_B1B8_RM500Q",
-                            "description": "",
                             "trips": 4,
                             "directions": "RFRF",
                             "period": "afternoon",
@@ -64,7 +69,10 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "B1B3", "qc01": "B1B8", "qc02": "LTE", "qc03": "All" },
                             "comment": ""
                         }
@@ -72,7 +80,6 @@
                     "2023-04-10": [
                         {
                             "name": "Experiment1",
-                            "description": "",
                             "trips": 2,
                             "directions": "RF",
                             "period": "afternoon",
@@ -80,13 +87,15 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "All", "qc01": "All", "qc02": "All", "qc03": "All" },
                             "comment": ""
                         },
                         {
                             "name": "Experiment2",
-                            "description": "",
                             "trips": 2,
                             "directions": "RF",
                             "period": "afternoon",
@@ -94,13 +103,15 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "B1", "qc01": "B3", "qc02": "B7", "qc03": "B8" },
                             "comment": ""
                         },
                         {
                             "name": "Experiment3",
-                            "description": "",
                             "trips": 2,
                             "directions": "RF",
                             "period": "afternoon",
@@ -108,7 +119,10 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "LTE", "qc01": "All", "qc02": "B7B8", "qc03": "B7" },
                             "comment": ""
                         }
@@ -116,7 +130,6 @@
                     "2023-04-17": [
                         {
                             "name": "Bandlock_Udp_All_LTE_B1B3_B3B7_RM500Q",
-                            "description": "",
                             "trips": 4,
                             "directions": "RFRF",
                             "period": "afternoon",
@@ -124,13 +137,15 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "All", "qc01": "LTE", "qc02": "B1B3", "qc03": "B3B7" },
                             "comment": ""
                         },
                         {
                             "name": "Bandlock_Udp_All_LTE_B1B7_B7B8_RM500Q",
-                            "description": "",
                             "trips": 4,
                             "directions": "RFRF",
                             "period": "afternoon",
@@ -138,13 +153,15 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "All", "qc01": "LTE", "qc02": "B1B7", "qc03": "B7B8" },
                             "comment": ""
                         },
                         {
                             "name": "Bandlock_Udp_All_LTE_B1B8_B3B8_RM500Q",
-                            "description": "",
                             "trips": 4,
                             "directions": "RFRF",
                             "period": "afternoon",
@@ -152,13 +169,15 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "All", "qc01": "LTE", "qc02": "B1B8", "qc03": "B3B8" },
                             "comment": ""
                         },
                         {
                             "name": "Bandlock_Udp_All_LTE_All_LTE_RM500Q",
-                            "description": "",
                             "trips": 4,
                             "directions": "FFRF",
                             "period": "afternoon",
@@ -166,13 +185,15 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "All", "qc01": "LTE", "qc02": "All", "qc03": "LTE" },
                             "comment": ""
                         },
                         {
                             "name": "Bandlock_Udp_All_LTE_B1_B3_RM500Q",
-                            "description": "",
                             "trips": 2,
                             "directions": "RF",
                             "period": "afternoon",
@@ -180,13 +201,15 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "All", "qc01": "LTE", "qc02": "B1", "qc03": "B3" },
                             "comment": ""
                         },
                         {
                             "name": "Bandlock_Udp_All_LTE_B7_B8_RM500Q",
-                            "description": "",
                             "trips": 2,
                             "directions": "RF",
                             "period": "afternoon",
@@ -194,15 +217,17 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "All", "qc01": "LTE", "qc02": "B7", "qc03": "B8" },
                             "comment": ""
                         }
                     ],
                     "2023-05-04": [
                         {
-                            "name": "6",
-                            "description": "",
+                            "name": "Bandlock_8_Schemes_Phone",
                             "trips": 6,
                             "directions": "RFRFRF",
                             "period": "afternoon",
@@ -210,7 +235,10 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "phone",
+                            "terminal": "",
                             "settings": { "sm00": "B3B7B8", "sm01": "B3", "sm02": "B7", "sm03": "B8", "sm04": "B3B7", "sm05": "B3B8", "sm06": "B7B8", "sm07": "LTE" },
                             "comment": ""
                         }
@@ -218,7 +246,6 @@
                     "2023-05-07": [
                         {
                             "name": "Bandlock_8_Schemes_Phone",
-                            "description": "",
                             "trips": 7,
                             "directions": "RFRFRFR",
                             "period": "afternoon",
@@ -226,7 +253,10 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "phone",
+                            "terminal": "",
                             "settings": { "sm00": "B3B7B8", "sm01": "B3", "sm02": "B7", "sm03": "B8", "sm04": "B3B7", "sm05": "B3B8", "sm06": "B7B8", "sm07": "LTE" },
                             "comment": ""
                         }
@@ -234,7 +264,6 @@
                     "2023-05-15": [
                         {
                             "name": "Bandlock_8_Schemes_Phone",
-                            "description": "",
                             "trips": 4,
                             "directions": "RFRF",
                             "period": "afternoon",
@@ -242,15 +271,17 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "phone",
+                            "terminal": "",
                             "settings": { "sm00": "B3B7B8", "sm01": "B3", "sm02": "B7", "sm03": "B8", "sm04": "B3B7", "sm05": "B3B8", "sm06": "B7B8", "sm07": "LTE" },
                             "comment": ""
                         }
                     ],
                     "2023-05-24": [
                         {
-                            "name": "1",
-                            "description": "",
+                            "name": "Bandlock_8_Schemes_Phone",
                             "trips": 8,
                             "directions": "RFRFRFRF",
                             "period": "afternoon",
@@ -258,7 +289,10 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "phone",
+                            "terminal": "",
                             "settings": { "sm00": "B3B7B8", "sm01": "B3", "sm02": "B7", "sm03": "B8", "sm04": "B3B7", "sm05": "B3B8", "sm06": "B7B8", "sm07": "LTE" },
                             "comment": ""
                         }
@@ -266,7 +300,6 @@
                     "2023-05-26": [
                         {
                             "name": "Bandlock_8_Schemes_Phone",
-                            "description": "",
                             "trips": 10,
                             "directions": "RFRFRFRFRF",
                             "period": "afternoon",
@@ -274,15 +307,17 @@
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "phone",
+                            "terminal": "",
                             "settings": { "sm00": "B3B7B8", "sm01": "B3", "sm02": "B7", "sm03": "B8", "sm04": "B3B7", "sm05": "B3B8", "sm06": "B7B8", "sm07": "LTE" },
                             "comment": ""
                         }
                     ],
                     "2023-06-12": [
                         {
-                            "name": "1",
-                            "description": "",
+                            "name": "Bandlock_8_Schemes_Phone",
                             "trips": 10,
                             "directions": "RFRFRFRFRF",
                             "period": "afternoon",
@@ -290,7 +325,10 @@
                             "gps": "no",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "phone",
+                            "terminal": "",
                             "settings": { "sm00": "B3B7B8", "sm01": "B3", "sm02": "B7", "sm03": "B8", "sm04": "B3B7", "sm05": "B3B8", "sm06": "B7B8", "sm07": "LTE" },
                             "comment": ""
                         }
@@ -298,7 +336,6 @@
                     "2023-06-13": [
                         {
                             "name": "Bandlock_8_Schemes_Phone",
-                            "description": "",
                             "trips": 9,
                             "directions": "FRFRFRFRF",
                             "period": "afternoon",
@@ -306,15 +343,17 @@
                             "gps": "no",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "phone",
+                            "terminal": "",
                             "settings": { "sm00": "B3B7B8", "sm01": "B3", "sm02": "B7", "sm03": "B8", "sm04": "B3B7", "sm05": "B3B8", "sm06": "B7B8", "sm07": "LTE" },
                             "comment": "#01 實驗失敗, 因此編號為 #02-#10."
                         }
                     ],
                     "2023-06-14": [
                         {
-                            "name": "2",
-                            "description": "",
+                            "name": "Modem_Action_Test",
                             "trips": 2,
                             "directions": "RF",
                             "period": "afternoon",
@@ -322,7 +361,10 @@
                             "gps": "no",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "test", "qc03": "test" },
                             "comment": ""
                         }
@@ -330,7 +372,6 @@
                     "2023-06-15": [
                         {
                             "name": "Bandlock_B1_B3_B7_B8_Dupl_Phone",
-                            "description": "",
                             "trips": 4,
                             "directions": "RFRF",
                             "period": "afternoon",
@@ -338,13 +379,15 @@
                             "gps": "no",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "phone",
+                            "terminal": "",
                             "settings": { "sm00": "B1", "sm01": "B1", "sm02": "B3", "sm03": "B3", "sm04": "B7", "sm05": "B7", "sm06": "B8", "sm07": "B8" },
                             "comment": ""
                         },
                         {
                             "name": "Bandlock_All_B3_B7_B8_Dupl_Phone",
-                            "description": "",
                             "trips": 4,
                             "directions": "RFRF",
                             "period": "afternoon",
@@ -352,13 +395,15 @@
                             "gps": "no",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "phone",
+                            "terminal": "",
                             "settings": { "sm00": "All", "sm01": "All", "sm02": "B3", "sm03": "B3", "sm04": "B7", "sm05": "B7", "sm06": "B8", "sm07": "B8" },
                             "comment": ""
                         },
                         {
                             "name": "Bandlock_LTE_B3_B7_B8_Dupl_Phone",
-                            "description": "",
                             "trips": 6,
                             "directions": "RFRFRF",
                             "period": "afternoon",
@@ -366,13 +411,15 @@
                             "gps": "no",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "phone",
+                            "terminal": "",
                             "settings": { "sm00": "LTE", "sm01": "LTE", "sm02": "B3", "sm03": "B3", "sm04": "B7", "sm05": "B7", "sm06": "B8", "sm07": "B8" },
                             "comment": ""
                         },
                         {
                             "name": "Bandlock_LTE_LTEb3_LTEb7_LTEb8_Dupl_Phone",
-                            "description": "",
                             "trips": 4,
                             "directions": "RFRF",
                             "period": "afternoon",
@@ -380,13 +427,15 @@
                             "gps": "no",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "phone",
+                            "terminal": "",
                             "settings": { "sm00": "LTE", "sm01": "LTE", "sm02": "LTEb3", "sm03": "LTEb3", "sm04": "LTEb7", "sm05": "LTEb7", "sm06": "LTEb8", "sm07": "LTEb8" },
                             "comment": "sm03 #03 沒有 mi2log."
                         },
                         {
                             "name": "Bandlock_LTEb1_LTEb3_LTEb7_LTEb8_Dupl_Phone",
-                            "description": "",
                             "trips": 4,
                             "directions": "RFRF",
                             "period": "afternoon",
@@ -394,7 +443,10 @@
                             "gps": "no",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "phone",
+                            "terminal": "",
                             "settings": { "sm00": "LTEb1", "sm01": "LTEb1", "sm02": "LTEb3", "sm03": "LTEb3", "sm04": "LTEb7", "sm05": "LTEb7", "sm06": "LTEb8", "sm07": "LTEb8" },
                             "comment": ""
                         }
@@ -402,7 +454,6 @@
                     "2023-06-21": [
                         {
                             "name": "Modem_Action_Test",
-                            "description": "",
                             "trips": 4,
                             "directions": "RFRF",
                             "period": "afternoon",
@@ -410,7 +461,10 @@
                             "gps": "no",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "test", "qc03": "test" },
                             "comment": ""
                         }
@@ -418,7 +472,6 @@
                     "2023-06-24": [
                         {
                             "name": "Control_Group",
-                            "description": "",
                             "trips": 6,
                             "directions": "RFRFRF",
                             "period": "afternoon",
@@ -426,13 +479,15 @@
                             "gps": "no",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "All", "qc03": "All" },
                             "comment": ""
                         },
                         {
                             "name": "Modem_Action_Test",
-                            "description": "",
                             "trips": 5,
                             "directions": "RRFRF",
                             "period": "afternoon",
@@ -440,7 +495,10 @@
                             "gps": "no",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "test", "qc03": "test" },
                             "comment": ""
                         }
@@ -448,7 +506,6 @@
                     "2023-08-29": [
                         {
                             "name": "Modem_Action_Test",
-                            "description": "",
                             "trips": 4,
                             "directions": "RFRF",
                             "period": "afternoon",
@@ -456,13 +513,15 @@
                             "gps": "no",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "test", "qc03": "test" },
                             "comment": ""
                         },
                         {
                             "name": "Modem_Control_Group",
-                            "description": "",
                             "trips": 6,
                             "directions": "RFRFRF",
                             "period": "afternoon",
@@ -470,7 +529,10 @@
                             "gps": "no",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "modem",
+                            "terminal": "",
                             "settings": { "qc00": "All", "qc03": "All" },
                             "comment": ""
                         }
@@ -483,7 +545,6 @@
                     "2023-08-16": [
                         {
                             "name": "Phone_Experiment_LTE_NR",
-                            "description": "",
                             "trips": 6,
                             "directions": "RFRFRF",
                             "period": "afternoon",
@@ -491,7 +552,10 @@
                             "gps": "no",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "phone",
+                            "terminal": "",
                             "settings": { "sm00": "LTE", "sm01": "All" },
                             "comment": ""
                         }
@@ -504,7 +568,6 @@
                     "2023-08-21": [
                         {
                             "name": "Phone_Experiment_LTE_NR",
-                            "description": "",
                             "trips": 6,
                             "directions": "FRFRFR",
                             "period": "afternoon",
@@ -512,7 +575,10 @@
                             "gps": "no",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "phone",
+                            "terminal": "",
                             "settings": { "sm00": "All", "sm01": "LTE" },
                             "comment": ""
                         }
@@ -522,18 +588,43 @@
             "動物園:南港展覽館": {
                 "stations": ["動物園", "木柵", "萬芳社區", "萬芳醫院", "辛亥", "麟光", "六張犁", "科技大樓", "大安", "忠孝復興", "南京復興", "中山國中", "松山機場", "大直", "劍南路", "西湖", "港墘", "文德", "內湖", "大湖公園", "葫洲", "東湖", "南港軟體園區", "南港展覽館"],
                 "dates": {
-                    "2023-09-11": [
+                    "2023-09-12_2": [
                         {
-                            "name": "Bandlock_9_Schemes_Phone",
-                            "description": "",
+                            "name": "Bandlock_9_Schemes_Phone_UDP",
                             "trips": 2,
                             "directions": "FR",
-                            "period": "",
-                            "weather": "",
+                            "period": "afternoon",
+                            "weather": "sunny",
                             "gps": "yes",
                             "telecom": "CHT",
                             "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
                             "device": "phone",
+                            "terminal": "",
+                            "settings": { "sm00": "All", "sm01": "All", "sm02": "B3", "sm03": "B7", "sm04": "B8", "sm05": "B3B7", "sm06": "B3B8", "sm07": "B7B8", "sm08": "LTE" },
+                            "comment": ""
+                        }
+                    ]
+                }
+            },
+            "動物園:麟光": {
+                "stations": ["動物園", "木柵", "萬芳社區", "萬芳醫院", "辛亥", "麟光"],
+                "dates": {
+                    "2023-09-12_2": [
+                        {
+                            "name": "Bandlock_9_Schemes_Phone_TCP",
+                            "trips": 1,
+                            "directions": "F",
+                            "period": "afternoon",
+                            "weather": "sunny",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "TCP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
+                            "device": "phone",
+                            "terminal": "",
                             "settings": { "sm00": "All", "sm01": "All", "sm02": "B3", "sm03": "B7", "sm04": "B8", "sm05": "B3B7", "sm06": "B3B8", "sm07": "B7B8", "sm08": "LTE" },
                             "comment": ""
                         }
@@ -566,7 +657,7 @@
         "routes": {}
     },
     "Y": {
-        "name": "Circular Line (Yellow): 環狀線",
+        "name": "Yellow Line: 環狀線",
         "stations": ["大坪林", "十四張", "秀朗橋", "景平", "景安", "中和", "橋和", "中原", "板新", "板橋", "新埔民生", "頭前庄", "幸福", "新北產業園區"],
         "routes": {}
     },
