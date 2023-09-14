@@ -3,6 +3,8 @@
 ## 實驗紀錄
 
 ### 實驗設定
+- perioid: [morning/afternoon/evening/late_night]
+- weather: [sunny/cloudy/rainy]
 - Protocol: [UDP/TCP]
 - Telecom: [CHT/TWM/FET]
 - Length: (default 250 bytes)
@@ -24,8 +26,7 @@
 | 南港展覽館 |  |  |
 
    {
-      "name": "Bandlock_9_Schemes_Phone",
-      "description": "",
+      "name": "UDP_Phone_NR_LTE",
       "trips": 2,
       "directions": "FR",
       "period": "afternoon",
@@ -36,7 +37,8 @@
       "length": "250 bytes",
       "bitrate": "1 Mbps",
       "device": "phone",
-      "settings": { "sm00": "All", "sm01": "All", "sm02": "B3", "sm03": "B7", "sm04": "B8", "sm05": "B3B7", "sm06": "B3B8", "sm07": "B7B8", "sm08": "LTE" },
+      "terminal": "",
+      "settings": { "sm00": "All", "sm01": "LTE" },
       "comment": ""
    }
 
