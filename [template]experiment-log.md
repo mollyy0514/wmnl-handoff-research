@@ -53,7 +53,6 @@
 
    {
       "name": "Bandlock_9_Schemes_Phone",
-      "description": "",
       "trips": 2,
       "directions": "FR",
       "period": "afternoon",
@@ -64,6 +63,7 @@
       "length": "250 bytes",
       "bitrate": "1 Mbps",
       "device": "phone",
+      "terminal": "",
       "settings": {},
       "comment": ""
    }
@@ -79,7 +79,6 @@
 
    {
       "name": "Bandlock_9_Schemes_Phone",
-      "description": "",
       "trips": 2,
       "directions": "FR",
       "period": "afternoon",
@@ -90,6 +89,7 @@
       "length": "250 bytes",
       "bitrate": "1 Mbps",
       "device": "phone",
+      "terminal": "",
       "settings": {},
       "comment": ""
    }
