@@ -94,6 +94,12 @@ class ServerIP:
     # PUBLIC = "140.112.17.209"  # 3F
     # PRIVATE = "192.168.1.108"  # 3F
 
+class GParam:
+    TRANS = 4
+    RECV = 0
+    TCP = 6
+    UDP = 17
+
 # DATA_RATE = 1000e3  # bits-per-second
 # PKT_RATE = DATA_RATE / Payload.LENGTH / 8  # packets-per-second
 # print("packet_rate (pps):", PKT_RATE, "\n")
