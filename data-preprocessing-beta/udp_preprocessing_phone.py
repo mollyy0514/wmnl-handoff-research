@@ -380,30 +380,14 @@ from mi2log.mi_offline_analysis import mi_decode, error_handling
 # from udp.parse_info import filter, parse_packet_info, parse_brief_info
 from udp.parse_info_v2 import parse_packet_info
 
-# def fgetter(direction, terminal):
-#     if direction == "uplink" and terminal == "client":
-#         tags = ("client_pcap_BL", "client_pcap_UL")
-#     elif direction == "downlink" and terminal == "client":
-#         tags = ("client_pcap_BL", "client_pcap_DL")
-#     elif direction == "uplink" and terminal == "server":
-#         tags = ("server_pcap_BL", "server_pcap_UL")
-#     elif direction == "downlink" and terminal == "server":
-#         tags = ("server_pcap_BL", "server_pcap_DL")
-#     for filename in filenames:
-#         if filename.startswith(tags) and filename.endswith(".csv"):
-#             print(">>>>>", os.path.join(source_dir, filename))
-#             return os.path.join(source_dir, filename)
-#     print("No candidate file.")
-#     return None
-
 def fgetter(direction, terminal):
-    if direction == "ul" and terminal == "client":
+    if direction == "uplink" and terminal == "client":
         tags = ("client_pcap_BL", "client_pcap_UL")
-    elif direction == "dl" and terminal == "client":
+    elif direction == "downlink" and terminal == "client":
         tags = ("client_pcap_BL", "client_pcap_DL")
-    elif direction == "ul" and terminal == "server":
+    elif direction == "uplink" and terminal == "server":
         tags = ("server_pcap_BL", "server_pcap_UL")
-    elif direction == "dl" and terminal == "server":
+    elif direction == "downlink" and terminal == "server":
         tags = ("server_pcap_BL", "server_pcap_DL")
     for filename in filenames:
         if filename.startswith(tags) and filename.endswith(".csv"):
@@ -411,6 +395,22 @@ def fgetter(direction, terminal):
             return os.path.join(source_dir, filename)
     print("No candidate file.")
     return None
+
+# def fgetter(direction, terminal):
+#     if direction == "ul" and terminal == "client":
+#         tags = ("client_pcap_BL", "client_pcap_UL")
+#     elif direction == "dl" and terminal == "client":
+#         tags = ("client_pcap_BL", "client_pcap_DL")
+#     elif direction == "ul" and terminal == "server":
+#         tags = ("server_pcap_BL", "server_pcap_UL")
+#     elif direction == "dl" and terminal == "server":
+#         tags = ("server_pcap_BL", "server_pcap_DL")
+#     for filename in filenames:
+#         if filename.startswith(tags) and filename.endswith(".csv"):
+#             print(">>>>>", os.path.join(source_dir, filename))
+#             return os.path.join(source_dir, filename)
+#     print("No candidate file.")
+#     return None
 
 # def main():
 #     ### detailed information for each udp packet's frame
