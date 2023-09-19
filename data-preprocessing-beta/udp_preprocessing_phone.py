@@ -25,11 +25,12 @@ from myutils import makedir
 database = "/home/wmnlab/D/database/"
 # database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
 dates = [
-    "2023-08-16",
+    "2023-09-12_2",
 ]
 json_files = [
-    ["time_sync_sm00.json", "time_sync_sm01.json",] #"time_sync_sm02.json", "time_sync_sm03.json",
-     #"time_sync_sm04.json", "time_sync_sm05.json", "time_sync_sm06.json", "time_sync_sm07.json",],
+    ["time_sync_sm00.json", "time_sync_sm01.json", "time_sync_sm02.json", "time_sync_sm03.json",
+     "time_sync_sm04.json", "time_sync_sm05.json", "time_sync_sm06.json", "time_sync_sm07.json",
+     "time_sync_sm08.json"],
 ]
 json_files = [[os.path.join(database, date, json_file) for json_file in _json_files] for date, _json_files in zip(dates, json_files)]
 
@@ -43,7 +44,8 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
     # "Bandlock_LTE_B3_B7_B8_Dupl_Phone": (6, ["#{:02d}".format(i+1) for i in range(6)]),
     # "Bandlock_LTE_LTEb3_LTEb7_LTEb8_Dupl_Phone": (4, ["#{:02d}".format(i+1) for i in range(4)]),
     # "Bandlock_LTEb1_LTEb3_LTEb7_LTEb8_Dupl_Phone": (4, ["#{:02d}".format(i+1) for i in range(4)]),
-    "Phone_Experiment_LTE_NR": (6, ["#{:02d}".format(i+1) for i in range(6)]),
+    # "Phone_Experiment_LTE_NR": (6, ["#{:02d}".format(i+1) for i in range(6)]),
+    "Bandlock_9_Schemes_Phone_UDP": (2, ["#{:02d}".format(i+1) for i in range(2)]),
 }
 _devices = [
     # ["qc00", "qc01", "qc02", "qc03"],
@@ -58,9 +60,10 @@ _devices = [
     # ["sm00", "sm01", "sm02", "sm03", "sm04", "sm05", "sm06", "sm07",],
     # ["sm00", "sm01", "sm02", "sm03", "sm04", "sm05", "sm06", "sm07",],
     # ["sm00", "sm01", "sm02", "sm03", "sm04", "sm05", "sm06", "sm07",],
-    ["sm00", "sm01",],
+    # ["sm00", "sm01",],
     # ["sm00",],
     # ["sm01",],
+    ["sm00", "sm01", "sm02", "sm03", "sm04", "sm05", "sm06", "sm07", "sm08",],
 ]
 _schemes = [
     # ["All", "LTE", "B1B3", "B3B7"],
