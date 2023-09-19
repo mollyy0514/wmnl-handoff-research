@@ -377,16 +377,33 @@ if not flag and err_handles:
 t.toc()  # Time elapsed since t.tic()
 # *****************************************************************************
 
-from udp.parse_info import filter, parse_packet_info, parse_brief_info
+# from udp.parse_info import filter, parse_packet_info, parse_brief_info
+from udp.parse_info_v2 import parse_packet_info
+
+# def fgetter(direction, terminal):
+#     if direction == "uplink" and terminal == "client":
+#         tags = ("client_pcap_BL", "client_pcap_UL")
+#     elif direction == "downlink" and terminal == "client":
+#         tags = ("client_pcap_BL", "client_pcap_DL")
+#     elif direction == "uplink" and terminal == "server":
+#         tags = ("server_pcap_BL", "server_pcap_UL")
+#     elif direction == "downlink" and terminal == "server":
+#         tags = ("server_pcap_BL", "server_pcap_DL")
+#     for filename in filenames:
+#         if filename.startswith(tags) and filename.endswith(".csv"):
+#             print(">>>>>", os.path.join(source_dir, filename))
+#             return os.path.join(source_dir, filename)
+#     print("No candidate file.")
+#     return None
 
 def fgetter(direction, terminal):
-    if direction == "uplink" and terminal == "client":
+    if direction == "ul" and terminal == "client":
         tags = ("client_pcap_BL", "client_pcap_UL")
-    elif direction == "downlink" and terminal == "client":
+    elif direction == "dl" and terminal == "client":
         tags = ("client_pcap_BL", "client_pcap_DL")
-    elif direction == "uplink" and terminal == "server":
+    elif direction == "ul" and terminal == "server":
         tags = ("server_pcap_BL", "server_pcap_UL")
-    elif direction == "downlink" and terminal == "server":
+    elif direction == "dl" and terminal == "server":
         tags = ("server_pcap_BL", "server_pcap_DL")
     for filename in filenames:
         if filename.startswith(tags) and filename.endswith(".csv"):
@@ -394,6 +411,75 @@ def fgetter(direction, terminal):
             return os.path.join(source_dir, filename)
     print("No candidate file.")
     return None
+
+# def main():
+#     ### detailed information for each udp packet's frame
+#     # udp_uplk_client_pkt_info   # udp ultx detailed info
+#     # udp_uplk_server_pkt_info   # udp ulrx detailed info
+#     # udp_dnlk_server_pkt_info   # udp dltx detailed info
+#     # udp_dnlk_client_pkt_info   # udp dlrx detailed info
+
+#     ### brief information for each udp packet
+#     # udp_uplk_client_pkt_brief  # udp ultx brief info
+#     # udp_uplk_server_pkt_brief  # udp ulrx brief info
+#     # udp_dnlk_server_pkt_brief  # udp dltx brief info
+#     # udp_dnlk_client_pkt_brief  # udp dlrx brief info
+
+#     ### dirpath
+#     # source_dir
+#     # target_dir
+
+#     ### parse detailed information & brief information for each packet
+    
+#     ## client_pcap_BL or client_pcap_UL
+#     filepath = fgetter("uplink", "client")
+#     if filepath:
+#         t1 = TicToc()  # create instance of class
+#         t1.tic()       # Start timer
+#         df = pd.read_csv(filepath, sep='@')
+#         df_ultx = filter(df.copy(), "uplink", "client", "udp")
+#         df_ultx = parse_packet_info(df_ultx, os.path.join(target_dir, "udp_uplk_client_pkt_info.csv"))
+#         df_ultx = parse_brief_info(df_ultx, os.path.join(target_dir, "udp_uplk_client_pkt_brief.csv"))
+#         os.system(f'rm {os.path.join(target_dir, "udp_uplk_client_pkt_info.csv")}') # Remove
+#         t1.toc()  # Time elapsed since t1.tic()
+    
+#     ## client_pcap_BL or client_pcap_DL
+#     filepath = fgetter("downlink", "client")
+#     if filepath:
+#         t1 = TicToc()  # create instance of class
+#         t1.tic()       # Start timer
+#         df = pd.read_csv(filepath, sep='@')
+#         df_dlrx = filter(df.copy(), "downlink", "client", "udp")
+#         df_dlrx = parse_packet_info(df_dlrx, os.path.join(target_dir, "udp_dnlk_client_pkt_info.csv"))
+#         df_dlrx = parse_brief_info(df_dlrx, os.path.join(target_dir, "udp_dnlk_client_pkt_brief.csv"))
+#         os.system(f'rm {os.path.join(target_dir, "udp_dnlk_client_pkt_info.csv")}') # Remove
+#         t1.toc()  # Time elapsed since t1.tic()
+
+#     ## server_pcap_BL or server_pcap_UL
+#     filepath = fgetter("uplink", "server")
+#     if filepath:
+#         t1 = TicToc()  # create instance of class
+#         t1.tic()       # Start timer
+#         df = pd.read_csv(filepath, sep='@')
+#         df_ulrx = filter(df.copy(), "uplink", "server", "udp")
+#         df_ulrx = parse_packet_info(df_ulrx, os.path.join(target_dir, "udp_uplk_server_pkt_info.csv"))
+#         df_ulrx = parse_brief_info(df_ulrx, os.path.join(target_dir, "udp_uplk_server_pkt_brief.csv"))
+#         os.system(f'rm {os.path.join(target_dir, "udp_uplk_server_pkt_info.csv")}') # Remove
+#         t1.toc()  # Time elapsed since t1.tic()
+    
+#     ## server_pcap_BL or server_pcap_DL
+#     filepath = fgetter("downlink", "server")
+#     if filepath:
+#         t1 = TicToc()  # create instance of class
+#         t1.tic()       # Start timer
+#         df = pd.read_csv(filepath, sep='@')
+#         df_dltx = filter(df.copy(), "downlink", "server", "udp")
+#         df_dltx = parse_packet_info(df_dltx, os.path.join(target_dir, "udp_dnlk_server_pkt_info.csv"))
+#         df_dltx = parse_brief_info(df_dltx, os.path.join(target_dir, "udp_dnlk_server_pkt_brief.csv"))
+#         os.system(f'rm {os.path.join(target_dir, "udp_dnlk_server_pkt_info.csv")}') # Remove
+#         t1.toc()  # Time elapsed since t1.tic()
+#     print()
+#     return
 
 def main():
     ### detailed information for each udp packet's frame
@@ -419,11 +505,7 @@ def main():
     if filepath:
         t1 = TicToc()  # create instance of class
         t1.tic()       # Start timer
-        df = pd.read_csv(filepath, sep='@')
-        df_ultx = filter(df.copy(), "uplink", "client", "udp")
-        df_ultx = parse_packet_info(df_ultx, os.path.join(target_dir, "udp_uplk_client_pkt_info.csv"))
-        df_ultx = parse_brief_info(df_ultx, os.path.join(target_dir, "udp_uplk_client_pkt_brief.csv"))
-        os.system(f'rm {os.path.join(target_dir, "udp_uplk_client_pkt_info.csv")}') # Remove
+        parse_packet_info(filepath, os.path.join(target_dir, "udp_uplk_client_pkt_brief.csv"), "client", "ul", "udp")
         t1.toc()  # Time elapsed since t1.tic()
     
     ## client_pcap_BL or client_pcap_DL
@@ -431,11 +513,7 @@ def main():
     if filepath:
         t1 = TicToc()  # create instance of class
         t1.tic()       # Start timer
-        df = pd.read_csv(filepath, sep='@')
-        df_dlrx = filter(df.copy(), "downlink", "client", "udp")
-        df_dlrx = parse_packet_info(df_dlrx, os.path.join(target_dir, "udp_dnlk_client_pkt_info.csv"))
-        df_dlrx = parse_brief_info(df_dlrx, os.path.join(target_dir, "udp_dnlk_client_pkt_brief.csv"))
-        os.system(f'rm {os.path.join(target_dir, "udp_dnlk_client_pkt_info.csv")}') # Remove
+        parse_packet_info(filepath, os.path.join(target_dir, "udp_dnlk_client_pkt_brief.csv"), "client", "dl", "udp")
         t1.toc()  # Time elapsed since t1.tic()
 
     ## server_pcap_BL or server_pcap_UL
@@ -443,11 +521,7 @@ def main():
     if filepath:
         t1 = TicToc()  # create instance of class
         t1.tic()       # Start timer
-        df = pd.read_csv(filepath, sep='@')
-        df_ulrx = filter(df.copy(), "uplink", "server", "udp")
-        df_ulrx = parse_packet_info(df_ulrx, os.path.join(target_dir, "udp_uplk_server_pkt_info.csv"))
-        df_ulrx = parse_brief_info(df_ulrx, os.path.join(target_dir, "udp_uplk_server_pkt_brief.csv"))
-        os.system(f'rm {os.path.join(target_dir, "udp_uplk_server_pkt_info.csv")}') # Remove
+        parse_packet_info(filepath, os.path.join(target_dir, "udp_uplk_server_pkt_brief.csv"), "server", "ul", "udp")
         t1.toc()  # Time elapsed since t1.tic()
     
     ## server_pcap_BL or server_pcap_DL
@@ -455,13 +529,31 @@ def main():
     if filepath:
         t1 = TicToc()  # create instance of class
         t1.tic()       # Start timer
-        df = pd.read_csv(filepath, sep='@')
-        df_dltx = filter(df.copy(), "downlink", "server", "udp")
-        df_dltx = parse_packet_info(df_dltx, os.path.join(target_dir, "udp_dnlk_server_pkt_info.csv"))
-        df_dltx = parse_brief_info(df_dltx, os.path.join(target_dir, "udp_dnlk_server_pkt_brief.csv"))
-        os.system(f'rm {os.path.join(target_dir, "udp_dnlk_server_pkt_info.csv")}') # Remove
+        parse_packet_info(filepath, os.path.join(target_dir, "udp_dnlk_server_pkt_brief.csv"), "server", "dl", "udp")
         t1.toc()  # Time elapsed since t1.tic()
     print()
+    
+    files = ["udp_uplk_server_pkt_brief.csv", "udp_uplk_client_pkt_brief.csv", "udp_dnlk_server_pkt_brief.csv", "udp_dnlk_client_pkt_brief.csv"]
+    files = [os.path.join(target_dir, s) for s in files]
+
+    st_t = []
+    ed_t = []
+    for file in files:
+        df = pd.read_csv(file)
+        df['frame_time'] = pd.to_datetime(df['frame_time'])
+        st_t.append(df.iloc[0]['frame_time'] - pd.Timedelta(seconds=5))
+        ed_t.append(df.iloc[-1]['frame_time'] + pd.Timedelta(seconds=5))
+        del df
+
+    st_t = max(st_t)
+    ed_t = min(ed_t)
+
+    for file in files:
+        df = pd.read_csv(file)
+        df['frame_time'] = pd.to_datetime(df['frame_time'])
+        df = df[(df['frame_time'] > st_t) & (df['frame_time'] < ed_t)]
+        df.to_csv(file, index=False)
+        
     return
 
 # ******************************* Check Files *********************************
