@@ -605,6 +605,24 @@
                             "settings": { "sm00": "All", "sm01": "All", "sm02": "B3", "sm03": "B7", "sm04": "B8", "sm05": "B3B7", "sm06": "B3B8", "sm07": "B7B8", "sm08": "LTE" },
                             "comment": ""
                         }
+                    ],
+                    "2023-09-21": [
+                        {
+                            "name": "Bandlock_9_Schemes_Phone_UDP",
+                            "trips": 2,
+                            "directions": ["動物園:南港展覽館", "南港展覽館:動物園"],
+                            "period": "afternoon",
+                            "weather": "cloudy",
+                            "gps": "yes",
+                            "telecom": "CHT",
+                            "protocol": "UDP",
+                            "length": "250 bytes",
+                            "bitrate": "1 Mbps",
+                            "device": "phone",
+                            "terminal": "lpt2",
+                            "settings": { "sm00": "All", "sm01": "All", "sm02": "B3", "sm03": "B7", "sm04": "B8", "sm05": "B3B7", "sm06": "B3B8", "sm07": "B7B8", "sm08": "LTE" },
+                            "comment": ""
+                        }
                     ]
                 }
             },

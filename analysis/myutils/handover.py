@@ -286,8 +286,14 @@ def mi_parse_ho(df, tz=0, debug=False):
                 end, j = None, None
                 _pcell = peek_eci()
             else:
-                end = a if a > b else b
-                j = j1 if a > b else j2
+                try:
+                    end = a if a > b else b
+                except:
+                    end = a
+                try:
+                    j = j1 if a > b else j2
+                except:
+                    j = j1
                 _pcell = peek_eci(pos=j)
             D['Conn_Setup'].append(HO(start=t, end=end))
             A['Conn_Setup'].append(C(*HO(start=t, end=end), *stLTE(tPCI=pci, tFreq=freq), *stNR(), *pcell, *_pcell, *pscell, *pscell))
