@@ -1,87 +1,164 @@
-df1 = dfs['nr'][0].copy()
-df2 = dfs['nr'][1].copy()
+# *********************************** HO ***********************************
+ho_types = ['LTEH', 'ENBH', 'MCGH', 'MNBH', 'SCGM',
+            'SCGA', 'SCGR-I', 'SCGC-I', 'SCGR-II', 'SCGC-II']
 
-df1 = df1[df1['serv_cel_index'] == 'PSCell'][['Timestamp', 'PCI', 'NR_ARFCN', 'RSRP', 'RSRQ']].reset_index(drop=True)
-df2 = df2[df2['serv_cel_index'] == 'PSCell'][['Timestamp', 'PCI', 'NR_ARFCN', 'RSRP', 'RSRQ']].reset_index(drop=True)
+df_ho = sr_table_ul[np.in1d(sr_table_ul.index.get_level_values(0), ho_types)].copy().reset_index()
+df_ho['type'] = df_ho['type'].astype('category').cat.set_categories(ho_types)
+df_ho = df_ho.sort_values(by=['type', 'stage']).reset_index(drop=True)
 
-axes[10].plot([], [], color='tab:red', alpha=0.7, label='nr_rsrp_radio1')
-axes[10].plot([], [], color='tab:green', alpha=0.7, label='nr_rsrp_radio2')
+# *********************************** Loss Rate ***********************************
+event_frequency = df_ho.loc[df_ho['stage'] == '-', 'Frequency (/hr)'].to_list()
+before_event_loss_rate = df_ho.loc[df_ho['stage'] == 'before', 'lost_r (%)'].to_list()
+during_event_loss_rate = df_ho.loc[df_ho['stage'] == 'during', 'lost_r (%)'].to_list()
+after_event_loss_rate = df_ho.loc[df_ho['stage'] == 'after', 'lost_r (%)'].to_list()
+stable_loss_rate = sr_table_ul.at[('stable', '-'), 'lost_r (%)']
 
-ax_twinx = axes[10].twinx()
-ax_twinx.plot(df1['Timestamp'], df1['RSRP'], color='tab:red', alpha=0.7, label='nr_rsrp_radio1')
-ax_twinx.plot(df2['Timestamp'], df2['RSRP'], color='tab:green', alpha=0.7, label='nr_rsrp_radio2')
-ax_twinx.set_ylim(-156, -31)
-ax_twinx.axhline(y=-110, color='gray', linestyle='--', linewidth=1.1)
+x = np.arange(len(ho_types))  # the label locations
+width = 0.2  # the width of the bars
+space = 0.55
 
-def drop_unchanged(df):
-    
-    df['prev_PCI'] = df['PCI'].shift(1)
-    df['prev_NR_ARFCN'] = df['NR_ARFCN'].shift(1)
-    df['handover'] = (df['PCI'] != df['prev_PCI']) | (df['NR_ARFCN'] != df['prev_NR_ARFCN'])
-    df.loc[0, 'handover'] = True
-    
-    df = df[df['handover']].reset_index(drop=True).drop(['prev_PCI', 'prev_NR_ARFCN'], axis=1)
-    df['duplicate'] = df.duplicated(subset=['PCI', 'NR_ARFCN'])
-    
-    pairs = [(pci, earfcn) for pci, earfcn in zip(df[~df['duplicate']]['PCI'].array, df[~df['duplicate']]['NR_ARFCN'].array)]
-    
-    return df, pairs
+fig, ax = plt.subplots(figsize=(6, 4))
+rects1 = ax.bar(x - space/3, before_event_loss_rate, width, label='Before')
+rects2 = ax.bar(x          , during_event_loss_rate, width, label='During')
+rects3 = ax.bar(x + space/3, after_event_loss_rate, width, label='After')
+ax.axhline(stable_loss_rate, c = 'tab:pink', linestyle='--', linewidth=1, label='Stable PLR')
+ax.set_ylim(bottom=0)
 
-def drop_duplicate(my_list):
-    unique_list = []
-    seen = set()
-    
-    for item in my_list:
-        if item not in seen:
-            unique_list.append(item)
-            seen.add(item)
+xlim = ax.get_xlim()[0]
+ax.text(1.478*xlim, stable_loss_rate, '{:.2f}'.format(stable_loss_rate), ha='center', fontweight='bold', fontsize=10, color='tab:pink')
 
-    return unique_list
+for k, v in enumerate(event_frequency):
+    if v == 0:
+        ax.text(k, 0, "N/A", ha='center', va='bottom', color='blue', fontweight='bold')
 
-df1, pairs1 = drop_unchanged(df1)
-df2, pairs2 = drop_unchanged(df2)
+# Add text for title and custom x-axis tick labels, etc.
+ax.set_ylabel('Packet Loss Rate (%)')
+ax.set_title('Uplink PLR (HO): Airport Line')
+ax.legend()
 
-df = pd.concat([df1, df2], ignore_index=True).sort_values(by='Timestamp').reset_index(drop=True)
-pairs = [(pci, earfcn) for pci, earfcn in zip(df[~df['duplicate']]['PCI'].array, df[~df['duplicate']]['NR_ARFCN'].array)]
+ax.set_xticks(x, ho_types)
+ax.set_xticklabels(ax.get_xticklabels(), rotation=40, fontsize=9.5, ha="right")
 
-cmap = plt.get_cmap('jet', len(pairs1))
-colors = [matplotlib.colors.to_hex(cmap(i)) for i in range(cmap.N)]
-cdict1 = {pair: color for pair, color in zip(pairs1, colors)}
+fig.tight_layout()
+plt.show()
 
-cmap = plt.get_cmap('gist_rainbow', len(pairs2))
-colors = [matplotlib.colors.to_hex(cmap(i)) for i in range(cmap.N)]
-cdict2 = {pair: color for pair, color in zip(pairs2, colors)}
+# *********************************** Loss Per Event ***********************************
+event_frequency = df_ho.loc[df_ho['stage'] == '-', 'Frequency (/hr)'].to_list()
+loss_per_event = df_ho.loc[df_ho['stage'] == '-', 'lost_pe'].to_list()
 
-markers = ['p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
-mdict = {}  
+x = np.arange(len(ho_types))  # the label locations
+width = 0.5  # the width of the bars
+space = 0.55
 
-axes[10].set_ylim(0, 1)
-axes[10].set_yticks([0.25, 0.75])
-axes[10].set_yticklabels(["Radio-1", "Radio-2"], rotation='vertical', va='center')
+fig, ax = plt.subplots(figsize=(6, 4))
+rect = ax.bar(x, loss_per_event, width, color='tab:orange', alpha=0.85)
+ax.set_ylim(bottom=0)
 
-k = 0       
-for pair in pairs1:
-    pci_earfcn = f'{pair[0]}:{pair[1]}'
-    
-    df = df1.copy()
-    tmp = df[(df['PCI'] == pair[0]) & (df['NR_ARFCN'] == pair[1])].reset_index(drop=True)
-    if not tmp.empty:
-        axes[10].vlines(tmp.Timestamp, ymin=0, ymax=0.55, color=cdict1[pair], linewidth=0.7, alpha=0.85, label=f'r1 {pci_earfcn}')
-    
-    tmp = tmp.drop(df.index[0])
-    if not tmp.empty:
-        axes[10].scatter(tmp.Timestamp, [0.05]*len(tmp), c=cdict1[pair], marker=markers[k % len(markers)], label=f'r1 {pci_earfcn} dup')
-        k += 1
+ax_twin = ax.twinx()
+ax_twin.plot(x, event_frequency, linestyle='-', color='none', marker='o', mfc='blue', mec='blue', markersize=4)
+ax_twin.plot([], [], linestyle='-', color='blue', marker='o', mfc='blue', mec='blue', markersize=4, label='Event Occurrence', linewidth=1)
+rect = ax_twin.bar(x, event_frequency, width=0.03, color='blue')
+ax_twin.set_ylabel('Frequency (/hr)')
 
-for pair in pairs2:
-    pci_earfcn = f'{pair[0]}:{pair[1]}'
-    
-    df = df2.copy()
-    tmp = df[(df['PCI'] == pair[0]) & (df['NR_ARFCN'] == pair[1])].reset_index(drop=True)
-    if not tmp.empty:
-        axes[10].vlines(tmp.Timestamp, ymin=0.45, ymax=1, color=cdict2[pair], linewidth=0.7, alpha=0.85, label=f'r2 {pci_earfcn}')
-    
-    tmp = tmp.drop(df.index[0])
-    if not tmp.empty:
-        axes[10].scatter(tmp.Timestamp, [0.95]*len(tmp), c=cdict2[pair], marker=markers[k % len(markers)], label=f'r2 {pci_earfcn} dup')
-        k += 1
+ax_twin.set_ylim(bottom=0)
+ax_twin.set_ylim(top=ax_twin.get_ylim()[1]*1.02)
+ylim = ax_twin.get_ylim()[1]
+
+for k, v in enumerate(event_frequency):
+    if v == 0:
+        ax.text(k, 0, "N/A", ha='center', va='bottom', color='blue', fontweight='bold')
+    else:
+        ax_twin.text(k, v + 0.01*ylim, '{:.2f}'.format(v), ha='center', va='bottom', color='blue', fontweight='bold', fontsize=9.5)
+
+# Add text for title and custom x-axis tick labels, etc.
+ax.set_ylabel('Loss Per Event')
+ax.set_title('Uplink LPE (HO): Airport Line')
+ax_twin.legend()
+
+ax.set_xticks(x, ho_types)
+ax.set_xticklabels(ax.get_xticklabels(), rotation=40, fontsize=9.5, ha="right")
+
+fig.tight_layout()
+plt.show()
+
+# *********************************** RLF ***********************************
+rlf_types = ['NASR', 'MCGF', 'SCGF']
+
+df_rlf = sr_table_ul[np.in1d(sr_table_ul.index.get_level_values(0), rlf_types)].copy().reset_index()
+df_rlf['type'] = df_rlf['type'].astype('category').cat.set_categories(rlf_types)
+df_rlf = df_rlf.sort_values(by=['type', 'stage']).reset_index(drop=True)
+
+# *********************************** Loss Rate ***********************************
+event_frequency = df_rlf.loc[df_rlf['stage'] == '-', 'Frequency (/hr)'].to_list()
+before_event_loss_rate = df_rlf.loc[df_rlf['stage'] == 'before', 'lost_r (%)'].to_list()
+during_event_loss_rate = df_rlf.loc[df_rlf['stage'] == 'during', 'lost_r (%)'].to_list()
+after_event_loss_rate = df_rlf.loc[df_rlf['stage'] == 'after', 'lost_r (%)'].to_list()
+stable_loss_rate = sr_table_ul.at[('stable', '-'), 'lost_r (%)']
+
+x = np.arange(len(rlf_types))  # the label locations
+width = 0.2  # the width of the bars
+space = 0.55
+
+fig, ax = plt.subplots(figsize=(3, 4))
+rects1 = ax.bar(x - space/3, before_event_loss_rate, width, label='Before')
+rects2 = ax.bar(x          , during_event_loss_rate, width, label='During')
+rects3 = ax.bar(x + space/3, after_event_loss_rate, width, label='After')
+ax.axhline(stable_loss_rate, c = 'tab:pink', linestyle='--', linewidth=1, label='Stable PLR')
+ax.set_ylim(bottom=0)
+
+xlim = ax.get_xlim()[0]
+ax.text(1.478*xlim, stable_loss_rate, '{:.2f}'.format(stable_loss_rate), ha='center', fontweight='bold', fontsize=10, color='tab:pink')
+
+for k, v in enumerate(event_frequency):
+    if v == 0:
+        ax.text(k, 0, "N/A", ha='center', va='bottom', color='blue', fontweight='bold')
+
+# Add text for title and custom x-axis tick labels, etc.
+ax.set_ylabel('Packet Loss Rate (%)')
+ax.set_title('Uplink PLR (RLF): Airport Line')
+ax.legend()
+
+ax.set_xticks(x, rlf_types)
+ax.set_xticklabels(ax.get_xticklabels(), rotation=40, fontsize=9.5, ha="right")
+
+fig.tight_layout()
+plt.show()
+
+# *********************************** Loss Per Event ***********************************
+event_frequency = df_rlf.loc[df_rlf['stage'] == '-', 'Frequency (/hr)'].to_list()
+loss_per_event = df_rlf.loc[df_rlf['stage'] == '-', 'lost_pe'].to_list()
+
+x = np.arange(len(rlf_types))  # the label locations
+width = 0.5  # the width of the bars
+space = 0.55
+
+fig, ax = plt.subplots(figsize=(3, 4))
+rect = ax.bar(x, loss_per_event, width, color='tab:orange', alpha=0.85)
+ax.set_ylim(bottom=0)
+
+ax_twin = ax.twinx()
+ax_twin.plot(x, event_frequency, linestyle='-', color='none', marker='o', mfc='blue', mec='blue', markersize=4)
+ax_twin.plot([], [], linestyle='-', color='blue', marker='o', mfc='blue', mec='blue', markersize=4, label='Event Occurrence', linewidth=1)
+rect = ax_twin.bar(x, event_frequency, width=0.03, color='blue')
+ax_twin.set_ylabel('Frequency (/hr)')
+
+ax_twin.set_ylim(bottom=0)
+ax_twin.set_ylim(top=ax_twin.get_ylim()[1]*1.02)
+ylim = ax_twin.get_ylim()[1]
+
+for k, v in enumerate(event_frequency):
+    if v == 0:
+        ax.text(k, 0, "N/A", ha='center', va='bottom', color='blue', fontweight='bold')
+    else:
+        ax_twin.text(k, v + 0.01*ylim, '{:.2f}'.format(v), ha='center', va='bottom', color='blue', fontweight='bold', fontsize=9.5)
+
+# Add text for title and custom x-axis tick labels, etc.
+ax.set_ylabel('Loss Per Event')
+ax.set_title('Uplink LPE (RLF): Airport Line')
+# ax_twin.legend()
+
+ax.set_xticks(x, rlf_types)
+ax.set_xticklabels(ax.get_xticklabels(), rotation=40, fontsize=9.5, ha="right")
+
+fig.tight_layout()
+plt.show()
