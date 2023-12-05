@@ -31,9 +31,9 @@ declare -a DEVICES
 for (( x=0; x < $NUMIDS; x++ )); do
     SERIAL=${IDS[x]}
     case $SERIAL in
-        "R5CRA1ET5KB") DEV="sm00"
+        "R5CR20FDXHK") DEV="sm00"
             ;;
-        "R5CRA1D2MRJ") DEV="sm01"
+        "R5CR30P9Z8Y") DEV="sm01"
             ;;
         "R5CRA1GCHFV") DEV="sm02"
             ;;
@@ -50,6 +50,10 @@ for (( x=0; x < $NUMIDS; x++ )); do
         "R5CRA1D23QK") DEV="sm08"
             ;;
         "R5CRA2EGJ5X") DEV="sm09"
+            ;;
+        "R5CRA1ET5KB") DEV="sm10"
+            ;;
+        "R5CRA1D2MRJ") DEV="sm11"
             ;;
         "73e11a9f") DEV="xm00"
             ;;
