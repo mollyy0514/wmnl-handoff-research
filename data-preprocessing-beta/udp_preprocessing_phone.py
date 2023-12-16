@@ -25,7 +25,7 @@ from myutils import makedir
 database = "/home/wmnlab/D/database/"
 # database = "/Users/jackbedford/Desktop/MOXA/Code/data/"
 dates = [
-    "2023-09-12-2",
+    "2023-12-16",
 ]
 json_files = [
     ["time_sync_sm00.json", "time_sync_sm01.json", "time_sync_sm02.json", "time_sync_sm03.json",
@@ -45,7 +45,7 @@ exps = {  # experiment_name: (number_of_experiment_rounds, list_of_experiment_ro
     # "Bandlock_LTE_LTEb3_LTEb7_LTEb8_Dupl_Phone": (4, ["#{:02d}".format(i+1) for i in range(4)]),
     # "Bandlock_LTEb1_LTEb3_LTEb7_LTEb8_Dupl_Phone": (4, ["#{:02d}".format(i+1) for i in range(4)]),
     # "Phone_Experiment_LTE_NR": (6, ["#{:02d}".format(i+1) for i in range(6)]),
-    "UDP_Bandlock_9S_Phone_Brown": (2, ["#{:02d}".format(i+1) for i in range(2)]),
+    "UDP_Bandlock_9S_Phone_BR": (1, ["#{:02d}".format(i+1) for i in range(1)]),
 }
 _devices = [
     # ["qc00", "qc01", "qc02", "qc03"],
@@ -78,9 +78,10 @@ _schemes = [
     # ["LTE_0", "LTE_1", "B3_0", "B3_1", "B7_0", "B7_1", "B8_0", "B8_1",],
     # ["LTE_0", "LTE_1", "LTEb3_0", "LTEb3_1", "LTEb7_0", "LTEb7_1", "LTEb8_0", "LTEb8_1",],
     # ["LTEb1_0", "LTEb1_1", "LTEb3_0", "LTEb3_1", "LTEb7_0", "LTEb7_1", "LTEb8_0", "LTEb8_1",],
-    ['LTE', 'All'],
+    # ['LTE', 'All'],
     # ['All',],
     # ['LTE'],
+    ["All_0", "All_1", "B3", "B7", "B8", "B3B7", "B3B8", "B7B8", 'LTE'],
 ]
 
 class Payload:
@@ -96,97 +97,97 @@ print("packet_rate (pps):", PKT_RATE, "\n")
 
 from mi2log.mi_offline_analysis import mi_decode, error_handling
 
-# def fgetter():
-#     files_collection = []
-#     tags = "diag_log"
-#     for filename in filenames:
-#         if filename.startswith(tags) and filename.endswith(".mi2log"):
-#             files_collection.append(filename)
-#     return files_collection
+def fgetter():
+    files_collection = []
+    tags = "diag_log"
+    for filename in filenames:
+        if filename.startswith(tags) and filename.endswith(".mi2log"):
+            files_collection.append(filename)
+    return files_collection
 
-# def main():
-#     files_collection = fgetter()
-#     if len(files_collection) == 0:
-#         print("No candidate file.")
-#     for filename in files_collection:
-#         fin = os.path.join(source_dir, filename)
-#         fout = os.path.join(target_dir, "{}.txt".format(filename[:-7]))
-#         print(">>>>> decode from '{}' into '{}'...".format(fin, fout))
-#         err_handle = mi_decode(fin, fout)
-#         err_handles.append(err_handle)
-#     print()
+def main():
+    files_collection = fgetter()
+    if len(files_collection) == 0:
+        print("No candidate file.")
+    for filename in files_collection:
+        fin = os.path.join(source_dir, filename)
+        fout = os.path.join(target_dir, "{}.txt".format(filename[:-7]))
+        print(">>>>> decode from '{}' into '{}'...".format(fin, fout))
+        err_handle = mi_decode(fin, fout)
+        err_handles.append(err_handle)
+    print()
 
-# # ******************************* Check Files *********************************
-# for date in dates:
-#     for (expr, (times, traces)), devices in zip(exps.items(), _devices):
-#         print(os.path.join(database, date, expr))
-#         for dev in devices:
-#             if not os.path.isdir(os.path.join(database, date, expr, dev)):
-#                 print("|___ {} does not exist.".format(os.path.join(database, date, expr, dev)))
-#                 continue
+# ******************************* Check Files *********************************
+for date in dates:
+    for (expr, (times, traces)), devices in zip(exps.items(), _devices):
+        print(os.path.join(database, date, expr))
+        for dev in devices:
+            if not os.path.isdir(os.path.join(database, date, expr, dev)):
+                print("|___ {} does not exist.".format(os.path.join(database, date, expr, dev)))
+                continue
             
-#             print("|___", os.path.join(database, date, expr, dev))
-#             if traces == None:
-#                 # print(os.path.join(database, date, expr, dev))
-#                 continue
-#             elif len(traces) == 0:
-#                 traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+            print("|___", os.path.join(database, date, expr, dev))
+            if traces == None:
+                # print(os.path.join(database, date, expr, dev))
+                continue
+            elif len(traces) == 0:
+                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
             
-#             print("|    ", times)
-#             traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
-#             if len(traces) != times:
-#                 print("***************************************************************************************")
-#                 print("Warning: the number of traces does not match the specified number of experiment times.")
-#                 print("***************************************************************************************")
-#             for trace in traces:
-#                 print("|    |___", os.path.join(database, date, expr, dev, trace))
-#         print()
-# # *****************************************************************************
+            print("|    ", times)
+            traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
+            if len(traces) != times:
+                print("***************************************************************************************")
+                print("Warning: the number of traces does not match the specified number of experiment times.")
+                print("***************************************************************************************")
+            for trace in traces:
+                print("|    |___", os.path.join(database, date, expr, dev, trace))
+        print()
+# *****************************************************************************
 
-# # ******************************** Processing *********************************
-# t = TicToc()  # create instance of class
-# t.tic()       # Start timer
-# err_handles = []
-# for date in dates:
-#     for (expr, (times, traces)), devices in zip(exps.items(), _devices):
-#         for dev in devices:
-#             if not os.path.isdir(os.path.join(database, date, expr, dev)):
-#                 print("{} does not exist.\n".format(os.path.join(database, date, expr, dev)))
-#                 continue
+# ******************************** Processing *********************************
+t = TicToc()  # create instance of class
+t.tic()       # Start timer
+err_handles = []
+for date in dates:
+    for (expr, (times, traces)), devices in zip(exps.items(), _devices):
+        for dev in devices:
+            if not os.path.isdir(os.path.join(database, date, expr, dev)):
+                print("{} does not exist.\n".format(os.path.join(database, date, expr, dev)))
+                continue
 
-#             if traces == None:
-#                 print("------------------------------------------")
-#                 print(date, expr, dev)
-#                 print("------------------------------------------")
-#                 source_dir = os.path.join(database, date, expr, dev)
-#                 target_dir = os.path.join(database, date, expr, dev)
-#                 makedir(target_dir)
-#                 filenames = os.listdir(source_dir)
-#                 main()
-#                 continue
-#             elif len(traces) == 0:
-#                 traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+            if traces == None:
+                print("------------------------------------------")
+                print(date, expr, dev)
+                print("------------------------------------------")
+                source_dir = os.path.join(database, date, expr, dev)
+                target_dir = os.path.join(database, date, expr, dev)
+                makedir(target_dir)
+                filenames = os.listdir(source_dir)
+                main()
+                continue
+            elif len(traces) == 0:
+                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
             
-#             traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
-#             for trace in traces:
-#                 print("------------------------------------------")
-#                 print(date, expr, dev, trace)
-#                 print("------------------------------------------")
-#                 source_dir = os.path.join(database, date, expr, dev, trace, "raw")
-#                 target_dir = os.path.join(database, date, expr, dev, trace, "middle")
-#                 makedir(target_dir)
-#                 filenames = os.listdir(source_dir)
-#                 main()
-# ### Check errors
-# flag = False
-# for err_handle in err_handles:
-#     flag = error_handling(err_handle)
-# if not flag and err_handles:
-#     print("**************************************************")
-#     print("No error occurs!!")
-#     print("**************************************************")
-# t.toc()  # Time elapsed since t.tic()
-# # *****************************************************************************
+            traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
+            for trace in traces:
+                print("------------------------------------------")
+                print(date, expr, dev, trace)
+                print("------------------------------------------")
+                source_dir = os.path.join(database, date, expr, dev, trace, "raw")
+                target_dir = os.path.join(database, date, expr, dev, trace, "middle")
+                makedir(target_dir)
+                filenames = os.listdir(source_dir)
+                main()
+### Check errors
+flag = False
+for err_handle in err_handles:
+    flag = error_handling(err_handle)
+if not flag and err_handles:
+    print("**************************************************")
+    print("No error occurs!!")
+    print("**************************************************")
+t.toc()  # Time elapsed since t.tic()
+# *****************************************************************************
 
 from mi2log.xml_mi import xml_to_csv_rrc, xml_to_csv_ml1, xml_to_csv_nr_ml1
 
@@ -210,12 +211,12 @@ def main():
         print(">>>>> convert from '{}' into '{}'...".format(fin, fout1))
         xml_to_csv_rrc(fin, fout1)
         # savemove(os.path.join(source_dir, "{}_rrc.csv".format(filename[:-4])), target_dir, "{}_rrc.csv".format(filename[:-4]))
-        # print(">>>>> convert from '{}' into '{}'...".format(fin, fout2))
-        # xml_to_csv_ml1(fin, fout2)
-        # # savemove(os.path.join(source_dir, "{}_ml1.csv".format(filename[:-4])), target_dir, "{}_ml1.csv".format(filename[:-4]))
-        # print(">>>>> convert from '{}' into '{}'...".format(fin, fout3))
-        # xml_to_csv_nr_ml1(fin, fout3)
-        # # savemove(os.path.join(source_dir, "{}_nr_ml1.csv".format(filename[:-4])), target_dir, "{}_nr_ml1.csv".format(filename[:-4]))
+        print(">>>>> convert from '{}' into '{}'...".format(fin, fout2))
+        xml_to_csv_ml1(fin, fout2)
+        # savemove(os.path.join(source_dir, "{}_ml1.csv".format(filename[:-4])), target_dir, "{}_ml1.csv".format(filename[:-4]))
+        print(">>>>> convert from '{}' into '{}'...".format(fin, fout3))
+        xml_to_csv_nr_ml1(fin, fout3)
+        # savemove(os.path.join(source_dir, "{}_nr_ml1.csv".format(filename[:-4])), target_dir, "{}_nr_ml1.csv".format(filename[:-4]))
     print()
 
 # ******************************* Check Files *********************************
@@ -282,115 +283,131 @@ for date in dates:
 t.toc()  # Time elapsed since t.tic()
 # *****************************************************************************
 
-# from udp.pcap_to_csv import pcap_to_csv
+from udp.pcap_to_csv import pcap_to_csv
 
-# def fgetter():
-#     files_collection = []
-#     tags = ("server_pcap", "client_pcap")
-#     for filename in filenames:
-#         if filename.startswith(tags) and filename.endswith(".pcap"):
-#             files_collection.append(filename)
-#     return files_collection
+def fgetter():
+    files_collection = []
+    tags = ("server_pcap", "client_pcap")
+    for filename in filenames:
+        if filename.startswith(tags) and filename.endswith(".pcap"):
+            files_collection.append(filename)
+    return files_collection
 
-# def main():
-#     files_collection = fgetter()
-#     if len(files_collection) == 0:
-#         print("No candidate file.")
-#     for filename in files_collection:
-#         fin = os.path.join(source_dir, filename)
-#         fout = os.path.join(target_dir, "{}.csv".format(filename[:-5]))
-#         print(">>>>> convert from '{}' into '{}'...".format(fin, fout))
-#         err_handle = pcap_to_csv(fin, fout)
-#         err_handles.append(err_handle)
-#     print()
+def main():
+    files_collection = fgetter()
+    if len(files_collection) == 0:
+        print("No candidate file.")
+    for filename in files_collection:
+        fin = os.path.join(source_dir, filename)
+        fout = os.path.join(target_dir, "{}.csv".format(filename[:-5]))
+        print(">>>>> convert from '{}' into '{}'...".format(fin, fout))
+        err_handle = pcap_to_csv(fin, fout)
+        err_handles.append(err_handle)
+    print()
 
-# # ******************************* Check Files *********************************
-# for date in dates:
-#     for (expr, (times, traces)), devices in zip(exps.items(), _devices):
-#         print(os.path.join(database, date, expr))
-#         for dev in devices:
-#             if not os.path.isdir(os.path.join(database, date, expr, dev)):
-#                 print("|___ {} does not exist.".format(os.path.join(database, date, expr, dev)))
-#                 continue
+# ******************************* Check Files *********************************
+for date in dates:
+    for (expr, (times, traces)), devices in zip(exps.items(), _devices):
+        print(os.path.join(database, date, expr))
+        for dev in devices:
+            if not os.path.isdir(os.path.join(database, date, expr, dev)):
+                print("|___ {} does not exist.".format(os.path.join(database, date, expr, dev)))
+                continue
             
-#             print("|___", os.path.join(database, date, expr, dev))
-#             if traces == None:
-#                 # print(os.path.join(database, date, expr, dev))
-#                 continue
-#             elif len(traces) == 0:
-#                 traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+            print("|___", os.path.join(database, date, expr, dev))
+            if traces == None:
+                # print(os.path.join(database, date, expr, dev))
+                continue
+            elif len(traces) == 0:
+                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
             
-#             print("|    ", times)
-#             traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
-#             if len(traces) != times:
-#                 print("***************************************************************************************")
-#                 print("Warning: the number of traces does not match the specified number of experiment times.")
-#                 print("***************************************************************************************")
-#             for trace in traces:
-#                 print("|    |___", os.path.join(database, date, expr, dev, trace))
-#         print()
-# # *****************************************************************************
+            print("|    ", times)
+            traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
+            if len(traces) != times:
+                print("***************************************************************************************")
+                print("Warning: the number of traces does not match the specified number of experiment times.")
+                print("***************************************************************************************")
+            for trace in traces:
+                print("|    |___", os.path.join(database, date, expr, dev, trace))
+        print()
+# *****************************************************************************
 
-# # ******************************** Processing *********************************
-# t = TicToc()  # create instance of class
-# t.tic()       # Start timer
-# err_handles = []
-# for date in dates:
-#     for (expr, (times, traces)), devices in zip(exps.items(), _devices):
-#         for dev in devices:
-#             if not os.path.isdir(os.path.join(database, date, expr, dev)):
-#                 print("{} does not exist.\n".format(os.path.join(database, date, expr, dev)))
-#                 continue
+# ******************************** Processing *********************************
+t = TicToc()  # create instance of class
+t.tic()       # Start timer
+err_handles = []
+for date in dates:
+    for (expr, (times, traces)), devices in zip(exps.items(), _devices):
+        for dev in devices:
+            if not os.path.isdir(os.path.join(database, date, expr, dev)):
+                print("{} does not exist.\n".format(os.path.join(database, date, expr, dev)))
+                continue
 
-#             if traces == None:
-#                 print("------------------------------------------")
-#                 print(date, expr, dev)
-#                 print("------------------------------------------")
-#                 source_dir = os.path.join(database, date, expr, dev)
-#                 target_dir = os.path.join(database, date, expr, dev)
-#                 makedir(target_dir)
-#                 traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
-#                 # filenames = os.listdir(source_dir)
-#                 # main()
-#                 # continue
-#             elif len(traces) == 0:
-#                 traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+            if traces == None:
+                print("------------------------------------------")
+                print(date, expr, dev)
+                print("------------------------------------------")
+                source_dir = os.path.join(database, date, expr, dev)
+                target_dir = os.path.join(database, date, expr, dev)
+                makedir(target_dir)
+                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+                # filenames = os.listdir(source_dir)
+                # main()
+                # continue
+            elif len(traces) == 0:
+                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
             
-#             traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
-#             for trace in traces:
-#                 print("------------------------------------------")
-#                 print(date, expr, dev, trace)
-#                 print("------------------------------------------")
-#                 source_dir = os.path.join(database, date, expr, dev, trace, "raw")
-#                 target_dir = os.path.join(database, date, expr, dev, trace, "middle")
-#                 if expr == "tsync":
-#                     source_dir = os.path.join(database, date, expr, dev, trace)
-#                     target_dir = os.path.join(database, date, expr, dev, trace)
-#                 makedir(target_dir)
-#                 filenames = os.listdir(source_dir)
-#                 main()
-# ### Check errors
-# flag = False
-# for err_handle in err_handles:
-#     flag = error_handling(err_handle)
-# if not flag and err_handles:
-#     print("**************************************************")
-#     print("No error occurs!!")
-#     print("**************************************************")
-# t.toc()  # Time elapsed since t.tic()
-# # *****************************************************************************
+            traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
+            for trace in traces:
+                print("------------------------------------------")
+                print(date, expr, dev, trace)
+                print("------------------------------------------")
+                source_dir = os.path.join(database, date, expr, dev, trace, "raw")
+                target_dir = os.path.join(database, date, expr, dev, trace, "middle")
+                if expr == "tsync":
+                    source_dir = os.path.join(database, date, expr, dev, trace)
+                    target_dir = os.path.join(database, date, expr, dev, trace)
+                makedir(target_dir)
+                filenames = os.listdir(source_dir)
+                main()
+### Check errors
+flag = False
+for err_handle in err_handles:
+    flag = error_handling(err_handle)
+if not flag and err_handles:
+    print("**************************************************")
+    print("No error occurs!!")
+    print("**************************************************")
+t.toc()  # Time elapsed since t.tic()
+# *****************************************************************************
 
-# # from udp.parse_info import filter, parse_packet_info, parse_brief_info
-# from udp.parse_info_v2 import parse_packet_info
+# from udp.parse_info import filter, parse_packet_info, parse_brief_info
+from udp.parse_info_v2 import parse_packet_info
+
+def fgetter(direction, terminal):
+    if direction == "uplink" and terminal == "client":
+        tags = ("client_pcap_BL", "client_pcap_UL")
+    elif direction == "downlink" and terminal == "client":
+        tags = ("client_pcap_BL", "client_pcap_DL")
+    elif direction == "uplink" and terminal == "server":
+        tags = ("server_pcap_BL", "server_pcap_UL")
+    elif direction == "downlink" and terminal == "server":
+        tags = ("server_pcap_BL", "server_pcap_DL")
+    for filename in filenames:
+        if filename.startswith(tags) and filename.endswith(".csv"):
+            print(">>>>>", os.path.join(source_dir, filename))
+            return os.path.join(source_dir, filename)
+    print("No candidate file.")
+    return None
 
 # def fgetter(direction, terminal):
-#     if direction == "uplink" and terminal == "client":
+#     if direction == "ul" and terminal == "client":
 #         tags = ("client_pcap_BL", "client_pcap_UL")
-#     elif direction == "downlink" and terminal == "client":
+#     elif direction == "dl" and terminal == "client":
 #         tags = ("client_pcap_BL", "client_pcap_DL")
-#     elif direction == "uplink" and terminal == "server":
+#     elif direction == "ul" and terminal == "server":
 #         tags = ("server_pcap_BL", "server_pcap_UL")
-#     elif direction == "downlink" and terminal == "server":
+#     elif direction == "dl" and terminal == "server":
 #         tags = ("server_pcap_BL", "server_pcap_DL")
 #     for filename in filenames:
 #         if filename.startswith(tags) and filename.endswith(".csv"):
@@ -398,91 +415,6 @@ t.toc()  # Time elapsed since t.tic()
 #             return os.path.join(source_dir, filename)
 #     print("No candidate file.")
 #     return None
-
-# # def fgetter(direction, terminal):
-# #     if direction == "ul" and terminal == "client":
-# #         tags = ("client_pcap_BL", "client_pcap_UL")
-# #     elif direction == "dl" and terminal == "client":
-# #         tags = ("client_pcap_BL", "client_pcap_DL")
-# #     elif direction == "ul" and terminal == "server":
-# #         tags = ("server_pcap_BL", "server_pcap_UL")
-# #     elif direction == "dl" and terminal == "server":
-# #         tags = ("server_pcap_BL", "server_pcap_DL")
-# #     for filename in filenames:
-# #         if filename.startswith(tags) and filename.endswith(".csv"):
-# #             print(">>>>>", os.path.join(source_dir, filename))
-# #             return os.path.join(source_dir, filename)
-# #     print("No candidate file.")
-# #     return None
-
-# # def main():
-# #     ### detailed information for each udp packet's frame
-# #     # udp_uplk_client_pkt_info   # udp ultx detailed info
-# #     # udp_uplk_server_pkt_info   # udp ulrx detailed info
-# #     # udp_dnlk_server_pkt_info   # udp dltx detailed info
-# #     # udp_dnlk_client_pkt_info   # udp dlrx detailed info
-
-# #     ### brief information for each udp packet
-# #     # udp_uplk_client_pkt_brief  # udp ultx brief info
-# #     # udp_uplk_server_pkt_brief  # udp ulrx brief info
-# #     # udp_dnlk_server_pkt_brief  # udp dltx brief info
-# #     # udp_dnlk_client_pkt_brief  # udp dlrx brief info
-
-# #     ### dirpath
-# #     # source_dir
-# #     # target_dir
-
-# #     ### parse detailed information & brief information for each packet
-    
-# #     ## client_pcap_BL or client_pcap_UL
-# #     filepath = fgetter("uplink", "client")
-# #     if filepath:
-# #         t1 = TicToc()  # create instance of class
-# #         t1.tic()       # Start timer
-# #         df = pd.read_csv(filepath, sep='@')
-# #         df_ultx = filter(df.copy(), "uplink", "client", "udp")
-# #         df_ultx = parse_packet_info(df_ultx, os.path.join(target_dir, "udp_uplk_client_pkt_info.csv"))
-# #         df_ultx = parse_brief_info(df_ultx, os.path.join(target_dir, "udp_uplk_client_pkt_brief.csv"))
-# #         os.system(f'rm {os.path.join(target_dir, "udp_uplk_client_pkt_info.csv")}') # Remove
-# #         t1.toc()  # Time elapsed since t1.tic()
-    
-# #     ## client_pcap_BL or client_pcap_DL
-# #     filepath = fgetter("downlink", "client")
-# #     if filepath:
-# #         t1 = TicToc()  # create instance of class
-# #         t1.tic()       # Start timer
-# #         df = pd.read_csv(filepath, sep='@')
-# #         df_dlrx = filter(df.copy(), "downlink", "client", "udp")
-# #         df_dlrx = parse_packet_info(df_dlrx, os.path.join(target_dir, "udp_dnlk_client_pkt_info.csv"))
-# #         df_dlrx = parse_brief_info(df_dlrx, os.path.join(target_dir, "udp_dnlk_client_pkt_brief.csv"))
-# #         os.system(f'rm {os.path.join(target_dir, "udp_dnlk_client_pkt_info.csv")}') # Remove
-# #         t1.toc()  # Time elapsed since t1.tic()
-
-# #     ## server_pcap_BL or server_pcap_UL
-# #     filepath = fgetter("uplink", "server")
-# #     if filepath:
-# #         t1 = TicToc()  # create instance of class
-# #         t1.tic()       # Start timer
-# #         df = pd.read_csv(filepath, sep='@')
-# #         df_ulrx = filter(df.copy(), "uplink", "server", "udp")
-# #         df_ulrx = parse_packet_info(df_ulrx, os.path.join(target_dir, "udp_uplk_server_pkt_info.csv"))
-# #         df_ulrx = parse_brief_info(df_ulrx, os.path.join(target_dir, "udp_uplk_server_pkt_brief.csv"))
-# #         os.system(f'rm {os.path.join(target_dir, "udp_uplk_server_pkt_info.csv")}') # Remove
-# #         t1.toc()  # Time elapsed since t1.tic()
-    
-# #     ## server_pcap_BL or server_pcap_DL
-# #     filepath = fgetter("downlink", "server")
-# #     if filepath:
-# #         t1 = TicToc()  # create instance of class
-# #         t1.tic()       # Start timer
-# #         df = pd.read_csv(filepath, sep='@')
-# #         df_dltx = filter(df.copy(), "downlink", "server", "udp")
-# #         df_dltx = parse_packet_info(df_dltx, os.path.join(target_dir, "udp_dnlk_server_pkt_info.csv"))
-# #         df_dltx = parse_brief_info(df_dltx, os.path.join(target_dir, "udp_dnlk_server_pkt_brief.csv"))
-# #         os.system(f'rm {os.path.join(target_dir, "udp_dnlk_server_pkt_info.csv")}') # Remove
-# #         t1.toc()  # Time elapsed since t1.tic()
-# #     print()
-# #     return
 
 # def main():
 #     ### detailed information for each udp packet's frame
@@ -508,7 +440,11 @@ t.toc()  # Time elapsed since t.tic()
 #     if filepath:
 #         t1 = TicToc()  # create instance of class
 #         t1.tic()       # Start timer
-#         parse_packet_info(filepath, os.path.join(target_dir, "udp_uplk_client_pkt_brief.csv"), "client", "ul", "udp")
+#         df = pd.read_csv(filepath, sep='@')
+#         df_ultx = filter(df.copy(), "uplink", "client", "udp")
+#         df_ultx = parse_packet_info(df_ultx, os.path.join(target_dir, "udp_uplk_client_pkt_info.csv"))
+#         df_ultx = parse_brief_info(df_ultx, os.path.join(target_dir, "udp_uplk_client_pkt_brief.csv"))
+#         os.system(f'rm {os.path.join(target_dir, "udp_uplk_client_pkt_info.csv")}') # Remove
 #         t1.toc()  # Time elapsed since t1.tic()
     
 #     ## client_pcap_BL or client_pcap_DL
@@ -516,7 +452,11 @@ t.toc()  # Time elapsed since t.tic()
 #     if filepath:
 #         t1 = TicToc()  # create instance of class
 #         t1.tic()       # Start timer
-#         parse_packet_info(filepath, os.path.join(target_dir, "udp_dnlk_client_pkt_brief.csv"), "client", "dl", "udp")
+#         df = pd.read_csv(filepath, sep='@')
+#         df_dlrx = filter(df.copy(), "downlink", "client", "udp")
+#         df_dlrx = parse_packet_info(df_dlrx, os.path.join(target_dir, "udp_dnlk_client_pkt_info.csv"))
+#         df_dlrx = parse_brief_info(df_dlrx, os.path.join(target_dir, "udp_dnlk_client_pkt_brief.csv"))
+#         os.system(f'rm {os.path.join(target_dir, "udp_dnlk_client_pkt_info.csv")}') # Remove
 #         t1.toc()  # Time elapsed since t1.tic()
 
 #     ## server_pcap_BL or server_pcap_UL
@@ -524,7 +464,11 @@ t.toc()  # Time elapsed since t.tic()
 #     if filepath:
 #         t1 = TicToc()  # create instance of class
 #         t1.tic()       # Start timer
-#         parse_packet_info(filepath, os.path.join(target_dir, "udp_uplk_server_pkt_brief.csv"), "server", "ul", "udp")
+#         df = pd.read_csv(filepath, sep='@')
+#         df_ulrx = filter(df.copy(), "uplink", "server", "udp")
+#         df_ulrx = parse_packet_info(df_ulrx, os.path.join(target_dir, "udp_uplk_server_pkt_info.csv"))
+#         df_ulrx = parse_brief_info(df_ulrx, os.path.join(target_dir, "udp_uplk_server_pkt_brief.csv"))
+#         os.system(f'rm {os.path.join(target_dir, "udp_uplk_server_pkt_info.csv")}') # Remove
 #         t1.toc()  # Time elapsed since t1.tic()
     
 #     ## server_pcap_BL or server_pcap_DL
@@ -532,247 +476,304 @@ t.toc()  # Time elapsed since t.tic()
 #     if filepath:
 #         t1 = TicToc()  # create instance of class
 #         t1.tic()       # Start timer
-#         parse_packet_info(filepath, os.path.join(target_dir, "udp_dnlk_server_pkt_brief.csv"), "server", "dl", "udp")
+#         df = pd.read_csv(filepath, sep='@')
+#         df_dltx = filter(df.copy(), "downlink", "server", "udp")
+#         df_dltx = parse_packet_info(df_dltx, os.path.join(target_dir, "udp_dnlk_server_pkt_info.csv"))
+#         df_dltx = parse_brief_info(df_dltx, os.path.join(target_dir, "udp_dnlk_server_pkt_brief.csv"))
+#         os.system(f'rm {os.path.join(target_dir, "udp_dnlk_server_pkt_info.csv")}') # Remove
 #         t1.toc()  # Time elapsed since t1.tic()
 #     print()
-    
-#     files = ["udp_uplk_server_pkt_brief.csv", "udp_uplk_client_pkt_brief.csv", "udp_dnlk_server_pkt_brief.csv", "udp_dnlk_client_pkt_brief.csv"]
-#     files = [os.path.join(target_dir, s) for s in files]
-
-#     st_t = []
-#     ed_t = []
-#     for file in files:
-#         df = pd.read_csv(file)
-#         df['frame_time'] = pd.to_datetime(df['frame_time'])
-#         st_t.append(df.iloc[0]['frame_time'] - pd.Timedelta(seconds=5))
-#         ed_t.append(df.iloc[-1]['frame_time'] + pd.Timedelta(seconds=5))
-#         del df
-
-#     st_t = max(st_t)
-#     ed_t = min(ed_t)
-
-#     for file in files:
-#         df = pd.read_csv(file)
-#         df['frame_time'] = pd.to_datetime(df['frame_time'])
-#         df = df[(df['frame_time'] > st_t) & (df['frame_time'] < ed_t)]
-#         df.to_csv(file, index=False)
-        
 #     return
 
-# # ******************************* Check Files *********************************
-# for date in dates:
-#     for (expr, (times, traces)), devices in zip(exps.items(), _devices):
-#         print(os.path.join(database, date, expr))
-#         for dev in devices:
-#             if not os.path.isdir(os.path.join(database, date, expr, dev)):
-#                 print("|___ {} does not exist.".format(os.path.join(database, date, expr, dev)))
-#                 continue
-            
-#             print("|___", os.path.join(database, date, expr, dev))
-#             if traces == None:
-#                 # print(os.path.join(database, date, expr, dev))
-#                 continue
-#             elif len(traces) == 0:
-#                 traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
-            
-#             print("|    ", times)
-#             traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
-#             if len(traces) != times:
-#                 print("***************************************************************************************")
-#                 print("Warning: the number of traces does not match the specified number of experiment times.")
-#                 print("***************************************************************************************")
-#             for trace in traces:
-#                 print("|    |___", os.path.join(database, date, expr, dev, trace))
-#         print()
-# # *****************************************************************************
+def main():
+    ### detailed information for each udp packet's frame
+    # udp_uplk_client_pkt_info   # udp ultx detailed info
+    # udp_uplk_server_pkt_info   # udp ulrx detailed info
+    # udp_dnlk_server_pkt_info   # udp dltx detailed info
+    # udp_dnlk_client_pkt_info   # udp dlrx detailed info
 
-# # ******************************** Processing *********************************
-# t = TicToc()  # create instance of class
-# t.tic()       # Start timer
-# for date in dates:
-#     for (expr, (times, traces)), devices in zip(exps.items(), _devices):
-#         for dev in devices:
-#             if not os.path.isdir(os.path.join(database, date, expr, dev)):
-#                 print("{} does not exist.\n".format(os.path.join(database, date, expr, dev)))
-#                 continue
+    ### brief information for each udp packet
+    # udp_uplk_client_pkt_brief  # udp ultx brief info
+    # udp_uplk_server_pkt_brief  # udp ulrx brief info
+    # udp_dnlk_server_pkt_brief  # udp dltx brief info
+    # udp_dnlk_client_pkt_brief  # udp dlrx brief info
 
-#             if traces == None:
-#                 print("------------------------------------------")
-#                 print(date, expr, dev)
-#                 print("------------------------------------------")
-#                 source_dir = os.path.join(database, date, expr, dev)
-#                 target_dir = os.path.join(database, date, expr, dev)
-#                 makedir(target_dir)
-#                 traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
-#                 # filenames = os.listdir(source_dir)
-#                 # main()
-#                 # continue
-#             elif len(traces) == 0:
-#                 traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
-            
-#             traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
-#             for trace in traces:
-#                 print("------------------------------------------")
-#                 print(date, expr, dev, trace)
-#                 print("------------------------------------------")
-#                 source_dir = os.path.join(database, date, expr, dev, trace, "middle")
-#                 target_dir = os.path.join(database, date, expr, dev, trace, "middle")
-#                 if expr == "tsync":
-#                     source_dir = os.path.join(database, date, expr, dev, trace)
-#                     target_dir = os.path.join(database, date, expr, dev, trace)
-#                 makedir(target_dir)
-#                 filenames = os.listdir(source_dir)
-#                 main()
-# t.toc()  # Time elapsed since t.tic()
-# # *****************************************************************************
+    ### dirpath
+    # source_dir
+    # target_dir
 
-# from udp.parse_loss_latency import get_loss, consolidate, compensate, get_latency, get_statistics
+    ### parse detailed information & brief information for each packet
+    
+    ## client_pcap_BL or client_pcap_UL
+    filepath = fgetter("uplink", "client")
+    if filepath:
+        t1 = TicToc()  # create instance of class
+        t1.tic()       # Start timer
+        parse_packet_info(filepath, os.path.join(target_dir, "udp_uplk_client_pkt_brief.csv"), "client", "ul", "udp")
+        t1.toc()  # Time elapsed since t1.tic()
+    
+    ## client_pcap_BL or client_pcap_DL
+    filepath = fgetter("downlink", "client")
+    if filepath:
+        t1 = TicToc()  # create instance of class
+        t1.tic()       # Start timer
+        parse_packet_info(filepath, os.path.join(target_dir, "udp_dnlk_client_pkt_brief.csv"), "client", "dl", "udp")
+        t1.toc()  # Time elapsed since t1.tic()
 
-# t = TicToc()  # create instance of class
-# t.tic()  # Start timer
-# # --------------------- (3) decode a batch of files (User Settings) ---------------------
-# # err_handles = []
-# for date in dates:
-#     for (expr, (times, traces)), devices in zip(exps.items(), _devices):
-#         print(os.path.join(database, date, expr))
-#         for dev in devices:
-#             if not os.path.isdir(os.path.join(database, date, expr, dev)):
-#                 print("|___ {} does not exist.".format(os.path.join(database, date, expr, dev)))
-#                 continue
-            
-#             print("|___", os.path.join(database, date, expr, dev))
-#             if traces == None:
-#                 # print(os.path.join(database, date, expr, dev))
-#                 continue
-#             elif len(traces) == 0:
-#                 traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
-            
-#             print("|    ", times)
-#             traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
-#             if len(traces) != times:
-#                 print("***************************************************************************************")
-#                 print("Warning: the number of traces does not match the specified number of experiment times.")
-#                 print("***************************************************************************************")
-#             for trace in traces:
-#                 print("|    |___", os.path.join(database, date, expr, dev, trace))
-#         print()
+    ## server_pcap_BL or server_pcap_UL
+    filepath = fgetter("uplink", "server")
+    if filepath:
+        t1 = TicToc()  # create instance of class
+        t1.tic()       # Start timer
+        parse_packet_info(filepath, os.path.join(target_dir, "udp_uplk_server_pkt_brief.csv"), "server", "ul", "udp")
+        t1.toc()  # Time elapsed since t1.tic()
+    
+    ## server_pcap_BL or server_pcap_DL
+    filepath = fgetter("downlink", "server")
+    if filepath:
+        t1 = TicToc()  # create instance of class
+        t1.tic()       # Start timer
+        parse_packet_info(filepath, os.path.join(target_dir, "udp_dnlk_server_pkt_brief.csv"), "server", "dl", "udp")
+        t1.toc()  # Time elapsed since t1.tic()
+    print()
+    
+    files = ["udp_uplk_server_pkt_brief.csv", "udp_uplk_client_pkt_brief.csv", "udp_dnlk_server_pkt_brief.csv", "udp_dnlk_client_pkt_brief.csv"]
+    files = [os.path.join(target_dir, s) for s in files]
+
+    st_t = []
+    ed_t = []
+    for file in files:
+        df = pd.read_csv(file)
+        df['frame_time'] = pd.to_datetime(df['frame_time'])
+        st_t.append(df.iloc[0]['frame_time'] - pd.Timedelta(seconds=5))
+        ed_t.append(df.iloc[-1]['frame_time'] + pd.Timedelta(seconds=5))
+        del df
+
+    st_t = max(st_t)
+    ed_t = min(ed_t)
+
+    for file in files:
+        df = pd.read_csv(file)
+        df['frame_time'] = pd.to_datetime(df['frame_time'])
+        df = df[(df['frame_time'] > st_t) & (df['frame_time'] < ed_t)]
+        df.to_csv(file, index=False)
         
-# # --------------------- Phase 2: Parse packet loss & latency --------------------- 
-# ### Read files
-# for date, _json_files in zip(dates, json_files):
-#     for (expr, (times, traces)), devices in zip(exps.items(), _devices):
-#         for dev, json_file in zip(devices, _json_files):
-#             if not os.path.isdir(os.path.join(database, date, expr, dev)):
-#                 print("{} does not exist.\n".format(os.path.join(database, date, expr, dev)))
-#                 continue
+    return
 
-#             if traces == None:
-#                 print("------------------------------------------")
-#                 print(date, expr, dev)
-#                 print("------------------------------------------")
-#                 source_dir = os.path.join(database, date, expr, dev)
-#                 target_dir = os.path.join(database, date, expr, dev)
-#                 makedir(target_dir)
-#                 traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
-#                 # filenames = os.listdir(source_dir)
-#                 # main()
-#                 # continue
-#             elif len(traces) == 0:
-#                 traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+# ******************************* Check Files *********************************
+for date in dates:
+    for (expr, (times, traces)), devices in zip(exps.items(), _devices):
+        print(os.path.join(database, date, expr))
+        for dev in devices:
+            if not os.path.isdir(os.path.join(database, date, expr, dev)):
+                print("|___ {} does not exist.".format(os.path.join(database, date, expr, dev)))
+                continue
             
-#             traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
-#             for trace in traces:
-#                 print("------------------------------------------")
-#                 print(date, expr, dev, trace)
-#                 print("------------------------------------------")
-#                 source_dir = os.path.join(database, date, expr, dev, trace, "middle")
-#                 target_dir1 = os.path.join(database, date, expr, dev, trace, "data")
-#                 target_dir2 = os.path.join(database, date, expr, dev, trace, "statistics")
-#                 if expr == "tsync":
-#                     source_dir = os.path.join(database, date, expr, dev, trace)
-#                     target_dir = os.path.join(database, date, expr, dev, trace)
-#                 makedir(target_dir1)
-#                 makedir(target_dir2)
-#                 filenames = os.listdir(source_dir)
-#                 t1 = TicToc()  # create instance of class
-#                 t1.tic()  # Start timer
-                
-#                 dl_txdf = pd.read_csv(os.path.join(source_dir, "udp_dnlk_server_pkt_brief.csv"))
-#                 dl_rxdf = pd.read_csv(os.path.join(source_dir, "udp_dnlk_client_pkt_brief.csv"))
-#                 ul_txdf = pd.read_csv(os.path.join(source_dir, "udp_uplk_client_pkt_brief.csv"))
-#                 ul_rxdf = pd.read_csv(os.path.join(source_dir, "udp_uplk_server_pkt_brief.csv"))
-                
-#                 dl_txseq = list(dl_txdf["seq"].array)
-#                 dl_rxseq = list(dl_rxdf["seq"].array)
-#                 dlst = max(dl_txseq[0], dl_rxseq[0])
-#                 dlet = min(dl_txseq[-1], dl_rxseq[-1])
-#                 # print(dlst, dlet)
+            print("|___", os.path.join(database, date, expr, dev))
+            if traces == None:
+                # print(os.path.join(database, date, expr, dev))
+                continue
+            elif len(traces) == 0:
+                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+            
+            print("|    ", times)
+            traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
+            if len(traces) != times:
+                print("***************************************************************************************")
+                print("Warning: the number of traces does not match the specified number of experiment times.")
+                print("***************************************************************************************")
+            for trace in traces:
+                print("|    |___", os.path.join(database, date, expr, dev, trace))
+        print()
+# *****************************************************************************
 
-#                 ul_txseq = list(ul_txdf["seq"].array)
-#                 ul_rxseq = list(ul_rxdf["seq"].array)
-#                 ulst = max(ul_txseq[0], ul_rxseq[0])
-#                 ulet = min(ul_txseq[-1], ul_rxseq[-1])
-#                 # print(ulst, ulet)
+# ******************************** Processing *********************************
+t = TicToc()  # create instance of class
+t.tic()       # Start timer
+for date in dates:
+    for (expr, (times, traces)), devices in zip(exps.items(), _devices):
+        for dev in devices:
+            if not os.path.isdir(os.path.join(database, date, expr, dev)):
+                print("{} does not exist.\n".format(os.path.join(database, date, expr, dev)))
+                continue
 
-#                 st = max(dlst, ulst)
-#                 et = min(dlet, ulet)
-#                 # print("----------------")
-#                 st += PKT_RATE * 5  # 開頭切5秒
-#                 et -= PKT_RATE * 5  # 結尾切5秒
-#                 # print(st, et)
+            if traces == None:
+                print("------------------------------------------")
+                print(date, expr, dev)
+                print("------------------------------------------")
+                source_dir = os.path.join(database, date, expr, dev)
+                target_dir = os.path.join(database, date, expr, dev)
+                makedir(target_dir)
+                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+                # filenames = os.listdir(source_dir)
+                # main()
+                # continue
+            elif len(traces) == 0:
+                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+            
+            traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
+            for trace in traces:
+                print("------------------------------------------")
+                print(date, expr, dev, trace)
+                print("------------------------------------------")
+                source_dir = os.path.join(database, date, expr, dev, trace, "middle")
+                target_dir = os.path.join(database, date, expr, dev, trace, "middle")
+                if expr == "tsync":
+                    source_dir = os.path.join(database, date, expr, dev, trace)
+                    target_dir = os.path.join(database, date, expr, dev, trace)
+                makedir(target_dir)
+                filenames = os.listdir(source_dir)
+                main()
+t.toc()  # Time elapsed since t.tic()
+# *****************************************************************************
 
-#                 dl_txdf = dl_txdf[(dl_txdf["seq"] >= st) & (dl_txdf["seq"] <= et)].copy().reset_index(drop=True)
-#                 dl_rxdf = dl_rxdf[(dl_rxdf["seq"] >= st) & (dl_rxdf["seq"] <= et)].copy().reset_index(drop=True)
-#                 ul_txdf = ul_txdf[(ul_txdf["seq"] >= st) & (ul_txdf["seq"] <= et)].copy().reset_index(drop=True)
-#                 ul_rxdf = ul_rxdf[(ul_rxdf["seq"] >= st) & (ul_rxdf["seq"] <= et)].copy().reset_index(drop=True)
-                
-#                 json_object = {}
-#                 if os.path.isfile(json_file):
-#                     with open(json_file, 'r') as f:
-#                         json_object = json.load(f)
-#                 else:
-#                     print('*************', json_file, 'does not exist! *************')
-#                 delta = pd.DataFrame.from_dict(json_object, orient='index', columns=['delta']).reset_index(names='Timestamp')
-#                 delta['Timestamp'] = pd.to_datetime(delta['Timestamp'])
-#                 delta['timedelta'] = pd.to_timedelta(delta['delta'], unit='seconds')
-#                 print(delta['delta'])
+from udp.parse_loss_latency import get_loss, consolidate, compensate, get_latency, get_statistics
 
-#                 ### Downlink
-#                 fout1_dl = os.path.join(target_dir1, "udp_dnlk_loss_latency.csv")
-#                 fout2_dl = os.path.join(target_dir2, "udp_dnlk_loss_statistics.csv")
-#                 fout3_dl = os.path.join(target_dir2, "udp_dnlk_excl_statistics.csv")
+t = TicToc()  # create instance of class
+t.tic()  # Start timer
+# --------------------- (3) decode a batch of files (User Settings) ---------------------
+# err_handles = []
+for date in dates:
+    for (expr, (times, traces)), devices in zip(exps.items(), _devices):
+        print(os.path.join(database, date, expr))
+        for dev in devices:
+            if not os.path.isdir(os.path.join(database, date, expr, dev)):
+                print("|___ {} does not exist.".format(os.path.join(database, date, expr, dev)))
+                continue
+            
+            print("|___", os.path.join(database, date, expr, dev))
+            if traces == None:
+                # print(os.path.join(database, date, expr, dev))
+                continue
+            elif len(traces) == 0:
+                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+            
+            print("|    ", times)
+            traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
+            if len(traces) != times:
+                print("***************************************************************************************")
+                print("Warning: the number of traces does not match the specified number of experiment times.")
+                print("***************************************************************************************")
+            for trace in traces:
+                print("|    |___", os.path.join(database, date, expr, dev, trace))
+        print()
+        
+# --------------------- Phase 2: Parse packet loss & latency --------------------- 
+### Read files
+for date, _json_files in zip(dates, json_files):
+    for (expr, (times, traces)), devices in zip(exps.items(), _devices):
+        for dev, json_file in zip(devices, _json_files):
+            if not os.path.isdir(os.path.join(database, date, expr, dev)):
+                print("{} does not exist.\n".format(os.path.join(database, date, expr, dev)))
+                continue
+
+            if traces == None:
+                print("------------------------------------------")
+                print(date, expr, dev)
+                print("------------------------------------------")
+                source_dir = os.path.join(database, date, expr, dev)
+                target_dir = os.path.join(database, date, expr, dev)
+                makedir(target_dir)
+                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+                # filenames = os.listdir(source_dir)
+                # main()
+                # continue
+            elif len(traces) == 0:
+                traces = sorted(os.listdir(os.path.join(database, date, expr, dev)))
+            
+            traces = [trace for trace in traces if os.path.isdir(os.path.join(database, date, expr, dev, trace))]
+            for trace in traces:
+                print("------------------------------------------")
+                print(date, expr, dev, trace)
+                print("------------------------------------------")
+                source_dir = os.path.join(database, date, expr, dev, trace, "middle")
+                target_dir1 = os.path.join(database, date, expr, dev, trace, "data")
+                target_dir2 = os.path.join(database, date, expr, dev, trace, "statistics")
+                if expr == "tsync":
+                    source_dir = os.path.join(database, date, expr, dev, trace)
+                    target_dir = os.path.join(database, date, expr, dev, trace)
+                makedir(target_dir1)
+                makedir(target_dir2)
+                filenames = os.listdir(source_dir)
+                t1 = TicToc()  # create instance of class
+                t1.tic()  # Start timer
                 
-#                 losdf = get_loss(dl_rxdf.copy(), dl_txdf.copy())
-#                 latdf = consolidate(dl_rxdf.copy(), dl_txdf.copy())
-#                 df = pd.concat([latdf, losdf], axis=0)
-#                 df = df.sort_values(by=["seq"]).reset_index(drop=True)
-#                 df = compensate(df.copy(), "dl", delta.copy())
-#                 df = get_latency(df.copy(), "dl")
-#                 get_statistics(df.copy(), fout1_dl, fout2_dl, fout3_dl)
+                dl_txdf = pd.read_csv(os.path.join(source_dir, "udp_dnlk_server_pkt_brief.csv"))
+                dl_rxdf = pd.read_csv(os.path.join(source_dir, "udp_dnlk_client_pkt_brief.csv"))
+                ul_txdf = pd.read_csv(os.path.join(source_dir, "udp_uplk_client_pkt_brief.csv"))
+                ul_rxdf = pd.read_csv(os.path.join(source_dir, "udp_uplk_server_pkt_brief.csv"))
                 
-#                 ### Uplink
-#                 fout1_ul = os.path.join(target_dir1, "udp_uplk_loss_latency.csv")
-#                 fout2_ul = os.path.join(target_dir2, "udp_uplk_loss_statistics.csv")
-#                 fout3_ul = os.path.join(target_dir2, "udp_uplk_excl_statistics.csv")
+                dl_txseq = list(dl_txdf["seq"].array)
+                dl_rxseq = list(dl_rxdf["seq"].array)
+                dlst = max(dl_txseq[0], dl_rxseq[0])
+                dlet = min(dl_txseq[-1], dl_rxseq[-1])
+                # print(dlst, dlet)
+
+                ul_txseq = list(ul_txdf["seq"].array)
+                ul_rxseq = list(ul_rxdf["seq"].array)
+                ulst = max(ul_txseq[0], ul_rxseq[0])
+                ulet = min(ul_txseq[-1], ul_rxseq[-1])
+                # print(ulst, ulet)
+
+                st = max(dlst, ulst)
+                et = min(dlet, ulet)
+                # print("----------------")
+                st += PKT_RATE * 5  # 開頭切5秒
+                et -= PKT_RATE * 5  # 結尾切5秒
+                # print(st, et)
+
+                dl_txdf = dl_txdf[(dl_txdf["seq"] >= st) & (dl_txdf["seq"] <= et)].copy().reset_index(drop=True)
+                dl_rxdf = dl_rxdf[(dl_rxdf["seq"] >= st) & (dl_rxdf["seq"] <= et)].copy().reset_index(drop=True)
+                ul_txdf = ul_txdf[(ul_txdf["seq"] >= st) & (ul_txdf["seq"] <= et)].copy().reset_index(drop=True)
+                ul_rxdf = ul_rxdf[(ul_rxdf["seq"] >= st) & (ul_rxdf["seq"] <= et)].copy().reset_index(drop=True)
                 
-#                 losdf = get_loss(ul_rxdf.copy(), ul_txdf.copy())
-#                 latdf = consolidate(ul_rxdf.copy(), ul_txdf.copy())
-#                 df = pd.concat([latdf, losdf], axis=0)
-#                 df = df.sort_values(by=["seq"]).reset_index(drop=True)
-#                 df = compensate(df.copy(), "ul", delta.copy())
-#                 df = get_latency(df.copy(), "ul")
-#                 get_statistics(df.copy(), fout1_ul, fout2_ul, fout3_ul)
+                json_object = {}
+                if os.path.isfile(json_file):
+                    with open(json_file, 'r') as f:
+                        json_object = json.load(f)
+                else:
+                    print('*************', json_file, 'does not exist! *************')
+                delta = pd.DataFrame.from_dict(json_object, orient='index', columns=['delta']).reset_index(names='Timestamp')
+                delta['Timestamp'] = pd.to_datetime(delta['Timestamp'])
+                delta['timedelta'] = pd.to_timedelta(delta['delta'], unit='seconds')
+                print(delta['delta'])
+
+                ### Downlink
+                fout1_dl = os.path.join(target_dir1, "udp_dnlk_loss_latency.csv")
+                fout2_dl = os.path.join(target_dir2, "udp_dnlk_loss_statistics.csv")
+                fout3_dl = os.path.join(target_dir2, "udp_dnlk_excl_statistics.csv")
                 
-#                 t1.toc()
-# # ### Check errors
-# # flag = False
-# # for err_handle in err_handles:
-# #     flag = error_handling(err_handle)
-# # if not flag:
-# #     print("**************************************************")
-# #     print("No error occurs!!")
-# #     print("**************************************************")
-# t.toc()  # Time elapsed since t.tic()
+                losdf = get_loss(dl_rxdf.copy(), dl_txdf.copy())
+                latdf = consolidate(dl_rxdf.copy(), dl_txdf.copy())
+                df = pd.concat([latdf, losdf], axis=0)
+                df = df.sort_values(by=["seq"]).reset_index(drop=True)
+                df = compensate(df.copy(), "dl", delta.copy())
+                df = get_latency(df.copy(), "dl")
+                get_statistics(df.copy(), fout1_dl, fout2_dl, fout3_dl)
+                
+                ### Uplink
+                fout1_ul = os.path.join(target_dir1, "udp_uplk_loss_latency.csv")
+                fout2_ul = os.path.join(target_dir2, "udp_uplk_loss_statistics.csv")
+                fout3_ul = os.path.join(target_dir2, "udp_uplk_excl_statistics.csv")
+                
+                losdf = get_loss(ul_rxdf.copy(), ul_txdf.copy())
+                latdf = consolidate(ul_rxdf.copy(), ul_txdf.copy())
+                df = pd.concat([latdf, losdf], axis=0)
+                df = df.sort_values(by=["seq"]).reset_index(drop=True)
+                df = compensate(df.copy(), "ul", delta.copy())
+                df = get_latency(df.copy(), "ul")
+                get_statistics(df.copy(), fout1_ul, fout2_ul, fout3_ul)
+                
+                t1.toc()
+# ### Check errors
+# flag = False
+# for err_handle in err_handles:
+#     flag = error_handling(err_handle)
+# if not flag:
+#     print("**************************************************")
+#     print("No error occurs!!")
+#     print("**************************************************")
+t.toc()  # Time elapsed since t.tic()
 
 # for date in dates:
 #     for (expr, (times, traces)), devices, schemes in zip(exps.items(), _devices, _schemes):
