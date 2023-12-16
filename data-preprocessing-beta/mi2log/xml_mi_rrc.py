@@ -282,7 +282,7 @@ def xml_to_csv_rrc(fin, fout):
         "PCI",
         "UL_DL",
         "Freq",
-
+        # Serving cell info
         "DL frequency",
         "UL frequency",
         "DL bandwidth",
@@ -292,39 +292,47 @@ def xml_to_csv_rrc(fin, fout):
         "Band ID",
         "MCC",
         "MNC",
-        "MNC digit",
-
+        
         ## Measure report related
-        "measurementReport",
+        "lte-measurementReport",
+        "nr-measurementReport",
         "measId",
         "MeasResultEUTRA",
-        "physCellId",               ## LTE measured target PCI for MeasResultEUTRA 
+        "physCellId", ## LTE measured target PCI for MeasResultEUTRA 
         "MeasResultServFreqNR-r15", ## When lte and nr both HO, this will be emerged with MeasResultEUTRA.
         "pci-r15",
         "MeasResultNR",
-        "physCellId",               ## NR measured target PCI for MeasResultNR
+        "physCellId", ## NR measured target PCI for MeasResultNR
         "measResultServingCell",
         "physCellId",
         "MeasResultCellNR-r15",
-        "pci-r15",                  ## NR measured target PCI for MeasResultCellNR-r15
+        "pci-r15",    ## NR measured target PCI for MeasResultCellNR-r15
         ###########################
 
         ## Configuration dissemination Related
-        "MeasObjectToAddMod",
+        "lte-MeasObjectToAddMod",
+        "nr-MeasObjectToAddMod",
         "measObjectId", 
-        "measObject",               ## measObjectEUTRA (0) OR measObjectNR-r15 (5)
-        "carrierFreq",              ## For E-UTRA
-        "carrierFreq-r15",          ## For E-UTRA
-        "ssbFrequency",             ## For measObjectNR
+        "measObject", ## measObjectEUTRA (0) OR measObjectNR-r15 (5)
+        "carrierFreq", ## For EUTRA
+        "carrierFreq-r15", ## For measObjectNR-r15
+        "ssbFrequency", ## For measObjectNR
+
+        "lte-ReportConfigToAddMod",
+        "lte-reportConfigId",
+        "triggerType", ## triggerType for 4G
+        "lte-eventId",
+        "lte-parameter",
+
+        "nr-ReportConfigToAddMod",
+        "nr-reportConfigId",
+        "reportType", ## reportType for 5G  
+        "nr-eventId",
+        "nr-parameter",
         
-        "ReportConfigToAddMod",
-        "reportConfigId",
-        "triggerType",              ## reportType for 5G OTA 
-        "eventId",
-        "parameter",                ## Most difficult part...
-        
-        "measIdToRemoveList",
-        "MeasIdToAddMod",           ## (MeasId & measObjectId & reportConfigId)
+        "lte-measIdToRemoveList",
+        "lte-MeasIdToAddMod",## (MeasId & measObjectId & reportConfigId)
+        "nr-MeasIdToAddMod",
         ###########################
 
         ## Basic reconfiguration
@@ -336,23 +344,27 @@ def xml_to_csv_rrc(fin, fout):
 
         ## LTE RLF related
         "rrcConnectionReestablishmentRequest",
-        "physCellId",               ## Target PCI for rrcConnectionReestablishmentRequest.
-        "reestablishmentCause",     ## ReestablishmentCause for rrcConnectionReestablishmentRequest.
+        "physCellId", ## Target PCI for rrcConnectionReestablishmentRequest.
+        "reestablishmentCause", ## ReestablishmentCause for rrcConnectionReestablishmentRequest.
         "rrcConnectionReestablishment",
         "rrcConnectionReestablishmentComplete",
         "rrcConnectionReestablishmentReject",
         ###########################
 
         ## Initial setup related
+        "rrcConnectionRequest",
         "rrcConnectionSetup",
         "rrcConnectionSetupComplete",
         "securityModeCommand",
-        "SecurityModeComplete",
+        "securityModeComplete",
         ###########################
 
+        ## Cell reselection related
         "rrcConnectionRelease",
-        
-        ## NSA mode SN setup and release 
+        "systemInformationBlockType1",
+        ###########################
+
+        ##  NSA mode SN setup and release 
         "nr-Config-r15: release (0)",
         "nr-Config-r15: setup (1)",
         "dualConnectivityPHR: release (0)",
@@ -361,14 +373,16 @@ def xml_to_csv_rrc(fin, fout):
 
         ## NSA mode SN RLF related
         "scgFailureInformationNR-r15",
-        "failureType-r15",          ## Failure cause of scgfailure .
+        "failureType-r15", ##Failure cause of scgfailure .
         ###########################
 
         ## LTE and NR ho related
-        "lte_targetPhysCellId",     ## Handover target.
+        "lte_targetPhysCellId", ## Handover target.
+        "dl-CarrierFreq",
         "lte-rrc.t304",
 
-        "nr_physCellId",            ## NR measured target PCI
+        "nr_physCellId", ## NR measured target PCI
+        "absoluteFrequencySSB",
         "nr-rrc.t304",
         ###########################
         
@@ -376,20 +390,29 @@ def xml_to_csv_rrc(fin, fout):
         ## SCell add and release 
         "sCellToReleaseList-r10",
         "SCellIndex-r10",
-        "sCellToAddMod-r10",
+        "SCellToAddMod-r10",
         "SCellIndex-r10",
         "physCellId-r10",
         "dl-CarrierFreq-r10",
         ###########################
 
+        ## ueCapabilityInformation
+        "ueCapabilityInformation",
+        "SupportedBandEUTRA",
+        "bandEUTRA",
+        ###########################
+
         ])+'\n')
 
-    # For each dm_log_packet, we will check that whether strings in type_list are shown in it.
-    # If yes, type_code will record what types in type_list are shown in the packet.
-    # -------------------------------------------------
+    #For each dm_log_packet, we will check that whether strings in type_list are shown in it.
+    #If yes, type_code will record what types in type_list are shown in the packet.
+    #-------------------------------------------------
     type_list = [
+
         ## MeasurementReport Related 
-        "\"measurementReport\"",
+        "\"lte-rrc.measurementReport_element\"",
+        "\"nr-rrc.measurementReport_element\"",
+
         "measId",
         "\"MeasResultEUTRA\"",
         "physCellId",
@@ -402,23 +425,31 @@ def xml_to_csv_rrc(fin, fout):
         "\"MeasResultCellNR-r15\"",
         "pci-r15",
         ###########################
-
+        
         ## Configuration dissemination Related
-        "\"MeasObjectToAddMod\"",
+        "\"lte-rrc.MeasObjectToAddMod_element\"",
+        "\"nr-rrc.MeasObjectToAddMod_element\"",
         "measObjectId", 
         "measObject", 
         "carrierFreq", 
         "carrierFreq-r15",
         "ssbFrequency",
 
-        "\"ReportConfigToAddMod\"",
-        "reportConfigId",
-        "triggerType",
-        "eventId",
-        "parameter",
+        "\"lte-rrc.ReportConfigToAddMod_element\"",
+        "lte-reportConfigId",
+        "triggerType", ## triggerType for 4G
+        "lte-eventId",
+        "lte-parameter",
 
-        "measIdToRemoveList",
-        "\"MeasIdToAddMod\"",
+        "\"nr-rrc.ReportConfigToAddMod_element\"",
+        "nr-reportConfigId",    
+        "reportType", ## reportType for 5G
+        "nr-eventId",
+        "nr-parameter",
+
+        "\"lte-rrc.measIdToRemoveList\"",
+        "\"lte-rrc.MeasIdToAddMod_element\"",
+        "\"nr-rrc.MeasIdToAddMod_element\"",
         ###########################
 
 
@@ -433,19 +464,23 @@ def xml_to_csv_rrc(fin, fout):
         "\"rrcConnectionReestablishmentRequest\"",
         "physCellId", 
         "reestablishmentCause",
-        "rrcConnectionReestablishment",
+        "\"rrcConnectionReestablishment\"",
         "\"rrcConnectionReestablishmentComplete\"",
         "\"rrcConnectionReestablishmentReject\"",
         ###########################
 
         ## Initial Setup related
+        "\"lte-rrc.rrcConnectionRequest_element\"",
         "\"rrcConnectionSetup\"",
         "\"rrcConnectionSetupComplete\"",
         "\"securityModeCommand\"",
-        "\"SecurityModeComplete\"",
+        "\"securityModeComplete\"",
         ###########################
 
+        ## Cell reselection related
         "\"rrcConnectionRelease\"",
+        "\"systemInformationBlockType1\"",
+        ###########################
 
         ## NSA mode SN setup and release 
         "\"nr-Config-r15: release (0)\"",
@@ -460,9 +495,12 @@ def xml_to_csv_rrc(fin, fout):
         ###########################
 
         ## LTE and NR ho related
-        "\"lte-rrc.targetPhysCellId\"",     
+        "\"lte-rrc.targetPhysCellId\"",
+        "dl-CarrierFreq",
         "\"lte-rrc.t304\"",
+
         "\"nr-rrc.physCellId\"",
+        "\"nr-rrc.absoluteFrequencySSB\"",
         "\"nr-rrc.t304\"",
         ###########################
 
@@ -473,6 +511,12 @@ def xml_to_csv_rrc(fin, fout):
         "sCellIndex-r10",
         "physCellId-r10",
         "dl-CarrierFreq-r10",
+        ###########################
+
+        ## ueCapabilityInformation
+        "\"ueCapabilityInformation\"",
+        "\"SupportedBandEUTRA\"",
+        "bandEUTRA",
         ###########################
 
         ]
@@ -506,7 +550,6 @@ def xml_to_csv_rrc(fin, fout):
                 MCC = soup.find(key="MCC").get_text()
                 # MNC_d = soup.find(key="MNC Digit").get_text()
                 MNC = soup.find(key="MNC").get_text()                
-                # f2.write(",".join([timestamp, type_id, PCI,'','', DL_f, UL_f, Cell_identity, TAC, Band_ID, MCC, MNC] )+'\n')
                 f2.write(",".join([timestamp, type_id, PCI,'','', DL_f, UL_f, DL_BW, UL_BW, Cell_identity, TAC, Band_ID, MCC, MNC] )+'\n')
                 l = f.readline()
                 continue
@@ -691,8 +734,10 @@ def xml_to_csv_rrc(fin, fout):
                                 l = passlines(1, f)
                                 type_code[c] = get_text(l, "dl-CarrierFreq")
                                 next = 1
-                        elif type in l and type == "\"nr-rrc.physCellId\"":
+                        elif type in l and type == "\"nr-rrc.physCellId\"": 
                             type_code[c] = get_text(l, "physCellId")
+                        elif type in l and type == "\"nr-rrc.absoluteFrequencySSB\"":
+                            type_code[c] = get_text(l, "absoluteFrequencySSB")
                         elif type in l and type == "\"sCellToReleaseList-r10:":
                             type_code[c] = get_text(l, "sCellToReleaseList-r10")
                             c += 1
@@ -737,14 +782,17 @@ def xml_to_csv_rrc(fin, fout):
                     
                     l = f.readline()
                 l = f.readline()
-                f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ['']*7 + type_code)+'\n')
+                f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ['']*9 + type_code)+'\n')
         else:
             print(l,"Error! Invalid data content.")
             delete = True
-            break
-            
+            break 
+    
     f2.close()
     f.close()
+    
+    if delete:
+        os.system(f"rm {f_out}")
 # *****************************************************************************
 
 # ****************************** Utils Functions ******************************

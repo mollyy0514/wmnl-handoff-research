@@ -327,6 +327,7 @@ def xml_to_csv_rrc(fin, fout):
         "lte-rrc.t304",
 
         "nr_physCellId", ## NR measured target PCI
+        "absoluteFrequencySSB",
         "nr-rrc.t304",
         ###########################
         
@@ -444,6 +445,7 @@ def xml_to_csv_rrc(fin, fout):
         "\"lte-rrc.t304\"",
 
         "\"nr-rrc.physCellId\"",
+        "\"nr-rrc.absoluteFrequencySSB\"",
         "\"nr-rrc.t304\"",
         ###########################
 
@@ -677,8 +679,10 @@ def xml_to_csv_rrc(fin, fout):
                                 l = passlines(1, f)
                                 type_code[c] = get_text(l, "dl-CarrierFreq")
                                 next = 1
-                        elif type in l and type == "\"nr-rrc.physCellId\"":
+                        elif type in l and type == "\"nr-rrc.physCellId\"": 
                             type_code[c] = get_text(l, "physCellId")
+                        elif type in l and type == "\"nr-rrc.absoluteFrequencySSB\"":
+                            type_code[c] = get_text(l, "absoluteFrequencySSB")
                         elif type in l and type == "\"sCellToReleaseList-r10:":
                             type_code[c] = get_text(l, "sCellToReleaseList-r10")
                             c += 1
@@ -726,7 +730,7 @@ def xml_to_csv_rrc(fin, fout):
                 f2.write(",".join([timestamp, type_id, PCI, UL_DL, Freq] + ['']*9 + type_code)+'\n')
         else:
             print(l,"Error! Invalid data content.")
-            # delete = True
+            delete = True
             break 
     
     f2.close()
