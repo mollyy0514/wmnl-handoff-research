@@ -1,3 +1,4 @@
+
 import os
 import shutil
 
@@ -62,8 +63,8 @@ serial_numbers = {}
 unauthorized_serial_numbers = {}
 
 serial_to_device = {
-    "R5CRA1ET5KB":"sm00",
-    "R5CRA1D2MRJ":"sm01",
+    "R5CR20FDXHK":"sm00",
+    "R5CR30P9Z8Y":"sm01",
     "R5CRA1GCHFV":"sm02",
     "R5CRA1JYYQJ":"sm03",
     "R5CRA1EV0XH":"sm04",
@@ -72,6 +73,8 @@ serial_to_device = {
     "R5CRA1ET22M":"sm07",
     "R5CRA1D23QK":"sm08",
     "R5CRA2EGJ5X":"sm09",
+    "R5CRA1ET5KB":"sm10",
+    "R5CRA1D2MRJ":"sm11",
     "73e11a9f":"xm00",
     "491d5141":"xm01",
     "790fc81d":"xm02",
