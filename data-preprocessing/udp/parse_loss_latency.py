@@ -307,7 +307,7 @@ if __name__ == "__main__":
         metadatas = metadata_loader(dates)
         print('\n================================ Start Processing ================================')
         
-        pop_error_message(signal='Parsing loss & latency (s/c time synchronize)', stdout=True)
+        # pop_error_message(signal='Parsing loss & latency (s/c time synchronize)', stdout=True)
         for metadata in metadatas:
             try:
                 print(metadata)
@@ -356,8 +356,8 @@ if __name__ == "__main__":
                     df = get_latency(df.copy(), direction=direction, sync_mapping=sync_mapping, thr=THRESHOLD)
                     df.to_csv(fout, index=False)
                     print(f">>>>> {fout1}")
-                    with open(RECORDS, "a") as f:
-                        f.write(f">>>>> {fout1}\n")
+                    # with open(RECORDS, "a") as f:
+                    #     f.write(f">>>>> {fout1}\n")
                     get_statistics(df, fout1, thr=THRESHOLD)
                     t.toc(); print()
                     # ******************************************************************
@@ -365,9 +365,10 @@ if __name__ == "__main__":
                 print()
                     
             except Exception as e:
-                pop_error_message(e, locate=metadata, raise_flag=True)
+                pass
+                # pop_error_message(e, locate=metadata, raise_flag=True)
                 
-        pop_error_message(signal='Finish parsing loss & latency', stdout=True)
+        # pop_error_message(signal='Finish parsing loss & latency', stdout=True)
         
     else:
         print(args.onefile)
