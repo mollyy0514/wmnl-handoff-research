@@ -307,7 +307,7 @@ if __name__ == "__main__":
         metadatas = metadata_loader(dates)
         print('\n================================ Start Processing ================================')
         
-        # pop_error_message(signal='Parsing loss & latency (s/c time synchronize)', stdout=True)
+        pop_error_message(signal='Parsing loss & latency (s/c time synchronize)', stdout=True)
         for metadata in metadatas:
             try:
                 print(metadata)
@@ -366,9 +366,9 @@ if __name__ == "__main__":
                     
             except Exception as e:
                 pass
-                # pop_error_message(e, locate=metadata, raise_flag=True)
+                pop_error_message(e, locate=metadata, raise_flag=True)
                 
-        # pop_error_message(signal='Finish parsing loss & latency', stdout=True)
+        pop_error_message(signal='Finish parsing loss & latency', stdout=True)
         
     else:
         print(args.onefile)
