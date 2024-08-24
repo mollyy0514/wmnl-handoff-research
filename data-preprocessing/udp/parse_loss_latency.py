@@ -278,15 +278,15 @@ def get_statistics(df, fout, thr=100e-3, dump_log=RECORDS):
     
     max_length = max(len(sublist[0]) for sublist in rows) + 1
     
-    with open(dump_log, "a") as f:
-        print("-----------------------------------------------------")
-        f.write("-----------------------------------------------------\n")
-        for row in rows:
-            key, value, unit = row[0], row[1], row[2]
-            print(f'{key}:'.ljust(max_length), round(value, 6), unit)
-            f.write(''.join([f'{key}: '.ljust(max_length + 1), ' ', str(round(value, 6)), ' ', unit, '\n']))
-        print("-----------------------------------------------------")
-        f.write("-----------------------------------------------------\n\n")
+    # with open(dump_log, "a") as f:
+    #     print("-----------------------------------------------------")
+    #     f.write("-----------------------------------------------------\n")
+    #     for row in rows:
+    #         key, value, unit = row[0], row[1], row[2]
+    #         print(f'{key}:'.ljust(max_length), round(value, 6), unit)
+    #         f.write(''.join([f'{key}: '.ljust(max_length + 1), ' ', str(round(value, 6)), ' ', unit, '\n']))
+    #     print("-----------------------------------------------------")
+    #     f.write("-----------------------------------------------------\n\n")
 
 
 # ===================== Main Process =====================
@@ -365,7 +365,6 @@ if __name__ == "__main__":
                 print()
                     
             except Exception as e:
-                pass
                 pop_error_message(e, locate=metadata, raise_flag=True)
                 
         pop_error_message(signal='Finish parsing loss & latency', stdout=True)
