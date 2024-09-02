@@ -89,7 +89,7 @@ if __name__ == "__main__":
         src.save_log_as(savepath_mi2log)
 
     # Enable all messages
-    # src.enable_log_all()
+    src.enable_log_all()
     
     # Enable 3G/4G/5G messages to be monitored. Here we enable RRC (radio resource control) monitoring
     src.enable_log("5G_NR_RRC_OTA_Packet")
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     dumper = MyMsgLogger()
     dumper.set_source(src)
     dumper.set_decoding(MyMsgLogger.XML)  # decode the message as xml
-    dumper.set_dump_type(MyMsgLogger.ALL)
+    dumper.set_dump_type(MyMsgLogger.FILE_ONLY)
     
     # Save the decoded monitoring results as *.xml file
     if args.decode_file is not None:
